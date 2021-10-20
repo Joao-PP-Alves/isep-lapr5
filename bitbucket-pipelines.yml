@@ -2,15 +2,21 @@
 # Use a skeleton to build, test and deploy using manual and parallel steps
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: atlassian/default-image:2
+image: mcr.microsoft.com/dotnet/core/sdk:3.1
 
 pipelines:
   default:
     - parallel:
       - step:
           name: 'Build and Test'
-          script:
-            - echo "Your build and test goes here..."
+          caches:
+          - dotnetcore
+          script: 
+          - export SOLUTION_NAME=MyProject          
+          - export CONFIGURATION=Release
+          - dotnet restore SOLUTION_NAME.sln
+          - dotnet build --no-restore $SOLUTION_NAME.sln --configuration $CONFIGURATION
+          - dotnet test --no-build $SOLUTION_NAME.sln
       - step:
           name: 'Lint'
           script:
