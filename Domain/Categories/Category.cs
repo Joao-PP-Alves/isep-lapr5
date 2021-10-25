@@ -10,7 +10,7 @@ namespace DDDSample1.Domain.Categories
 
         public bool Active{ get;  private set; }
 
-        private Category()
+        private Category() 
         {
             this.Active = true;
         }

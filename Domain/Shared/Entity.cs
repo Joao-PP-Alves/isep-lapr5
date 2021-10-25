@@ -7,5 +7,17 @@ namespace DDDSample1.Domain.Shared
     where TEntityId: EntityId
     {
          public TEntityId Id { get;  protected set; }
+
+       // [Required]
+      //  private Date Date {get;}
+
+       // [Required]
+        private PhoneNumber PhoneNumber {get; set;}
+
+       // [Required]
+      //  private Date Date {get;}
+
+       // [Required]
+        private PhoneNumber PhoneNumber {get; set;}
     }
 }
