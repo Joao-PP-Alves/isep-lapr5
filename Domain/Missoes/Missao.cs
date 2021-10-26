@@ -2,7 +2,7 @@ using DDDSample1.Domain.Shared;
 
 namespace DDDSample1.Domain.Missoes
 {
-    public class Missao : Entity<MissaoId>, IAggregateRoot 
+    public class Missao /*: Entity<MissaoId>, IAggregateRoot */
     {
         public int grauDificuldade {get; private set;}
 

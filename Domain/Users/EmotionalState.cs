@@ -5,6 +5,6 @@ namespace DDDNetCore.Domain.Users
 
         public EmotionalState(){}
 
-        pub
+       // pub
     }
 }
