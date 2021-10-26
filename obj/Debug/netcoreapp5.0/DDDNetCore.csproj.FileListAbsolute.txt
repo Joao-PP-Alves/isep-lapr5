@@ -56,5 +56,4 @@ C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\bin\Debug\netcoreapp5
 C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\bin\Debug\netcoreapp5.0\Newtonsoft.Json.dll
 C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\bin\Debug\netcoreapp5.0\Newtonsoft.Json.Bson.dll
 C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\obj\Debug\netcoreapp5.0\DDDNetCore.RazorTargetAssemblyInfo.cache
-C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\obj\Debug\netcoreapp5.0\DDDNetCore.csproj.CopyComplete
 C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\obj\Debug\netcoreapp5.0\DDDNetCore.genruntimeconfig.cache

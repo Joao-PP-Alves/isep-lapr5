@@ -49,7 +49,7 @@ namespace DDDNetCore.Domain.Users
 
         public void ChangeTags(List<Tag> tags){
             if(tags != null){
-                throw new Exception("The new tags list can't be empty.");;
+                throw new Exception("The new tags list can't be empty.");
             } 
             this.tags = tags;
         }

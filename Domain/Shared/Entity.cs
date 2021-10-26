@@ -8,10 +8,6 @@ namespace DDDNetCore.Domain.Shared
     {
         public TEntityId Id { get;  protected set; }
 
-       // [Required]
-      //  private Date Date {get;}
-
-       // [Required]
-        private PhoneNumber PhoneNumber {get; set;}
+    
     }
 }
