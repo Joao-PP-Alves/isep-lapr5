@@ -65,4 +65,5 @@ Thumbs.db
 *.wmv
 
 obj/*
+bin/*
 
