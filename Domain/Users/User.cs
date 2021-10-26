@@ -21,6 +21,8 @@ namespace DDDNetCore.Domain.Users
         private PhoneNumber PhoneNumber {get; set;}
 
         private List<Tag> tags {get; set;}
+
+        private EmotionalState emotionalState {get;set;}
         
         private bool Active {get; set;}
 
@@ -31,12 +33,13 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(string name, Email email, DateTime date, PhoneNumber phoneNumber, List<Tag> tags){
+        public User(string name, Email email, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState){
             this.Id  = new UserId(Guid.NewGuid());
             this.Name = name;
             this.Date = date;
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
+            this.emotionalState = emotionalState;
             this.Active = true;
         }
 

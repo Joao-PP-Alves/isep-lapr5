@@ -3,6 +3,7 @@ namespace DDDNetCore.Domain.Users{
         sadness,
         happiness,
         anger,
-        stress
+        stress,
+        fear
     }
 }
