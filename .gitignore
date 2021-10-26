@@ -64,3 +64,11 @@ Thumbs.db
 *.mov
 *.wmv
 
+obj/DDDNetCore.csproj.nuget.dgspec.json
+obj/DDDNetCore.csproj.nuget.g.props
+obj/project.assets.json
+obj/project.nuget.cache
+obj/Debug/netcoreapp5.0/DDDNetCore.assets.cache
+obj/Debug/netcoreapp5.0/DDDNetCore.csproj.AssemblyReference.cache
+obj/Debug/netcoreapp5.0/DDDNetCore.GeneratedMSBuildEditorConfig.editorconfig
+obj/Debug/netcoreapp5.0/DDDNetCore.genruntimeconfig.cache
