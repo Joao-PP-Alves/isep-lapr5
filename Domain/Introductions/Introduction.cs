@@ -5,7 +5,7 @@ using DDDSample1.Domain.Shared;
 using DDDSample1.Domain.Users;
 using Microsoft.Win32;
 
-namespace DDDSample1.Domain.Introduction
+namespace DDDSample1.Domain.Introductions
 {
     public class Introduction : Entity<IntroductionId>, IAggregateRoot
     {

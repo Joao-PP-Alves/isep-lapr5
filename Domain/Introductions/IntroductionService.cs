@@ -1,18 +1,19 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using DDDSample1.Domain.Shared;
-using DDDSample1.Domain.Introduction;
 
-namespace DDDSample1.Domain.Introduction
+namespace DDDSample1.Domain.Introductions
 {
     public class IntroductionService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IIntroductionRepository _repo;
+        //private readonly IUserRepository _repoUser;
 
-        public IntroductionService(IUnitOfWork unitOfWork, IIntroductionRepository repo){
+        public IntroductionService(IUnitOfWork unitOfWork, IIntroductionRepository repo/*, IUserRepository repoUser **/){
             this._unitOfWork = unitOfWork;
             this._repo = repo;
+            //this._repoUser = repoUser;
         }
 
         public async Task<List<IntroductionDto>> GetAllAsync()

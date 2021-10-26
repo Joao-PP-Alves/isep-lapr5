@@ -1,7 +1,7 @@
 using System;
 using DDDSample1.Domain.Shared;
 
-namespace DDDSample1.Domain.Introduction
+namespace DDDSample1.Domain.Introductions
 {
     public enum Decision
      {
