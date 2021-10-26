@@ -1,11 +1,11 @@
 using System;
 using System.Configuration;
 using System.Dynamic;
-using DDDSample1.Domain.Shared;
-using DDDSample1.Domain.Users;
+using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Users;
 using Microsoft.Win32;
 
-namespace DDDSample1.Domain.Introductions
+namespace DDDNetCore.Domain.Introductions
 {
     public class Introduction : Entity<IntroductionId>, IAggregateRoot
     {

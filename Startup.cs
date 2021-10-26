@@ -5,17 +5,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using DDDSample1.Infrastructure;
-using DDDSample1.Infrastructure.Categories;
-using DDDSample1.Infrastructure.Products;
-using DDDSample1.Infrastructure.Families;
-using DDDSample1.Infrastructure.Shared;
-using DDDSample1.Domain.Shared;
-using DDDSample1.Domain.Categories;
-using DDDSample1.Domain.Products;
-using DDDSample1.Domain.Families;
+using DDDNetCore.Infrastructure;
+using DDDNetCore.Infrastructure.Categories;
+using DDDNetCore.Infrastructure.Products;
+using DDDNetCore.Infrastructure.Families;
+using DDDNetCore.Infrastructure.Shared;
+using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Categories;
+using DDDNetCore.Domain.Products;
+using DDDNetCore.Domain.Families;
 
-namespace DDDSample1
+namespace DDDNetCore
 {
     public class Startup
     {
@@ -29,8 +29,8 @@ namespace DDDSample1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DDDSample1DbContext>(opt =>
-                opt.UseInMemoryDatabase("DDDSample1DB")
+            services.AddDbContext<DDDNetCoreDbContext>(opt =>
+                opt.UseInMemoryDatabase("DDDNetCoreDB")
                 .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
 
             ConfigureMyServices(services);

@@ -1,18 +1,12 @@
-namespace DDDSample1.Domain.Shared
+using DDDNetCore.Domain.Users;
+namespace DDDNetCore.Domain.Shared
 {
     /// <summary>
     /// Base class for entities.
     /// </summary>
-    public abstract class Entity<TEntityId>
-    where TEntityId: EntityId
+    public abstract class Entity<TEntityId> where TEntityId: EntityId
     {
-         public TEntityId Id { get;  protected set; }
-
-       // [Required]
-      //  private Date Date {get;}
-
-       // [Required]
-        private PhoneNumber PhoneNumber {get; set;}
+        public TEntityId Id { get;  protected set; }
 
        // [Required]
       //  private Date Date {get;}

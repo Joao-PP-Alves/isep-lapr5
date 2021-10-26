@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using DDDSample1.Domain.Shared;
+using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Users;
 
-namespace DDDSample1.Domain.Introductions
+namespace DDDNetCore.Domain.Introductions
 {
     public class IntroductionService
     {
@@ -21,7 +22,7 @@ namespace DDDSample1.Domain.Introductions
             var list = await this._repo.GetAllAsync();
             
             List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro => 
-                new IntroductionDto(intro.Id.AsGuid(),intro.Description,intro.UserId,intro.UserId,intro.UserId));
+                new IntroductionDto(intro.Id.AsGuid(),intro.Description,intro.Resquester,intro.Enabler,intro.TargetUser));
 
             return listDto;
         }
@@ -33,7 +34,7 @@ namespace DDDSample1.Domain.Introductions
             if(intro == null)
                 return null;
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.Description,intro.UserId,intro.UserId,intro.UserId);
+            return new IntroductionDto(intro.Id.AsGuid(),intro.Description,intro.Resquester,intro.Enabler,intro.TargetUser);
         }
 
         public async Task<IntroductionDto> InactivateAsync(IntroductionId id)
@@ -43,11 +44,11 @@ namespace DDDSample1.Domain.Introductions
             if (introduction == null)
                 return null;   
 
-            introduction.MarkAsInative();
+            //introduction.MarkAsInative();
             
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(),introduction.Description,introduction.UserId,introduction.UserId,introduction.UserId);
+            return new IntroductionDto(introduction.Id.AsGuid(),introduction.Description,introduction.Resquester,introduction.Enabler,introduction.TargetUser);
         }
 
         public async Task<IntroductionDto> DeleteAsync(IntroductionId id)
@@ -63,7 +64,7 @@ namespace DDDSample1.Domain.Introductions
             this._repo.Remove(introduction);
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(),introduction.Description,introduction.UserId,introduction.UserId,introduction.UserId);
+            return new IntroductionDto(introduction.Id.AsGuid(),introduction.Description,introduction.Resquester,introduction.Enabler,introduction.TargetUser);
         }
 
         //TODO: Add/Update/CheckUserId Async

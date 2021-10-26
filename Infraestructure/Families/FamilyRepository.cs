@@ -1,12 +1,12 @@
-using DDDSample1.Domain.Families;
-using DDDSample1.Infrastructure.Shared;
+using DDDNetCore.Domain.Families;
+using DDDNetCore.Infrastructure.Shared;
 
-namespace DDDSample1.Infrastructure.Families
+namespace DDDNetCore.Infrastructure.Families
 {
     public class FamilyRepository : BaseRepository<Family, FamilyId>, IFamilyRepository
     {
       
-        public FamilyRepository(DDDSample1DbContext context):base(context.Families)
+        public FamilyRepository(DDDNetCoreDbContext context):base(context.Families)
         {
             
         }

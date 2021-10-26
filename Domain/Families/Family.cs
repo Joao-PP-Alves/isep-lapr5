@@ -1,6 +1,6 @@
-using DDDSample1.Domain.Shared;
+using DDDNetCore.Domain.Shared;
 
-namespace DDDSample1.Domain.Families
+namespace DDDNetCore.Domain.Families
 {
     public class Family : Entity<FamilyId>, IAggregateRoot
     {

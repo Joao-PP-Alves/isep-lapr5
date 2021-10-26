@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using DDDSample1.Domain.Shared;
+using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Domain.Users
 {

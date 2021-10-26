@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using DDDNetCore.Domain.Users;
-using DDDSample1.Domain.Shared;
+using DDDNetCore.Domain.Shared;
 
-namespace DDDSample1.Domain.Users
+namespace DDDNetCore.Domain.Users
 {
     //[Table("User")]
     public class User : Entity<UserId>, IAggregateRoot
@@ -49,7 +49,7 @@ namespace DDDSample1.Domain.Users
 
         public void ChangeTags(List<Tag> tags){
             if(tags != null){
-                throw new Exception("The new tags list can't be empty.")
+                throw new Exception("The new tags list can't be empty.");;
             } 
             this.tags = tags;
         }

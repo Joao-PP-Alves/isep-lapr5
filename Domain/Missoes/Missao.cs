@@ -1,6 +1,6 @@
-using DDDSample1.Domain.Shared;
+using DDDNetCore.Domain.Shared;
 
-namespace DDDSample1.Domain.Missoes
+namespace DDDNetCore.Domain.Missoes
 {
     public class Missao : Entity<MissaoId>, IAggregateRoot 
     {

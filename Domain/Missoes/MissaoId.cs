@@ -2,17 +2,13 @@ using System;
 using DDDNetCore.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace DDDNetCore.Domain.Categories
-{
-    public class CategoryId : EntityId
+namespace DDDNetCore.Domain.Missoes{
+    public class MissaoId : EntityId
     {
         [JsonConstructor]
-        public CategoryId(Guid value) : base(value)
-        {
-        }
+        public MissaoId(Guid value) : base(value){}
 
-        public CategoryId(String value) : base(value)
-        {
+        public MissaoId(String value) : base(value){
         }
 
         override
@@ -30,5 +26,5 @@ namespace DDDNetCore.Domain.Categories
         public Guid AsGuid(){
             return (Guid) base.ObjValue;
         }
-    }
+    } 
 }

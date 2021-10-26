@@ -1,9 +1,9 @@
 using System;
-using DDDSample1.Domain.Shared;
+using DDDNetCore.Domain.Shared;
 using Newtonsoft.Json;
 
 
-namespace DDDSample1.Domain.Introductions
+namespace DDDNetCore.Domain.Introductions
 {
     public class IntroductionId : EntityId
     {

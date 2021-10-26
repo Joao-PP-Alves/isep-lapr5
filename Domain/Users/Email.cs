@@ -1,8 +1,8 @@
 using System;
 using System.Net.Mail;
-using DDDSample1.Domain.Shared;
+using DDDNetCore.Domain.Shared;
 
-namespace DDDSample1.Domain.Users{
+namespace DDDNetCore.Domain.Users{
 
     public class Email : IValueObject {
         private string EmailAddress {get; set;}

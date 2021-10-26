@@ -1,7 +1,7 @@
 using System;
-using DDDSample1.Domain.Users;
+using DDDNetCore.Domain.Users;
 
-namespace DDDSample1.Domain.Introductions
+namespace DDDNetCore.Domain.Introductions
 {
     public class IntroductionDto{
 

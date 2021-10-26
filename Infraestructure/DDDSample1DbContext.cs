@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using DDDSample1.Domain.Categories;
-using DDDSample1.Domain.Products;
-using DDDSample1.Domain.Families;
-using DDDSample1.Infrastructure.Categories;
-using DDDSample1.Infrastructure.Products;
+using DDDNetCore.Domain.Categories;
+using DDDNetCore.Domain.Products;
+using DDDNetCore.Domain.Families;
+using DDDNetCore.Infrastructure.Categories;
+using DDDNetCore.Infrastructure.Products;
 
-namespace DDDSample1.Infrastructure
+namespace DDDNetCore.Infrastructure
 {
-    public class DDDSample1DbContext : DbContext
+    public class DDDNetCoreDbContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
 
@@ -15,7 +15,7 @@ namespace DDDSample1.Infrastructure
 
         public DbSet<Family> Families { get; set; }
 
-        public DDDSample1DbContext(DbContextOptions options) : base(options)
+        public DDDNetCoreDbContext(DbContextOptions options) : base(options)
         {
 
         }

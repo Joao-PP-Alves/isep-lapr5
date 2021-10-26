@@ -1,11 +1,11 @@
-using DDDSample1.Domain.Products;
-using DDDSample1.Infrastructure.Shared;
+using DDDNetCore.Domain.Products;
+using DDDNetCore.Infrastructure.Shared;
 
-namespace DDDSample1.Infrastructure.Products
+namespace DDDNetCore.Infrastructure.Products
 {
     public class ProductRepository : BaseRepository<Product, ProductId>,IProductRepository
     {
-        public ProductRepository(DDDSample1DbContext context):base(context.Products)
+        public ProductRepository(DDDNetCoreDbContext context):base(context.Products)
         {
            
         }
