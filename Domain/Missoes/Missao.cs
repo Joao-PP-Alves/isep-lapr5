@@ -1,9 +1,8 @@
 using DDDNetCore.Domain.Shared;
-using System.Collections.Generic;
-using DDDNetCore.Domain.Missoes;
 
 namespace DDDNetCore.Domain.Missoes
 {
+    public class Missao : Entity<MissaoId>, IAggregateRoot
     {
         //[Required]
         public int grauDificuldade {get; private set;}
