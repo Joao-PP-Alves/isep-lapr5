@@ -1,12 +1,20 @@
 image: mcr.microsoft.com/dotnet/core/sdk:5.0
-
 pipelines:
-  default:
-    - step:
-        name: Build and Test
-        caches:
-          - dotnetcore
-        script:
-          - dotnet restore
-          - dotnet build
-          - dotnet test
+  branches:
+    master:
+      - step:
+          name: Start
+          script:
+            - echo "Starting pipeline..."
+      - step:
+          name: Clean
+          script:
+            - dotnet clean
+      - step:
+          name: Build
+          script:
+            - dotnet build
+      - step:
+          name: Test
+          script:
+            - dotnet test
