@@ -40,8 +40,6 @@ namespace DDDNetCore.Controllers{
             return intro;
         }
 
-        //TODO -> Rest of Controller.
-
         // POST: api/Introductions
        [HttpPost]
         public async Task<ActionResult<IntroductionDto>> Create(CreatingIntroductionDto dto)
