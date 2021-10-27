@@ -6,6 +6,7 @@ using DDDNetCore.Domain.Introductions;
 using DDDNetCore.Infrastructure.Introductions;
 using DDDNetCore.Infrastructure.Categories;
 using DDDNetCore.Infrastructure.Products;
+using DDDNetCore.Domain.Users;
 
 namespace DDDNetCore.Infrastructure
 {
@@ -16,6 +17,9 @@ namespace DDDNetCore.Infrastructure
         public DbSet<Product> Products { get; set; }
 
         public DbSet<Family> Families { get; set; }
+
+        // Ainda falta fazer configutrações
+        public DbSet<User> Users {get; set;}
 
         public DbSet<Introduction> Introductions {get; set;}
 
