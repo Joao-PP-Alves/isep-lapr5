@@ -9,12 +9,12 @@ namespace DDDNetCore.Domain.Introductions
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IIntroductionRepository _repo;
-        //private readonly IUserRepository _repoUser;
+        private readonly IUserRepository _repoUser;
 
-        public IntroductionService(IUnitOfWork unitOfWork, IIntroductionRepository repo/*, IUserRepository repoUser **/){
+        public IntroductionService(IUnitOfWork unitOfWork, IIntroductionRepository repo, IUserRepository repoUser){
             this._unitOfWork = unitOfWork;
             this._repo = repo;
-            //this._repoUser = repoUser;
+            this._repoUser = repoUser;
         }
 
         public async Task<List<IntroductionDto>> GetAllAsync()
@@ -22,7 +22,7 @@ namespace DDDNetCore.Domain.Introductions
             var list = await this._repo.GetAllAsync();
             
             List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro => 
-                new IntroductionDto(intro.Id.AsGuid(),intro.Description,intro.Resquester,intro.Enabler,intro.TargetUser));
+                new IntroductionDto(intro.Id.AsGuid(),intro.Decision,intro.Description,intro.Requester,intro.Enabler,intro.TargetUser));
 
             return listDto;
         }
@@ -34,7 +34,7 @@ namespace DDDNetCore.Domain.Introductions
             if(intro == null)
                 return null;
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.Description,intro.Resquester,intro.Enabler,intro.TargetUser);
+            return new IntroductionDto(intro.Id.AsGuid(),intro.Decision,intro.Description,intro.Requester,intro.Enabler,intro.TargetUser);
         }
 
         public async Task<IntroductionDto> InactivateAsync(IntroductionId id)
@@ -48,7 +48,7 @@ namespace DDDNetCore.Domain.Introductions
             
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(),introduction.Description,introduction.Resquester,introduction.Enabler,introduction.TargetUser);
+            return new IntroductionDto(introduction.Id.AsGuid(),introduction.Decision,introduction.Description,introduction.Requester,introduction.Enabler,introduction.TargetUser);
         }
 
         public async Task<IntroductionDto> DeleteAsync(IntroductionId id)
@@ -64,9 +64,51 @@ namespace DDDNetCore.Domain.Introductions
             this._repo.Remove(introduction);
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(),introduction.Description,introduction.Resquester,introduction.Enabler,introduction.TargetUser);
+            return new IntroductionDto(introduction.Id.AsGuid(),introduction.Decision,introduction.Description,introduction.Requester,introduction.Enabler,introduction.TargetUser);
         }
 
-        //TODO: Add/Update/CheckUserId Async
+        private async Task checkUserIdAsync(UserId userId)
+        {
+            var user = await _repoUser.GetByIdAsync(userId);
+            if (user == null)
+                throw new BusinessRuleValidationException("Invalid User Id");
+        }
+        
+        public async Task<IntroductionDto> AddAsync(CreatingIntroductionDto dto)
+        {
+            await checkUserIdAsync(dto.Requester);
+            await checkUserIdAsync(dto.Enabler);
+            await checkUserIdAsync(dto.TargetUser);
+            var intro = new Introduction(dto.Description,dto.Requester,dto.Enabler,dto.TargetUser);
+
+            await this._repo.AddAsync(intro);
+            await this._unitOfWork.CommitAsync();
+
+            return new IntroductionDto(intro.Id.AsGuid(),intro.Decision, intro.Description, intro.Requester, intro.Enabler, intro.TargetUser);
+
+        }
+
+        public async Task<IntroductionDto> UpdateAsync(IntroductionDto dto)
+        {
+            await checkUserIdAsync(dto.Requester);
+            await checkUserIdAsync(dto.Enabler);
+            await checkUserIdAsync(dto.TargetUser);
+            var intro = await this._repo.GetByIdAsync(new IntroductionId(dto.Id));
+
+            if (intro == null){
+                return null;
+            }
+
+            intro.ChangeDescription(dto.Description);
+            intro.MakeDecision(dto.Decision);
+            intro.ChangeRequester(dto.Requester);
+            intro.ChangeEnabler(dto.Enabler);
+            intro.ChangeTargetUser(dto.TargetUser);
+
+            await this._unitOfWork.CommitAsync();
+
+            return new IntroductionDto(intro.Id.AsGuid(),intro.Decision, intro.Description, intro.Requester, intro.Enabler, intro.TargetUser);
+        }
+        
     }
 }

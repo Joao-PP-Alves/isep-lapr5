@@ -40,22 +40,84 @@ namespace DDDNetCore.Controllers{
             return intro;
         }
 
+        //TODO -> Rest of Controller.
+
         // POST: api/Introductions
-       /* [HttpPost]
+       [HttpPost]
         public async Task<ActionResult<IntroductionDto>> Create(CreatingIntroductionDto dto)
         {
             try
             {
                 var intro = await _service.AddAsync(dto);
 
-                return CreatedAtAction(nameof(GetById), new { id = prod.Id }, prod);
+                return CreatedAtAction(nameof(GetById), new { id = intro.Id }, intro);
             }
             catch(BusinessRuleValidationException ex)
             {
                 return BadRequest(new {Message = ex.Message});
             }
         }
-        **/
+
+        // PUT: api/Introductions/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult<IntroductionDto>> Update(Guid id, IntroductionDto dto)
+        {
+            if (id != dto.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var intro = await _service.UpdateAsync(dto);
+                
+                if (intro == null)
+                {
+                    return NotFound();
+                }
+                return Ok(intro);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+
+        // Inactivate: api/Introductions/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<IntroductionDto>> SoftDelete(Guid id)
+        {
+            var intro = await _service.InactivateAsync(new IntroductionId(id));
+
+            if (intro == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(intro);
+        }
+
+        // DELETE: api/Introductions/5
+        [HttpDelete("{id}/hard")]
+        public async Task<ActionResult<IntroductionDto>> HardDelete(Guid id)
+        {
+            try
+            {
+                var intro = await _service.DeleteAsync(new IntroductionId(id));
+
+                if (intro == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(intro);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
+        }
+        
 
 
     }
