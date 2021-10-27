@@ -2,13 +2,13 @@ using System;
 using DDDNetCore.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace DDDNetCore.Domain.Missoes{
-    public class MissaoId : EntityId
+namespace DDDNetCore.Domain.Missions{
+    public class MissionId : EntityId
     {
         [JsonConstructor]
-        public MissaoId(Guid value) : base(value){}
+        public MissionId(Guid value) : base(value){}
 
-        public MissaoId(String value) : base(value){
+        public MissionId(String value) : base(value){
         }
 
         override
