@@ -33,7 +33,6 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-
         public FriendShip(User user1, User user2, float connection_strenght, float relationship_strenght, List<Tag> friendshipTags) {
             this.Id = new FriendShipId(Guid.NewGuid());
             this.user1 = user1;
@@ -51,8 +50,13 @@ namespace DDDNetCore.Domain.Users
             this.connection_strenght = connection_strenght;
         }
 
+        protected void deactivate() {
+            if(this.Active == false) {
+                throw new Exception("The FriendShip is already inactive");
+            } else {
+                this.Active = true;
+            }
+        }
         
     }
-
-
 }
