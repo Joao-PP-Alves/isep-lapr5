@@ -17,14 +17,14 @@ namespace DDDNetCore.Domain.Missions
             this.Active = true;
         }
 
-        public Mission(int dificultyDegree, Status status)
+        private Mission(int dificultyDegree, Status status)
         {
             this.dificultyDegree = dificultyDegree;
             this.status = status;
             this.Active = true;
         }
 
-        public void ChangeDificultyDegree(int dificultyDegree){
+        private void ChangeDificultyDegree(int dificultyDegree){
             if(!this.Active){
                 throw new BusinessRuleValidationException("It is not possible to make changes to an inactive product.");
             }
