@@ -1,7 +1,7 @@
 using System;
 using DDDNetCore.Domain.Shared;
 
-namespace DDDNetCore.Domain.Introductions
+namespace DDDNetCore.Domain.Shared
 {
     public enum Decision
      {
