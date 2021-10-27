@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using DDDNetCore.Domain.Categories;
 using DDDNetCore.Domain.Products;
 using DDDNetCore.Domain.Families;
+using DDDNetCore.Domain.Introductions;
+using DDDNetCore.Infrastructure.Introductions;
 using DDDNetCore.Infrastructure.Categories;
 using DDDNetCore.Infrastructure.Products;
 
@@ -15,6 +17,8 @@ namespace DDDNetCore.Infrastructure
 
         public DbSet<Family> Families { get; set; }
 
+        public DbSet<Introduction> Introductions {get; set;}
+
         public DDDNetCoreDbContext(DbContextOptions options) : base(options)
         {
 
@@ -25,6 +29,7 @@ namespace DDDNetCore.Infrastructure
             modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ProductEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FamilyEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new IntroductionEntityTypeConfiguration());
         }
     }
 }

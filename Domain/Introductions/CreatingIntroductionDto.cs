@@ -4,6 +4,7 @@ namespace DDDNetCore.Domain.Introductions
 {
     public class CreatingIntroductionDto
     {
+        public Decision Decision {get;set;}
         public string Description {get;set;}
         public UserId Requester {get;set;}
         public UserId Enabler {get;set;}
@@ -14,6 +15,7 @@ namespace DDDNetCore.Domain.Introductions
             this.Requester = requester;
             this.Enabler = enabler;
             this.TargetUser = targetUser;
+            this.Decision = Decision.PENDING;
         }
 
     }
