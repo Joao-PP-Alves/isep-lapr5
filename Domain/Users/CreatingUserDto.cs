@@ -6,10 +6,13 @@ namespace DDDNetCore.Domain.Users{
         public Email email {get;}
         public List<Tag> tags {get; set;}
 
-        public CreatingUserDto(string name, Email email, List<Tag> tags){
+        public EmotionalState emotionalState {get;set;}
+
+        public CreatingUserDto(string name, Email email, List<Tag> tags, EmotionalState emotionalState){
             this.name = name;
             this.email=email;
             this.tags=tags;
+            this.emotionalState = emotionalState;
         }
     }
 }

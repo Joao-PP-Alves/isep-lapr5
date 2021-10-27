@@ -9,22 +9,22 @@ namespace DDDNetCore.Domain.Users
     public class User : Entity<UserId>, IAggregateRoot
     {
        // [Required]
-        private string Name {get; set;}
+        public string Name {get; set;}
 
        // [Required]
-        private Email Email {get;}
+        public Email Email {get;}
 
        // [Required]
-        private DateTime Date {get;}
+        public DateTime Date {get;}
 
        // [Required]
-        private PhoneNumber PhoneNumber {get; set;}
+        public PhoneNumber PhoneNumber {get; set;}
 
-        private List<Tag> tags {get; set;}
+        public List<Tag> tags {get; set;}
 
-        private EmotionalState emotionalState {get;set;}
+        public EmotionalState emotionalState {get;set;}
         
-        private bool Active {get; set;}
+        public bool Active {get; set;}
 
         //private HyperLink facebook;
         //private Hyperlink linkedin;
@@ -41,6 +41,13 @@ namespace DDDNetCore.Domain.Users
             this.tags = tags;
             this.emotionalState = emotionalState;
             this.Active = true;
+        }
+
+        public User (string name, Email email, List<Tag> tags, EmotionalState emotionalState){
+            this.Name = name;
+            this.Email = email;
+            this.tags = tags;
+            this.emotionalState = emotionalState;
         }
 
         public void ChangeName(string name){
