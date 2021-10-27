@@ -7,6 +7,6 @@ namespace DDDNetCore.Infrastructure.Introductions
     {
         public IntroductionRepository(DDDNetCoreDbContext context): base(context.Introductions){
             
-        }
+        } 
     }
 }
