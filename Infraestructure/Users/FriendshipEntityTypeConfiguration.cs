@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using DDDNetCore.Domain.Users;
 
-namespace DDDNetCore.Infrastructure.Friendships
+namespace DDDNetCore.Infrastructure.Users
 {
     internal class FriendshipEntityTypeConfiguration : IEntityTypeConfiguration<Friendship>
     {

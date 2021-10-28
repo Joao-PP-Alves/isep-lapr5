@@ -14,6 +14,8 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Categories;
 using DDDNetCore.Domain.Products;
 using DDDNetCore.Domain.Families;
+using DDDNetCore.Domain.Users;
+using DDDNetCore.Infrastructure.Users;
 
 namespace DDDNetCore
 {
@@ -76,6 +78,9 @@ namespace DDDNetCore
 
             services.AddTransient<IFamilyRepository,FamilyRepository>();
             services.AddTransient<FamilyService>();
+
+            services.AddTransient<IUserRepository,UserRepository>();
+            services.AddTransient<UserService>();
         }
     }
 }

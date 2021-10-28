@@ -9,6 +9,7 @@ namespace DDDNetCore.Infrastructure.Users{
         {
             //builder.ToTable("Users",SchemaNames.DDDNetCore);
             builder.HasKey(b => b.Id);
+            builder.OwnsOne(b => b.emotionalState);
         }
     }
 }

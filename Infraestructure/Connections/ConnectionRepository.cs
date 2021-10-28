@@ -5,7 +5,7 @@ namespace DDDNetCore.Infrastructure.Connections
 {
     public class ConnectionRepository : BaseRepository<Connection, ConnectionId>,IConnectionRepository
     {
-        public ConnectionRepository(DDDNetCoreDbContext context):base(context.Connections)
+        public ConnectionRepository(DDDNetCoreDbContext context) : base(context.Connections)
         {
            
         }
