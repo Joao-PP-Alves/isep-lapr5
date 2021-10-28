@@ -58,10 +58,24 @@ namespace DDDNetCore.Domain.Users
         } 
 
         public void ChangeTags(List<Tag> tags){
-            if(tags != null){
+            if(tags == null){
                 throw new Exception("The new tags list can't be empty.");
             } 
             this.tags = tags;
+        }
+
+        public void ChangePhoneNumber(PhoneNumber phoneNumber){
+            if(phoneNumber == null){
+                throw new Exception("The phone number cannot be null.");
+            }
+            this.PhoneNumber = phoneNumber;
+        }
+
+        public void ChangeEmotionalState(EmotionalState emotionalState){
+            if(emotionalState.emotion == null){
+                throw new Exception("The emotional state must contain an emotion attached.");
+            }
+            this.emotionalState = emotionalState;
         }
 
         public void MarkAsInative(){

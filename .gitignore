@@ -66,4 +66,5 @@ Thumbs.db
 
 obj/*
 bin/*
+bin/Debug/*
 

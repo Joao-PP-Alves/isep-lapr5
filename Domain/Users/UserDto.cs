@@ -9,6 +9,8 @@ namespace DDDNetCore.Domain.Users{
         public Email email {get;}
         public List<Tag> tags {get;set;}
 
+        public PhoneNumber phoneNumber {get;set;}
+
         public EmotionalState emotionalState {get;set;}
 
         public UserDto(Guid Id, string name, Email email, List<Tag> tags, EmotionalState emotionalState){
