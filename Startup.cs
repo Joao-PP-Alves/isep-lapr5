@@ -69,9 +69,12 @@ namespace DDDNetCore
         public void ConfigureMyServices(IServiceCollection services)
         {
             services.AddTransient<IUnitOfWork,UnitOfWork>();
-            
+
             services.AddTransient<IUserRepository,UserRepository>();
             services.AddTransient<UserService>();
+
+            services.AddTransient<IFriendshipRepository,FriendshipRepository>();
+            services.AddTransient<FriendshipService>();
         }
     }
 }
