@@ -7,6 +7,7 @@ using DDDNetCore.Infrastructure.Introductions;
 using DDDNetCore.Infrastructure.Categories;
 using DDDNetCore.Infrastructure.Products;
 using DDDNetCore.Domain.Users;
+using DDDNetCore.Domain.Connections;
 
 namespace DDDNetCore.Infrastructure
 {
@@ -22,6 +23,8 @@ namespace DDDNetCore.Infrastructure
         public DbSet<User> Users {get; set;}
 
         public DbSet<Introduction> Introductions {get; set;}
+
+        public DbSet<Connection> Connections {get; set;}
 
         public DDDNetCoreDbContext(DbContextOptions options) : base(options)
         {

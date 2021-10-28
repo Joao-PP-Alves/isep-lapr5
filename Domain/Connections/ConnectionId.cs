@@ -2,7 +2,7 @@ using System;
 using DDDNetCore.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace DDDNetCore.Domain.Users{
+namespace DDDNetCore.Domain.Connections{
 
     public class ConnectionId : EntityId {
         [JsonConstructor]
@@ -25,5 +25,10 @@ namespace DDDNetCore.Domain.Users{
         {
             return new Guid(text);
         }
+
+        public Guid AsGuid(){
+            return (Guid) base.ObjValue;
+        }
+        
     }
 }
