@@ -4,7 +4,7 @@ namespace DDDNetCore.Domain.Families
 {
     public class Family : Entity<FamilyId>, IAggregateRoot
     {
-
+ 
         public string Description { get;  private set; }
 
         public bool Active{ get;  private set; }
