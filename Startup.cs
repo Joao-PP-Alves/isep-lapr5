@@ -6,16 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using DDDNetCore.Infrastructure;
-using DDDNetCore.Infrastructure.Categories;
-using DDDNetCore.Infrastructure.Products;
-using DDDNetCore.Infrastructure.Families;
 using DDDNetCore.Infrastructure.Shared;
 using DDDNetCore.Domain.Shared;
-using DDDNetCore.Domain.Categories;
-using DDDNetCore.Domain.Products;
-using DDDNetCore.Domain.Families;
 using DDDNetCore.Domain.Users;
+using DDDNetCore.Domain.Missions;
 using DDDNetCore.Infrastructure.Users;
+using DDDNetCore.Infrastructure.Missions;
 
 namespace DDDNetCore
 {
@@ -75,6 +71,9 @@ namespace DDDNetCore
 
             services.AddTransient<IFriendshipRepository,FriendshipRepository>();
             services.AddTransient<FriendshipService>();
+
+            services.AddTransient<IMissionRepository,MissionRepository>();
+            services.AddTransient<MissionService>();
         }
     }
 }
