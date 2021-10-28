@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
+using System.Configuration;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -44,6 +45,7 @@ namespace DDDNetCore.Domain.Users
         }
 
         public User (string name, Email email, List<Tag> tags, EmotionalState emotionalState){
+            this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
             this.Email = email;
             this.tags = tags;

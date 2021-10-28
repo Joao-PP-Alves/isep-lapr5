@@ -15,6 +15,8 @@ using DDDNetCore.Domain.Categories;
 using DDDNetCore.Domain.Products;
 using DDDNetCore.Domain.Families;
 using DDDNetCore.Domain.Users;
+using DDDNetCore.Domain.Connections;
+using DDDNetCore.Infrastructure.Connections;
 using DDDNetCore.Infrastructure.Users;
 
 namespace DDDNetCore
@@ -75,6 +77,9 @@ namespace DDDNetCore
 
             services.AddTransient<IFriendshipRepository,FriendshipRepository>();
             services.AddTransient<FriendshipService>();
+
+            services.AddTransient<IConnectionRepository,ConnectionRepository>();
+            services.AddTransient<ConnectionService>();
         }
     }
 }
