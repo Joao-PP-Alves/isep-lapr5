@@ -11,9 +11,9 @@ namespace DDDNetCore.Domain.Users
 
         public float relationship_strenght {get; set;}
 
-        public UserId user1 {get; set;}
+        public User user1 {get; set;}
 
-        public UserId user2 {get; set;}
+        public User user2 {get; set;}
 
         public Tag friendshipTag {get; set;}
 
@@ -23,7 +23,7 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(UserId user1, UserId user2) {
+        public Friendship(User user1, User user2) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.user1 = user1;
             this.user2 = user2;
@@ -33,7 +33,7 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(UserId user1, UserId user2, float connection_strenght, float relationship_strenght, Tag friendshipTags) {
+        public Friendship(User user1, User user2, float connection_strenght, float relationship_strenght, Tag friendshipTags) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.user1 = user1;
             this.user2 = user2;

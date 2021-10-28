@@ -8,11 +8,10 @@ namespace DDDNetCore.Infrastructure.Users
     {
         public void Configure(EntityTypeBuilder<Friendship> builder)
         {
-            // cf. https://www.entityframeworktutorial.net/efcore/fluent-api-in-entity-framework-core.aspx
-            
-            //builder.ToTable("Categories", SchemaNames.DDDNetCore);
             builder.HasKey(b => b.Id);
-            //builder.Property<bool>("_active").HasColumnName("Active");
+            builder.HasOne(b => b.user1);
+            builder.HasOne(b => b.user2);
+            builder.OwnsOne(b => b.friendshipTag);
         }
     }
 }
