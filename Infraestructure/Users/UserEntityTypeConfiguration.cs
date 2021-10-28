@@ -7,9 +7,11 @@ namespace DDDNetCore.Infrastructure.Users{
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            //builder.ToTable("Users",SchemaNames.DDDNetCore);
             builder.HasKey(b => b.Id);
             builder.OwnsOne(b => b.emotionalState);
+            builder.OwnsOne(b => b.PhoneNumber);
+            builder.OwnsOne(b => b.Email);
+            builder.OwnsMany(b => b.tags);
         }
     }
 }
