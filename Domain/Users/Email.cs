@@ -6,7 +6,6 @@ namespace DDDNetCore.Domain.Users{
 
     public class Email : IValueObject {
         private string EmailAddress {get; set;}
-
         public Email(){
         
         }
@@ -17,10 +16,10 @@ namespace DDDNetCore.Domain.Users{
             }
             try{
                 MailAddress address = new MailAddress(emailAddress);
-            } catch (FormatException ex) {
+            } catch (FormatException) {
                 throw new BusinessRuleValidationException("Invalid email address!");
             }
-
+            
             this.EmailAddress = emailAddress;
         }
 
