@@ -4,42 +4,42 @@ using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Domain.Users
 {
-    public class FriendShip : Entity<FriendShipId> {
+    public class Friendship : Entity<FriendshipId> {
 
 
-        private float connection_strenght {get; set;}
+        public float connection_strenght {get; set;}
 
-        private float relationship_strenght {get; set;}
+        public float relationship_strenght {get; set;}
 
-        private User user1 {get; set;}
+        public User user1 {get; set;}
 
-        private User user2 {get; set;}
+        public User user2 {get; set;}
 
-        private List<Tag> friendshipTags {get; set;}
+        public Tag friendshipTag {get; set;}
 
         private bool Active{get; set;}
 
-        public FriendShip(){
+        public Friendship(){
             this.Active = true;
         }
 
-        public FriendShip(User user1, User user2) {
-            this.Id = new FriendShipId(Guid.NewGuid());
+        public Friendship(User user1, User user2) {
+            this.Id = new FriendshipId(Guid.NewGuid());
             this.user1 = user1;
             this.user2 = user2;
             this.connection_strenght = 0;
             this.relationship_strenght = 0;
-            this.friendshipTags = new List<Tag>();
+            this.friendshipTag = new Tag();
             this.Active = true;
         }
 
-        public FriendShip(User user1, User user2, float connection_strenght, float relationship_strenght, List<Tag> friendshipTags) {
-            this.Id = new FriendShipId(Guid.NewGuid());
+        public Friendship(User user1, User user2, float connection_strenght, float relationship_strenght, List<Tag> friendshipTags) {
+            this.Id = new FriendshipId(Guid.NewGuid());
             this.user1 = user1;
             this.user2 = user2;
             this.connection_strenght = connection_strenght;
             this.relationship_strenght = relationship_strenght;
-            this.friendshipTags = friendshipTags;
+            this.friendshipTag = friendshipTag;
             this.Active = true;
         }
 

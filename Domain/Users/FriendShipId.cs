@@ -3,14 +3,15 @@ using DDDNetCore.Domain.Shared;
 using Newtonsoft.Json;
 
 namespace DDDNetCore.Domain.Users {
-    public class FriendShipId : EntityId
+    public class FriendshipId : EntityId
     {
+    
         [JsonConstructor]
-        public FriendShipId(Guid value) : base(value)
+        public FriendshipId(Guid value) : base(value)
         {
         }
 
-        public FriendShipId(String value) : base(value){
+        public FriendshipId(String value) : base(value){
         }
 
         override

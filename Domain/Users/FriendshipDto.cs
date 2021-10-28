@@ -9,26 +9,25 @@ namespace DDDNetCore.Domain.Users
 {
     public class FriendshipDto
     {
-        private Guid Id { get; set; }
-        private float connection_strenght { get; set; }
+        public FriendshipId Id { get; set; }
+        public float connection_strenght { get; set; }
 
-        private float relationship_strenght { get; set; }
+        public float relationship_strenght { get; set; }
 
-        private UserId user1 { get; set; }
+        public UserId user1 { get; set; }
 
-        private UserId user2 { get; set; }
+        public UserId user2 { get; set; }
 
-        private List<Tag> friendshipTags { get; set; }
+        public Tag friendshipTag { get; set; }
 
-
-        public FriendshipDto(Guid Id, float connection_strenght, float relationship_strenght, UserId user1, UserId user2, List<Tag> friendshipTags)
+        public FriendshipDto(FriendshipId Id, float connection_strenght, float relationship_strenght, UserId user1, UserId user2, Tag friendshipTag)
         {
             this.Id = Id;
             this.connection_strenght = connection_strenght;
             this.relationship_strenght = relationship_strenght;
             this.user1 = user1;
             this.user2 = user2;
-            this.friendshipTags = friendshipTags;
+            this.friendshipTag = friendshipTag;
         }
     }
 }
