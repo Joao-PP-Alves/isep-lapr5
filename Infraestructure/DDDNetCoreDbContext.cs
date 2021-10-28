@@ -6,8 +6,8 @@ using DDDNetCore.Domain.Introductions;
 using DDDNetCore.Infrastructure.Introductions;
 using DDDNetCore.Infrastructure.Categories;
 using DDDNetCore.Infrastructure.Products;
+using DDDNetCore.Infrastructure.Users;
 using DDDNetCore.Domain.Users;
-using DDDNetCore.Domain.Connections;
 
 namespace DDDNetCore.Infrastructure
 {
@@ -24,7 +24,7 @@ namespace DDDNetCore.Infrastructure
 
         public DbSet<Introduction> Introductions {get; set;}
 
-        public DbSet<Connection> Connections {get; set;}
+        public DbSet<Friendship> Friendships {get; set;}
 
         public DDDNetCoreDbContext(DbContextOptions options) : base(options)
         {

@@ -11,19 +11,19 @@ namespace DDDNetCore.Domain.Users
 
         public float relationship_strenght {get; set;}
 
-        public User user1 {get; set;}
+        public UserId user1 {get; set;}
 
-        public User user2 {get; set;}
+        public UserId user2 {get; set;}
 
         public Tag friendshipTag {get; set;}
 
-        private bool Active{get; set;}
+        public bool Active{get; set;}
 
         public Friendship(){
             this.Active = true;
         }
 
-        public Friendship(User user1, User user2) {
+        public Friendship(UserId user1, UserId user2) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.user1 = user1;
             this.user2 = user2;
@@ -33,7 +33,7 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(User user1, User user2, float connection_strenght, float relationship_strenght, List<Tag> friendshipTags) {
+        public Friendship(UserId user1, UserId user2, float connection_strenght, float relationship_strenght, Tag friendshipTags) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.user1 = user1;
             this.user2 = user2;
@@ -50,7 +50,14 @@ namespace DDDNetCore.Domain.Users
             this.connection_strenght = connection_strenght;
         }
 
-        protected void deactivate() {
+        public void ChangeFriendshipTag(Tag friendshipTag){
+            if(this.user1 == null || this.user2 == null){
+                throw new BusinessRuleValidationException("The relationship is invalid. One or both users are null");
+            }
+            this.friendshipTag = friendshipTag;
+        }
+
+        public void deactivate() {
             if(this.Active == false) {
                 throw new Exception("The FriendShip is already inactive");
             } else {
