@@ -95,5 +95,21 @@ namespace DDDNetCore.Domain.Users
 
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.tags, user.emotionalState);
         }
+
+         public async Task<UserDto> UpdateEmotionalStateAsync(UserDto dto)
+        {
+            var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            //change all field
+            user.ChangeEmotionalState(dto.emotionalState);
+
+            await this._unitOfWork.CommitAsync();
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.tags, user.emotionalState);
+        }
     }
 }

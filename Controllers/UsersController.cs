@@ -78,6 +78,33 @@ namespace DDDNetCore.Controllers{
             }
         }
 
+         // PUT: api/Users/5/EmocionalStateUpdate
+        [HttpPut("{id}/EmocionalStateUpdate")]
+        public async Task<ActionResult<UserDto>> UpdateEmotionalState(Guid id, UserDto dto)
+        {
+            if (id != dto.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var showUser = GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
+
+                var user = await _service.UpdateEmotionalStateAsync(dto);
+                
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return Ok(user);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+
         // Inactivate: api/Users/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserDto>> SoftDelete(Guid id)
