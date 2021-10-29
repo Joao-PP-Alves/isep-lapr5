@@ -64,7 +64,7 @@ Thumbs.db
 *.mov
 *.wmv
 
-obj/*
-bin/*
-bin/Debug/*
+obj/
+bin/
+
 
