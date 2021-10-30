@@ -11,6 +11,7 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Users;
 using DDDNetCore.Infrastructure.Missions;
+using DDDNetCore.Domain.Missions;
 
 namespace DDDNetCore
 {
@@ -69,6 +70,10 @@ namespace DDDNetCore
             services.AddTransient<UserService>();
 
             services.AddTransient<IFriendshipRepository,FriendshipRepository>();
-            services.AddTransient<FriendshipService>();        }
+            services.AddTransient<FriendshipService>();   
+            
+            services.AddTransient<IMissionRepository,MissionRepository>();
+            services.AddTransient<MissionService>();
+                 }
     }
 }

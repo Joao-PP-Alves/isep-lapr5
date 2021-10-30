@@ -38,7 +38,8 @@ namespace DDDNetCore.Domain.Users
             this.Id  = new UserId(Guid.NewGuid());
             this.Name = name;
             this.Date = date;
-            this.PhoneNumber = phoneNumber;
+            this.Email = new Email(email.ToString());
+            this.PhoneNumber = new PhoneNumber(phoneNumber.ToString());
             this.tags = tags;
             this.emotionalState = emotionalState;
             this.Active = true;
@@ -47,7 +48,7 @@ namespace DDDNetCore.Domain.Users
         public User (string name, Email email, List<Tag> tags, EmotionalState emotionalState){
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
-            this.Email = email;
+            this.Email = new Email(email.ToString());
             this.tags = tags;
             this.emotionalState = emotionalState;
         }
