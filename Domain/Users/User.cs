@@ -12,11 +12,13 @@ namespace DDDNetCore.Domain.Users
        // [Required]
         public string Name {get; set;}
 
-       // [Required]
-        public Email Email {get;}
+        public String Password {get; set;}
 
        // [Required]
-        public DateTime Date {get;}
+        public Email Email {get; set;}
+
+       // [Required]
+        public DateTime Date {get; set;}
 
        // [Required]
         public PhoneNumber PhoneNumber {get; set;}
@@ -34,12 +36,13 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(string name, Email email, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState){
+        public User(string name, string password, Email email, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState){
             this.Id  = new UserId(Guid.NewGuid());
             this.Name = name;
+            this.Email = email;
+            this.Password = password;
             this.Date = date;
-            this.Email = new Email(email.ToString());
-            this.PhoneNumber = new PhoneNumber(phoneNumber.ToString());
+            this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
             this.Active = true;
@@ -48,7 +51,7 @@ namespace DDDNetCore.Domain.Users
         public User (string name, Email email, List<Tag> tags, EmotionalState emotionalState){
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
-            this.Email = new Email(email.ToString());
+            this.Email = email;
             this.tags = tags;
             this.emotionalState = emotionalState;
         }
