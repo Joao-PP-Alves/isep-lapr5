@@ -87,8 +87,8 @@ namespace DDDNetCore.Domain.Users
             if (user == null)
                 return null;
 
-            if (user.Active)
-                throw new BusinessRuleValidationException("It is not possible to delete an active category.");
+            // Mark as inactive. An exception may be thrown in the User class
+            user.MarkAsInative();
 
             this._repo.Remove(user);
             await this._unitOfWork.CommitAsync();
