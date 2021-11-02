@@ -12,6 +12,8 @@ using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Users;
 using DDDNetCore.Infrastructure.Missions;
 using DDDNetCore.Domain.Missions;
+using DDDNetCore.Domain.Connections;
+using DDDNetCore.Infrastructure.Connections;
 
 namespace DDDNetCore
 {
@@ -74,6 +76,9 @@ namespace DDDNetCore
             
             services.AddTransient<IMissionRepository,MissionRepository>();
             services.AddTransient<MissionService>();
-                 }
+
+            services.AddTransient<IConnectionRepository,ConnectionRepository>();
+            services.AddTransient<ConnectionService>();
+        }
     }
 }

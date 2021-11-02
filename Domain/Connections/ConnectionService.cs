@@ -17,6 +17,15 @@ namespace DDDNetCore.Domain.Connections
             this._repoUser = repoUser;
         }
 
+        public async Task<List<ConnectionDto>> GetPendentConnections(UserId id){
+            var list = await this._repo.getPendentConnections(id);
+
+            List<ConnectionDto> listDto = list.ConvertAll<ConnectionDto>(intro =>
+                new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision));
+        
+            return listDto;
+        }
+
         public async Task<List<ConnectionDto>> GetAllAsync()
         {
             var list = await this._repo.GetAllAsync();

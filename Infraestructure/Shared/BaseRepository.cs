@@ -19,6 +19,10 @@ namespace DDDNetCore.Infrastructure.Shared
         
         }
 
+        protected DbSet<TEntity> getContext(){
+            return this._objs;
+        }
+
         public async Task<List<TEntity>> GetAllAsync()
         {
             return await this._objs.ToListAsync();
