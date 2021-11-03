@@ -55,6 +55,7 @@ namespace DDDNetCore.Domain.Users
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
+            this.Active = true;
         }
 
         public void ChangeName(string name)
