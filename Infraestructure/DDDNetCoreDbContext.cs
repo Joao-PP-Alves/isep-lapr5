@@ -22,7 +22,7 @@ namespace DDDNetCore.Infrastructure
 
         public DbSet<Mission> Missions {get;set;}
 
-        public DDDNetCoreDbContext(DbContextOptions options) : base(options)
+        public DDDNetCoreDbContext(DbContextOptions<DDDNetCoreDbContext> options) : base(options)
         {
 
         }
