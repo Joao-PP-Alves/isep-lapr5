@@ -6,7 +6,7 @@ using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Infrastructure.Missions;
-//using DDDNetCore.Infrastructure.Connections;
+using DDDNetCore.Infrastructure.Connections;
 
 namespace DDDNetCore.Infrastructure
 {
@@ -33,7 +33,7 @@ namespace DDDNetCore.Infrastructure
             modelBuilder.ApplyConfiguration(new FriendshipEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new IntroductionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new MissionEntityTypeConfiguration());
-        //    modelBuilder.ApplyConfiguration(new ConnectionEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ConnectionEntityTypeConfiguration());
         }
     }
 }
