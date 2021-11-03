@@ -1,3 +1,4 @@
+using System;
 using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Domain.Users
@@ -6,7 +7,11 @@ namespace DDDNetCore.Domain.Users
         public Emotion emotion {get; set;}
 
         public EmotionalState(Emotion emotion){
-            this.emotion = emotion;
+            try{
+                this.emotion = emotion;
+            } catch (Exception) {
+                    throw new Exception("The inserted emotion does not exist.");
+            }
         }
     }
 }

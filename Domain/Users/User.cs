@@ -47,11 +47,12 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(string name, Email email, List<Tag> tags, EmotionalState emotionalState)
+        public User(string name, Email email, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
             this.Email = email;
+            this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
         }

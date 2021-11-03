@@ -14,11 +14,11 @@ namespace DDDNetCore.Domain.Users{
             if(emailAddress == null){
                 throw new BusinessRuleValidationException("The email address cannot be null or empty.");
             }
-            /*try{
+            try{
                 MailAddress address = new MailAddress(emailAddress);
             } catch (FormatException) {
                 throw new BusinessRuleValidationException("Invalid email address!");
-            }**/
+            }
             
             this.EmailAddress = emailAddress;
         }

@@ -11,9 +11,11 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Users;
 using DDDNetCore.Infrastructure.Missions;
+using DDDNetCore.Infrastructure.Introductions;
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Infrastructure.Connections;
+using DDDNetCore.Domain.Introductions;
 
 namespace DDDNetCore
 {
@@ -79,6 +81,9 @@ namespace DDDNetCore
 
             services.AddTransient<IConnectionRepository,ConnectionRepository>();
             services.AddTransient<ConnectionService>();
+
+            services.AddTransient<IIntroductionRepository,IntroductionRepository>();
+            services.AddTransient<IntroductionService>();
         }
     }
 }

@@ -13,9 +13,10 @@ namespace DDDNetCore.Domain.Users{
 
         public EmotionalState emotionalState {get;set;}
 
-        public UserDto(Guid Id, string name, Email email, List<Tag> tags, EmotionalState emotionalState){
+        public UserDto(Guid Id, string name, Email email, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState){
             this.Id = Id;
             this.name = name;
+            this.phoneNumber = phoneNumber;
             this.email = email;
             this.tags = tags;
             this.emotionalState = emotionalState;
