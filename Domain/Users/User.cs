@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -51,13 +52,32 @@ namespace DDDNetCore.Domain.Users
         public User(string name, Email email, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
         {
             this.Id = new UserId(Guid.NewGuid());
-            this.Name = name;
+            this.Name = validateName(name);
             this.Email = email;
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
             this.Active = true;
         }
+
+        private string validateName(string name){
+            if (name != null){
+                string aux = name.Substring(0,1);
+                if (aux == " "){
+                    throw new BusinessRuleValidationException("The name cannot start with a space.");
+                }
+            }
+            return name;
+        }
+        
+        private string validatePassword(string password){
+            Regex regex = new Regex(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+            if (!regex.IsMatch(password)){
+                throw new BusinessRuleValidationException("The password must contain at least one upper case and lower case letters, one number, one special char and it must be exacly 8 chars long.");
+            }
+            return password;
+        }
+
 
         public void ChangeName(string name)
         {
