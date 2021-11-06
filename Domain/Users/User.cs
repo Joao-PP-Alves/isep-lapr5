@@ -25,6 +25,7 @@ namespace DDDNetCore.Domain.Users
 
         public EmotionalState emotionalState { get; set; }
 
+
         public bool Active { get; set; }
 
         //private HyperLink facebook;
@@ -62,37 +63,66 @@ namespace DDDNetCore.Domain.Users
         {
             if (!this.Active)
             {
-                throw new BusinessRuleValidationException("It is not possible to change the description to an inactive product.");
+                return; 
+            }
+            if(name == null){
+                return; //se o nome for nulo, mantém o mesmo
             }
             this.Name = name;
         }
 
+        public void ChangeEmail(Email email)
+        {
+            if (!this.Active)
+            {
+                return; 
+            }
+            if (email == null)
+            {
+                return; //se o email for nulo, mantém o mesmo
+            }
+            this.Email = email;
+        }
+
+
         public void ChangeTags(List<Tag> tags)
         {
+            if (!this.Active)
+            {
+                return; 
+            }
             if (tags == null)
             {
-                throw new Exception("The new tags list can't be empty.");
+                return; //se a lista for nula, mantém a mesma
             }
             this.tags = tags;
         }
 
         public void ChangePhoneNumber(PhoneNumber phoneNumber)
         {
+            if (!this.Active)
+            {
+                return; 
+            }
             if (phoneNumber == null)
             {
-                throw new Exception("The phone number cannot be null.");
+                return; //se o telefone for nulo, mantém o mesmo
             }
             this.PhoneNumber = phoneNumber;
         }
 
         public void ChangeEmotionalState(EmotionalState emotionalState)
         {
+            if (!this.Active)
+            {
+                return; 
+            }
             // (Davide) Esta exceção não faz muito sentido. Apaguei o construtor vazio de estado emocional visto que não há nenhuma emoçao default para um construtor sem parametros
             // Sendo assim o estado emocional terá sempre obrigatoriamente uma emoção agarrada
-            /* if (emotionalState.emotion == null)
+             if (emotionalState == null)
             {
-                throw new Exception("The emotional state must contain an emotion attached.");
-            } */
+                return; //se o emotional state for nulo, mantém o mesmo
+            } 
             this.emotionalState = emotionalState;
         }
 

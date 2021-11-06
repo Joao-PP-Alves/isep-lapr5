@@ -61,6 +61,7 @@ namespace DDDNetCore.Domain.Users
             user.ChangeTags(dto.tags);
             user.ChangePhoneNumber(dto.phoneNumber);
             user.ChangeEmotionalState(dto.emotionalState);
+            user.ChangeEmail(dto.email);
 
             await this._unitOfWork.CommitAsync();
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
