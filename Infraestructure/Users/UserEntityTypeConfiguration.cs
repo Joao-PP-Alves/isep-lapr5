@@ -11,6 +11,7 @@ namespace DDDNetCore.Infrastructure.Users{
             builder.OwnsOne(b => b.emotionalState);
             builder.OwnsOne(b => b.PhoneNumber);
             builder.OwnsOne(b => b.Email);
+            builder.OwnsOne(b => b.Password);
             builder.OwnsMany(b => b.tags);
         }
     }

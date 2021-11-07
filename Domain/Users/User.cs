@@ -17,6 +17,9 @@ namespace DDDNetCore.Domain.Users
         public Email Email { get; set; }
 
         // [Required]
+        public Password Password {get; set;}
+
+        // [Required]
         public DateTime Date { get; set; }
 
         // [Required]
@@ -37,23 +40,25 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(string name, Email email, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
+        public User(string name, Email email, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
             this.Date = date;
             this.Email = email;
+            this.Password = password;
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
             this.Active = true;
         }
 
-        public User(string name, Email email, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
+        public User(string name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = validateName(name);
             this.Email = email;
+            this.Password = password;
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
@@ -68,14 +73,6 @@ namespace DDDNetCore.Domain.Users
                 }
             }
             return name;
-        }
-        
-        private string validatePassword(string password){
-            Regex regex = new Regex(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
-            if (!regex.IsMatch(password)){
-                throw new BusinessRuleValidationException("The password must contain at least one upper case and lower case letters, one number, one special char and it must be exacly 8 chars long.");
-            }
-            return password;
         }
 
 
@@ -144,6 +141,19 @@ namespace DDDNetCore.Domain.Users
                 return; //se o emotional state for nulo, mantém o mesmo
             } 
             this.emotionalState = emotionalState;
+        }
+
+
+        public void ChangePassword(Password newPassword)
+        {
+            if(!this.Active) return;
+
+
+            if (newPassword == null)
+            {
+               return;
+            }
+             this.Password = newPassword;
         }
 
         public void MarkAsInative()
