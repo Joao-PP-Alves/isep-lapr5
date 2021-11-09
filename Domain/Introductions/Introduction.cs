@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Dynamic;
+using DDDNetCore.Domain.Connections;
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
@@ -17,7 +18,8 @@ namespace DDDNetCore.Domain.Introductions
         public string Description {get; private set;}
         public UserId Requester {get; private set;}
         public UserId Enabler {get;private set;}
-        public UserId TargetUser {get; private set;} 
+        public UserId TargetUser {get; private set;}
+        public ConnectionId ConnectionId {get; private set;} 
         public bool Active {get; private set;}
 
         private Introduction(){

@@ -2,6 +2,7 @@ using System;
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Connections;
 
 namespace DDDNetCore.Domain.Introductions
 {
@@ -14,6 +15,7 @@ namespace DDDNetCore.Domain.Introductions
         public UserId TargetUser {get;set;}
         public UserId Requester {get;set;}
         public UserId Enabler {get;set;}
+        public ConnectionId ConnectionId {get;set;}
 
         public IntroductionDto(Guid Id, MissionId missionId, Decision decision, string Description, UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = Id;
