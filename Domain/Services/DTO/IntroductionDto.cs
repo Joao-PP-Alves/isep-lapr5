@@ -4,7 +4,7 @@ using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Connections;
 
-namespace DDDNetCore.Domain.Introductions
+namespace DDDNetCore.Domain.Services.DTO
 {
     public class IntroductionDto{
 

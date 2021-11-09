@@ -1,7 +1,7 @@
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Users;
 
-namespace DDDNetCore.Domain.Users
+namespace DDDNetCore.Domain.Services.CreatingDTO
 {
     public class CreatingFriendshipDto
     {

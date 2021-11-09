@@ -2,7 +2,7 @@ using DDDNetCore.Domain.Users;
 using System;
 using DDDNetCore.Domain.Shared;
 
-namespace DDDNetCore.Domain.Connections{
+namespace DDDNetCore.Domain.Services.DTO{
 
     public class ConnectionDto {
 

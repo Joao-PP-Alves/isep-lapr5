@@ -1,6 +1,7 @@
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Missions;
 
-namespace DDDNetCore.Domain.Missions
+namespace DDDNetCore.Domain.Services.DTO
 {
     public class MissionDto{
 
