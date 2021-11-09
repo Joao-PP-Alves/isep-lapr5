@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using DDDNetCore.Domain.Users;
 
-namespace DDDNetCore.Domain.Users{
+namespace DDDNetCore.Domain.Services.DTO{
     public class UserDto {
         public Guid Id {get;set;}
 

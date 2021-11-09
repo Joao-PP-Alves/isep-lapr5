@@ -2,7 +2,7 @@ using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
 
-namespace DDDNetCore.Domain.Introductions
+namespace DDDNetCore.Domain.Services.CreatingDTO
 {
     public class CreatingIntroductionDto
     {
