@@ -11,7 +11,7 @@ namespace DDDNetCore.Infrastructure.Users
             builder.HasKey(b => b.Id);
             builder.HasOne(b => b.user1);
             builder.HasOne(b => b.user2);
-            builder.OwnsOne(b => b.friendshipTag);
+            builder.HasOne(b => b.friendshipTag);
         }
     }
 }

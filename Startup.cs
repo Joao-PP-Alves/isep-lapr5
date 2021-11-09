@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,8 @@ using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Infrastructure.Connections;
 using DDDNetCore.Domain.Introductions;
-
+using Microsoft.Data.SqlClient;
+// jdbc:sqlserver://vs398.dei.isep.ipp.pt\MYSQLSERVER:1433
 namespace DDDNetCore
 {
     public class Startup
@@ -24,6 +26,30 @@ namespace DDDNetCore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
+            // try 
+            // { 
+            //     SqlConnection connection = new SqlConnection();
+            //     connection.ConnectionString =
+            //         "Data Source=vs398.dei.isep.ipp.pt;" +
+            //         "Initial Catalog=master;" +
+            //         "User id=Zezoca;" +
+            //         "Password=Tropita123;";
+            //     
+            //     
+            //     //SqlConnection connection = new SqlConnection();
+            //     //connection.ConnectionString = configuration.GetConnectionString("ConnectionString");
+            //
+            //         var sql = "CREATE TABLE teste3(id int primary key)";
+            //         
+            //     using var command = new SqlCommand(sql, connection);
+            //     connection.Open();
+            //     command.ExecuteNonQuery();
+            // }
+            // catch (SqlException e)
+            // {
+            //     Console.WriteLine(e.ToString());
+            // }
         }
 
         public IConfiguration Configuration { get; }
@@ -32,7 +58,7 @@ namespace DDDNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DDDNetCoreDbContext>(opt =>
-                opt.UseInMemoryDatabase("DDDNetCoreDB")
+                opt.UseSqlServer("ConnectionString")
                 .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
 
             ConfigureMyServices(services);

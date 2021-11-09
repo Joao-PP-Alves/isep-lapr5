@@ -27,13 +27,23 @@ namespace DDDNetCore.Infrastructure
 
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(
+                @"Server=vs398.dei.isep.ipp.pt;Database=master;User Id=Zezoca;Password=Tropita123;Trusted_Connection=True;");
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("LAPR5");
+            
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FriendshipEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new IntroductionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new MissionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ConnectionEntityTypeConfiguration());
+
+            modelBuilder.Entity<User>().ToTable("Users");
         }
     }
 }

@@ -10,6 +10,8 @@ namespace DDDNetCore.Infrastructure.Introductions{
         {
             //builder.ToTable("Introductions",SchemaNames.DDDNetCore);
             builder.HasKey(b => b.Id);
+            //builder.HasOne(b => b.Decision);
+            
         }
     }
 }

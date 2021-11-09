@@ -8,11 +8,12 @@ namespace DDDNetCore.Infrastructure.Users{
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(b => b.Id);
-            builder.OwnsOne(b => b.emotionalState);
-            builder.OwnsOne(b => b.PhoneNumber);
-            builder.OwnsOne(b => b.Email);
-            builder.OwnsOne(b => b.Password);
-            builder.OwnsMany(b => b.tags);
+            builder.HasOne(b => b.Name);
+            builder.HasOne(b => b.emotionalState);
+            builder.HasOne(b => b.PhoneNumber);
+            builder.HasOne(b => b.Email);
+            builder.HasOne(b => b.Password);
+            builder.HasMany(b => b.tags);
         }
     }
 }
