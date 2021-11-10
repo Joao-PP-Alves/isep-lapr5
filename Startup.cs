@@ -56,8 +56,12 @@ namespace DDDNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DDDNetCoreDbContext>(opt =>
-                opt.UseSqlServer("DDDSample1DB")
-                .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                    .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
+            
+            // services.AddDbContext<DDDNetCoreDbContext>(opt =>
+            //     opt.UseSqlServer("DDDSample1DB")
+            //         .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
             /*  services.AddDbContext<DDDNetCoreDbContext>(options =>
                 options.UseApplicationServiceProvider(Configuration.GetConnectionString("DefaultConnection")).ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
                 
