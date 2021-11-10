@@ -14,6 +14,12 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
         public void testNameWithSpaceAtBeggining(){
             Name name = new Name(" ");
         }
+
+        [TestMethod]
+
+        public void testRegularName(){
+            Name name = new Name("Zezoca");
+        }
     }
 
 }
