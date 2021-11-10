@@ -2,14 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
-using DDDNetCore.Domain.Introductions;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
-using System.Runtime.Versioning;
-using System.Dynamic;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
-
 
 namespace DDDNetCore.Controllers{
     [Route("api/[controller]")]
@@ -22,7 +18,7 @@ namespace DDDNetCore.Controllers{
             _service = service;
         }
 
-        // GET: api/Introductions
+        // GET: api/Friendships
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FriendshipDto>>> GetAll()
         {
@@ -118,8 +114,19 @@ namespace DDDNetCore.Controllers{
                return BadRequest(new {Message = ex.Message});
             }
         }
-        
 
+        public async Task<ActionResult<Dictionary<int, List<UserDto>>>> UserFriendships(int level, Guid userId)
+        {
+            /**
+             * isto é um mapa que vai conter a rede de utilizadores: key: inteiros(níveis de distância ao user atual); value: lista de users pertencentes ao nível
+             **/
+            Dictionary<int, List<UserDto>> web = await _service.createMap(level);
+           // var friendsList = await _service.GetByUserId(userId);
+            
+            //TODO
 
+            return web;
+        }
+            
     }
 }

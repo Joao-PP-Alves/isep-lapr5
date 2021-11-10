@@ -11,12 +11,14 @@ namespace DDDNetCore.Domain.Users {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFriendshipRepository _repo;
         private readonly IUserRepository _repoUser;
+        private readonly UserService _serviceUser;
 
-        public FriendshipService(IUnitOfWork unitOfWork, IFriendshipRepository repo, IUserRepository _repoUser)
+        public FriendshipService(IUnitOfWork unitOfWork, IFriendshipRepository repo, IUserRepository _repoUser, UserService uservice)
         {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._repoUser = _repoUser;
+            this._serviceUser = uservice;
         }
 
         public async Task<List<FriendshipDto>> GetAllAsync()
@@ -100,9 +102,28 @@ namespace DDDNetCore.Domain.Users {
 
         private async Task checkUserIdAsync(UserId userId)
         {
-           var category = await _repoUser.GetByIdAsync(userId);
+           var category = await _serviceUser.GetByIdAsync(userId);
            if (category == null)
                 throw new BusinessRuleValidationException("Invalid Category Id.");
+        }
+
+        public async Task<List<FriendshipDto>> GetByUserId(UserId userId)
+        {
+            List<FriendshipDto> friendships = new List<FriendshipDto>();
+            //var user = s
+            return null;
+        }
+
+        public async Task<Dictionary<int, List<UserDto>>> createMap(int level)
+        {
+            Dictionary<int, List<UserDto>> web = new Dictionary<int, List<UserDto>>();
+            //inicializa o mapa, põe n keys (níveis)
+            for (int i = 0; i < level; i++)
+            {
+                web[i] = new List<UserDto>();
+            }
+
+            return web;
         }
     }
 }
