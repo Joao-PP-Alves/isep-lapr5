@@ -56,21 +56,8 @@ namespace DDDNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DDDNetCoreDbContext>(opt =>
-                opt.UseSqlServer("Data Source=vs398.dei.isep.ipp.pt;Initial Catalog=master;User id=Zezoca;Password=Tropita123;Trusted_Connection=false;IntegratedSecurity = false" +
-                                 ";")
-                .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
-            /*  services.AddDbContext<DDDNetCoreDbContext>(options =>
-                options.UseApplicationServiceProvider(Configuration.GetConnectionString("DefaultConnection")).ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
-                
-                
-              /*  UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-                    .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>()); 
-       */
-            //context adder inicializa o contexto da bd
-        //    DbContextAdder.GetDbContextAdder(Configuration.GetConnectionString("DbProviderClassName")).AddDBContext(services,Configuration);
-        //    services.AddDatabaseDeveloperPageExceptionFilter();
-            
-            
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                    .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
             ConfigureMyServices(services);
             
 
