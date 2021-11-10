@@ -7,13 +7,14 @@ using DDDNetCore.Infrastructure;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Users;
-using DDDNetCore.Infrastructure.Missions;
 using DDDNetCore.Infrastructure.Introductions;
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Infrastructure.Connections;
 using DDDNetCore.Domain.Introductions;
-using DDDSample1.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using DDDNetCore.Infrastructure.Shared;
 
 // jdbc:sqlserver://vs398.dei.isep.ipp.pt\MYSQLSERVER:1433
 namespace DDDNetCore
@@ -54,8 +55,18 @@ namespace DDDNetCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DDDNetCoreDbContext>(opt =>
+                opt.UseSqlServer("DDDSample1DB")
+                .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
+            /*  services.AddDbContext<DDDNetCoreDbContext>(options =>
+                options.UseApplicationServiceProvider(Configuration.GetConnectionString("DefaultConnection")).ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
+                
+                
+              /*  UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                    .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>()); 
+       */
             //context adder inicializa o contexto da bd
-            DbContextAdder.GetDbContextAdder(Configuration.GetConnectionString("DbProviderClassName")).AddDBContext(services,Configuration);
+        //    DbContextAdder.GetDbContextAdder(Configuration.GetConnectionString("DbProviderClassName")).AddDBContext(services,Configuration);
         //    services.AddDatabaseDeveloperPageExceptionFilter();
             
             
@@ -100,8 +111,8 @@ namespace DDDNetCore
             services.AddTransient<IFriendshipRepository,FriendshipRepository>();
             services.AddTransient<FriendshipService>();   
             
-            services.AddTransient<IMissionRepository,MissionRepository>();
-            services.AddTransient<MissionService>();
+        //    services.AddTransient<IMissionRepository,MissionRepository>();
+        //    services.AddTransient<MissionService>();
 
             services.AddTransient<IConnectionRepository,ConnectionRepository>();
             services.AddTransient<ConnectionService>();

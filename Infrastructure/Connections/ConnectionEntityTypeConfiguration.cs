@@ -12,10 +12,10 @@ namespace DDDNetCore.Infrastructure.Connections{
         {
             //builder.ToTable("Connections",SchemaNames.DDDNetCore);
             builder.HasKey(b => b.Id);
-            //builder.HasOne(b => b.requester);
-            //builder.HasOne(b => b.targetUser);
-            //builder.OwnsOne(b => b.description);
-            //builder.Property(b => b.decision).HasConversion<string>();
+        //    builder.HasOne(b => b.requester);
+        //    builder.HasOne(b => b.targetUser);
+            builder.OwnsOne(b => b.description);
+            builder.Property(b => b.decision).HasConversion<string>();
         }
     }
 }

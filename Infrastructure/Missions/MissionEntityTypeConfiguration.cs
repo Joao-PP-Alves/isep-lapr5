@@ -7,10 +7,8 @@ namespace DDDNetCore.Infrastructure.Missions{
     {
         public void Configure(EntityTypeBuilder<Mission> builder)
         {
-           // builder.HasKey(b => b.Id);
-            builder.HasOne(b => b.dificultyDegree);
-            //builder.HasOne(b => b.dificultyDegree);
-            //builder.HasOne(b => b.dificultyDegree);
+            builder.HasKey(b => b.Id);
+            builder.OwnsOne(b => b.dificultyDegree);
         }
     }
 }

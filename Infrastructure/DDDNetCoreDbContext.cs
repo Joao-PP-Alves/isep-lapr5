@@ -4,8 +4,6 @@ using DDDNetCore.Infrastructure.Introductions;
 using DDDNetCore.Infrastructure.Users;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Connections;
-using DDDNetCore.Domain.Missions;
-using DDDNetCore.Infrastructure.Missions;
 using DDDNetCore.Infrastructure.Connections;
 
 namespace DDDNetCore.Infrastructure
@@ -20,7 +18,7 @@ namespace DDDNetCore.Infrastructure
 
         public DbSet<Connection> Connections {get; set;}
 
-        public DbSet<Mission> Missions {get;set;}
+    //    public DbSet<Mission> Missions {get;set;}
 
         public DDDNetCoreDbContext(DbContextOptions<DDDNetCoreDbContext> options) : base(options)
         {
@@ -41,7 +39,7 @@ namespace DDDNetCore.Infrastructure
             modelBuilder.ApplyConfiguration(new FriendshipEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new IntroductionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ConnectionEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new MissionEntityTypeConfiguration());
+        //    modelBuilder.ApplyConfiguration(new MissionEntityTypeConfiguration());
 
             modelBuilder.Entity<User>().ToTable("Users");
         }

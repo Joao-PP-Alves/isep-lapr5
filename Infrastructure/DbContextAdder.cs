@@ -1,7 +1,7 @@
 ﻿using DDDNetCore.Infrastructure.Provider;
 using System;
 
-namespace DDDSample1.Infrastructure
+namespace DDDNetCore.Infrastructure
 {
     public class DbContextAdder
     {
