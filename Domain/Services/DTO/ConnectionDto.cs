@@ -3,7 +3,7 @@ using System;
 using System.Security.Cryptography;
 using DDDNetCore.Domain.Shared;
 
-namespace DDDNetCore.Domain.Connections{
+namespace DDDNetCore.Domain.Services.DTO{
 
     public class ConnectionDto {
 

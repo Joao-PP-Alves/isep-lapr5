@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using DDDNetCore.Domain.Users;
 
-namespace DDDNetCore.Domain.Users{
+namespace DDDNetCore.Domain.Services.CreatingDTO{
     public class CreatingUserDto{
         public Name name {get;set;}
         public Email email {get;}

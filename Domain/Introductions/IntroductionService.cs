@@ -2,6 +2,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
+using DDDNetCore.Domain.Services.CreatingDTO;
+using DDDNetCore.Domain.Services.DTO;
 
 namespace DDDNetCore.Domain.Introductions
 {

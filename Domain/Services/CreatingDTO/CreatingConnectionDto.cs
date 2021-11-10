@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
 
-namespace DDDNetCore.Domain.Connections
+namespace DDDNetCore.Domain.Services.CreatingDTO
 {
     public class CreatingConnectionDto
     {

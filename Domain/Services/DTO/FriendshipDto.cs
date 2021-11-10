@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
 
-namespace DDDNetCore.Domain.Users
+namespace DDDNetCore.Domain.Services.DTO
 {
     public class FriendshipDto
     {

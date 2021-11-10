@@ -1,19 +1,20 @@
-using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Missions;
 
-namespace DDDNetCore.Domain.Missions
+namespace DDDNetCore.Domain.Services.DTO
 {
-    public class CreatingMissionDto
-    {
+    public class MissionDto{
+
         public MissionId Id {get; set;}
         public DificultyDegree dificultyDegree {get; set;}
 
-        public Status status {get; set;}
-        public CreatingMissionDto(MissionId Id, DificultyDegree dificultyDegree, Status status){
+        //[Required]
+        public Status status {get; set; }
+
+        public MissionDto(MissionId Id, DificultyDegree dificultyDegree, Status status){
             this.Id = Id;
             this.dificultyDegree = dificultyDegree;
             this.status = status;
         }
-
     }
 }
