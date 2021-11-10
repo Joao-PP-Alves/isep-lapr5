@@ -12,6 +12,7 @@ using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Infrastructure.Connections;
 using DDDNetCore.Domain.Introductions;
+using DDDNetCore.Infrastructure.Missions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using DDDNetCore.Infrastructure.Shared;
@@ -99,8 +100,8 @@ namespace DDDNetCore
             services.AddTransient<IFriendshipRepository,FriendshipRepository>();
             services.AddTransient<FriendshipService>();   
             
-        //    services.AddTransient<IMissionRepository,MissionRepository>();
-        //    services.AddTransient<MissionService>();
+            services.AddTransient<IMissionRepository,MissionRepository>();
+            services.AddTransient<MissionService>();
 
             services.AddTransient<IConnectionRepository,ConnectionRepository>();
             services.AddTransient<ConnectionService>();

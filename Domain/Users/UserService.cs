@@ -30,7 +30,7 @@ namespace DDDNetCore.Domain.Users
                 EmotionalState.updateElapsedTime(dto.emotionalState);
             }
             return listDto;
-        }
+        } 
 
         public async Task<UserDto> GetByIdAsync(UserId id)
         {

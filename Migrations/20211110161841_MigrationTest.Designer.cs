@@ -4,14 +4,16 @@ using DDDNetCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDNetCoreDbContext))]
-    partial class DDDNetCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211110161841_MigrationTest")]
+    partial class MigrationTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,15 +62,28 @@ namespace DDDNetCore.Migrations
                     b.Property<string>("MissionId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Requester")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("TargetUser")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Introductions");
+                });
+
+            modelBuilder.Entity("DDDNetCore.Domain.Missions.Mission", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Missions");
                 });
 
             modelBuilder.Entity("DDDNetCore.Domain.Users.Friendship", b =>
@@ -171,9 +186,48 @@ namespace DDDNetCore.Migrations
                                 .HasForeignKey("IntroductionId");
                         });
 
+                    b.OwnsOne("DDDNetCore.Domain.Users.UserId", "Requester", b1 =>
+                        {
+                            b1.Property<string>("IntroductionId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("IntroductionId");
+
+                            b1.ToTable("Introductions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IntroductionId");
+                        });
+
                     b.Navigation("decision");
 
                     b.Navigation("Description");
+
+                    b.Navigation("Requester");
+                });
+
+            modelBuilder.Entity("DDDNetCore.Domain.Missions.Mission", b =>
+                {
+                    b.OwnsOne("DDDNetCore.Domain.Missions.DificultyDegree", "dificultyDegree", b1 =>
+                        {
+                            b1.Property<string>("MissionId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("level")
+                                .HasColumnType("int");
+
+                            b1.HasKey("MissionId");
+
+                            b1.ToTable("Missions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MissionId");
+                        });
+
+                    b.Navigation("dificultyDegree");
                 });
 
             modelBuilder.Entity("DDDNetCore.Domain.Users.Friendship", b =>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDDNetCore.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class MigrationTest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,6 +45,21 @@ namespace DDDNetCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Introductions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Missions",
+                schema: "LAPR5",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    dificultyDegree_level = table.Column<int>(type: "int", nullable: true),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Missions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -148,6 +163,10 @@ namespace DDDNetCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Introductions",
+                schema: "LAPR5");
+
+            migrationBuilder.DropTable(
+                name: "Missions",
                 schema: "LAPR5");
 
             migrationBuilder.DropTable(

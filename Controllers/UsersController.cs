@@ -25,7 +25,7 @@ namespace DDDNetCore.Controllers{
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAll(){
             return await _service.GetAllAsync();
-        }
+        } 
 
         //GET: api/Users
         [HttpGet("{id}")]

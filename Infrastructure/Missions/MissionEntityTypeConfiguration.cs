@@ -9,6 +9,7 @@ namespace DDDNetCore.Infrastructure.Missions{
         {
             builder.HasKey(b => b.Id);
             builder.OwnsOne(b => b.dificultyDegree);
+
         }
     }
 }
