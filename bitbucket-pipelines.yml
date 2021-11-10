@@ -9,6 +9,7 @@ pipelines:
       - step:
           name: Clean
           script:
+            - cd MasterDataSocialNetwork
             - dotnet clean
       - step:
           name: Build
