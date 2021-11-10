@@ -13,8 +13,10 @@ pipelines:
       - step:
           name: Build
           script:
+            - cd MasterDataSocialNetwork
             - dotnet build
       - step:
           name: Test
           script:
+            - cd MasterDataSocialNetworkTest
             - dotnet test
