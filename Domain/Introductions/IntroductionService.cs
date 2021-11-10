@@ -22,7 +22,7 @@ namespace DDDNetCore.Domain.Introductions
             var list = await this._repo.GetAllAsync();
             
             List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro => 
-                new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.Decision,intro.Description,intro.Requester,intro.Enabler,intro.TargetUser));
+                new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decision,intro.Description,intro.Requester,intro.Enabler,intro.TargetUser));
 
             return listDto;
         }
@@ -34,7 +34,7 @@ namespace DDDNetCore.Domain.Introductions
             if(intro == null)
                 return null;
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.Decision,intro.Description,intro.Requester,intro.Enabler,intro.TargetUser);
+            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decision,intro.Description,intro.Requester,intro.Enabler,intro.TargetUser);
         }
 
         public async Task<IntroductionDto> InactivateAsync(IntroductionId id)
@@ -48,7 +48,7 @@ namespace DDDNetCore.Domain.Introductions
             
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(), introduction.MissionId,introduction.Decision,introduction.Description,introduction.Requester,introduction.Enabler,introduction.TargetUser);
+            return new IntroductionDto(introduction.Id.AsGuid(), introduction.MissionId,introduction.decision,introduction.Description,introduction.Requester,introduction.Enabler,introduction.TargetUser);
         }
 
         public async Task<IntroductionDto> DeleteAsync(IntroductionId id)
@@ -64,7 +64,7 @@ namespace DDDNetCore.Domain.Introductions
             this._repo.Remove(introduction);
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(),introduction.MissionId,introduction.Decision,introduction.Description,introduction.Requester,introduction.Enabler,introduction.TargetUser);
+            return new IntroductionDto(introduction.Id.AsGuid(),introduction.MissionId,introduction.decision,introduction.Description,introduction.Requester,introduction.Enabler,introduction.TargetUser);
         }
 
         private async Task checkUserIdAsync(UserId userId)
@@ -84,7 +84,7 @@ namespace DDDNetCore.Domain.Introductions
             await this._repo.AddAsync(intro);
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.Decision, intro.Description, intro.Requester, intro.Enabler, intro.TargetUser);
+            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decision, intro.Description, intro.Requester, intro.Enabler, intro.TargetUser);
 
         }
 
@@ -107,7 +107,7 @@ namespace DDDNetCore.Domain.Introductions
 
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.Decision, intro.Description, intro.Requester, intro.Enabler, intro.TargetUser);
+            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decision, intro.Description, intro.Requester, intro.Enabler, intro.TargetUser);
         }
         
     }

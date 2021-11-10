@@ -8,7 +8,7 @@ namespace DDDNetCore.Domain.Users{
         [JsonConstructor]
         public UserId(Guid value) : base(value){}
 
-        public UserId(String value) : base(value){
+        public UserId(string value) : base(value){
         }
 
         override

@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
 
@@ -9,12 +10,12 @@ namespace DDDNetCore.Domain.Connections
         public UserId requester {get; set; } 
 
         public UserId targetUser {get; set; } 
-        public string description {get; set; }
+        public Description description {get; set; }
 
         public Decision decision {get; set; }
 
 
-        public CreatingConnectionDto(string description, UserId requester, UserId targetUser)
+        public CreatingConnectionDto(Description description, UserId requester, UserId targetUser)
         {
             this.description = description;
             this.requester = requester;

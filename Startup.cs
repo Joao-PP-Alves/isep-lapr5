@@ -1,13 +1,9 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using DDDNetCore.Infrastructure;
-using DDDNetCore.Infrastructure.Shared;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Users;
@@ -17,7 +13,8 @@ using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Infrastructure.Connections;
 using DDDNetCore.Domain.Introductions;
-using Microsoft.Data.SqlClient;
+using DDDSample1.Infrastructure;
+
 // jdbc:sqlserver://vs398.dei.isep.ipp.pt\MYSQLSERVER:1433
 namespace DDDNetCore
 {
@@ -57,10 +54,11 @@ namespace DDDNetCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DDDNetCoreDbContext>(opt =>
-                opt.UseSqlServer("ConnectionString")
-                .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
-
+            //context adder inicializa o contexto da bd
+            DbContextAdder.GetDbContextAdder(Configuration.GetConnectionString("DbProviderClassName")).AddDBContext(services,Configuration);
+        //    services.AddDatabaseDeveloperPageExceptionFilter();
+            
+            
             ConfigureMyServices(services);
             
 

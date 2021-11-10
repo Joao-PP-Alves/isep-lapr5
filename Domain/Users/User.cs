@@ -11,7 +11,8 @@ namespace DDDNetCore.Domain.Users
     public class User : Entity<UserId>, IAggregateRoot
     {
         // [Required]
-        public string Name { get; set; }
+        // Name
+        public Name Name { get; set; }
 
         // [Required]
         public Email Email { get; set; }
@@ -40,7 +41,7 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(string name, Email email, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
+        public User(Name name, Email email, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
@@ -53,7 +54,7 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(string name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
+        public User(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = validateName(name);
@@ -65,18 +66,18 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        private string validateName(string name){
-            if (name != null){
-                string aux = name.Substring(0,1);
-                if (aux == " "){
-                    throw new BusinessRuleValidationException("The name cannot start with a space.");
-                }
-            }
+        private Name validateName(Name name){
+            // if (name != null){
+            //     string aux = name.Substring(0,1);
+            //     if (aux == " "){
+            //         throw new BusinessRuleValidationException("The name cannot start with a space.");
+            //     }
+            // }
             return name;
         }
 
 
-        public void ChangeName(string name)
+        public void ChangeName(Name name)
         {
             if (!this.Active)
             {

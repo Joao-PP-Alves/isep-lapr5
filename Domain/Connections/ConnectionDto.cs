@@ -1,5 +1,6 @@
 using DDDNetCore.Domain.Users;
 using System;
+using System.Security.Cryptography;
 using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Domain.Connections{
@@ -11,11 +12,11 @@ namespace DDDNetCore.Domain.Connections{
 
         public UserId targetUser {get; set;}
 
-        public string description {get; set;}
+        public Description description {get; set;}
 
         public Decision decision {get; set;}
 
-        public ConnectionDto(Guid id, UserId requester, UserId targetUser, string description, Decision decision){
+        public ConnectionDto(Guid id, UserId requester, UserId targetUser, Description description, Decision decision){
             this.id = id;
             this.requester = requester;
             this.targetUser = targetUser;

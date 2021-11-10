@@ -10,7 +10,7 @@ namespace DDDNetCore.Domain.Connections{
 
         public UserId targetUser { get;  private set; }
 
-        public string description { get;  private set; }
+        public Description description { get;  private set; }
 
         public Decision decision { get; private set; }
 
@@ -20,7 +20,7 @@ namespace DDDNetCore.Domain.Connections{
 
         }
 
-        public Connection(UserId requester, UserId targetUser, string description){
+        public Connection(UserId requester, UserId targetUser, Description description){
             this.Id = new ConnectionId(Guid.NewGuid());
             this.requester = requester;
             this.targetUser = targetUser;
@@ -48,7 +48,7 @@ namespace DDDNetCore.Domain.Connections{
             this.decision = newDecision;    
         }
 
-        public void ChangeDescription(string newDescription){
+        public void ChangeDescription(Description newDescription){
             if(!this.active)
                 throw new BusinessRuleValidationException("It is not possible to change the description to an inactive introduction.");
             this.description = newDescription;

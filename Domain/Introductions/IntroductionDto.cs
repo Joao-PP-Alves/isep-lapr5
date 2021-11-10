@@ -8,14 +8,14 @@ namespace DDDNetCore.Domain.Introductions
     public class IntroductionDto{
 
         public Guid Id {get;set;}
-        public Decision Decision {get;set;}
+        public DecisionState Decision {get;set;}
         public MissionId MissionId {get;set;}
-        public string Description {get;set;}
+        public Description Description {get;set;}
         public UserId TargetUser {get;set;}
         public UserId Requester {get;set;}
         public UserId Enabler {get;set;}
 
-        public IntroductionDto(Guid Id, MissionId missionId, Decision decision, string Description, UserId Requester, UserId Enabler, UserId TargetUser){
+        public IntroductionDto(Guid Id, MissionId missionId, DecisionState decision, Description description, UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = Id;
             this.Description = Description;
             this.TargetUser = TargetUser;

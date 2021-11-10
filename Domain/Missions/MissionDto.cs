@@ -5,12 +5,12 @@ namespace DDDNetCore.Domain.Missions
     public class MissionDto{
 
         public MissionId Id {get; set;}
-        public int dificultyDegree {get; set;}
+        public DificultyDegree dificultyDegree {get; set;}
 
         //[Required]
         public Status status {get; set; }
 
-        public MissionDto(MissionId Id, int dificultyDegree, Status status){
+        public MissionDto(MissionId Id, DificultyDegree dificultyDegree, Status status){
             this.Id = Id;
             this.dificultyDegree = dificultyDegree;
             this.status = status;

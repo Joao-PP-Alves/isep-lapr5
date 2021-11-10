@@ -5,7 +5,7 @@ namespace DDDNetCore.Domain.Users{
     public class UserDto {
         public Guid Id {get;set;}
 
-        public string name {get;set;}
+        public Name name {get;set;}
         public Email email {get;}
         public List<Tag> tags {get;set;}
 
@@ -13,7 +13,7 @@ namespace DDDNetCore.Domain.Users{
 
         public EmotionalState emotionalState {get;set;}
 
-        public UserDto(Guid Id, string name, Email email, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState){
+        public UserDto(Guid Id, Name name, Email email, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState){
             this.Id = Id;
             this.name = name;
             this.phoneNumber = phoneNumber;

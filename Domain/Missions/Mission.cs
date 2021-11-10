@@ -6,7 +6,7 @@ namespace DDDNetCore.Domain.Missions
     public class Mission : Entity<MissionId>, IAggregateRoot
     {
         //[Required]
-        public int dificultyDegree { get; private set; }
+        public DificultyDegree dificultyDegree { get; private set; }
 
         //[Required]
         public Status status { get; private set; }
@@ -18,7 +18,7 @@ namespace DDDNetCore.Domain.Missions
             this.Active = true;
         }
 
-        public Mission(int dificultyDegree, Status status)
+        public Mission(DificultyDegree dificultyDegree, Status status)
         {
             this.Id = new MissionId(Guid.NewGuid());
             this.dificultyDegree = dificultyDegree;
@@ -26,7 +26,7 @@ namespace DDDNetCore.Domain.Missions
             this.Active = true;
         }
 
-        public void ChangeDificultyDegree(int dificultyDegree)
+        public void ChangeDificultyDegree(DificultyDegree dificultyDegree)
         {
             if (!this.Active)
             {

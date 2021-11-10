@@ -7,13 +7,13 @@ namespace DDDNetCore.Domain.Introductions
     public class CreatingIntroductionDto
     {
         public Decision Decision {get;set;}
-        public string Description {get;set;}
+        public Description Description {get;set;}
         public MissionId MissionId {get;set;}
         public UserId Requester {get;set;}
         public UserId Enabler {get;set;}
         public UserId TargetUser {get;set;}
 
-        public CreatingIntroductionDto(string description, MissionId missionId, UserId requester, UserId enabler, UserId targetUser){
+        public CreatingIntroductionDto(Description description, MissionId missionId, UserId requester, UserId enabler, UserId targetUser){
             this.Description = description;
             this.Requester = requester;
             this.Enabler = enabler;

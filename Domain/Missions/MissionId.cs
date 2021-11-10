@@ -12,12 +12,12 @@ namespace DDDNetCore.Domain.Missions{
         }
 
         override
-        protected  Object createFromString(String text){
+            protected  Object createFromString(String text){
             return new Guid(text);
         }
 
         override
-        public String AsString(){
+            public String AsString(){
             Guid obj = (Guid) base.ObjValue;
             return obj.ToString();
         }

@@ -40,8 +40,8 @@ namespace DDDNetCore.Infrastructure
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FriendshipEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new IntroductionEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new MissionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ConnectionEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new MissionEntityTypeConfiguration());
 
             modelBuilder.Entity<User>().ToTable("Users");
         }

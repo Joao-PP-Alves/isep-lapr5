@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Infrastructure.Shared;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DDDNetCore.Infrastructure.Shared
 {

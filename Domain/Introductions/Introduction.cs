@@ -12,9 +12,9 @@ namespace DDDNetCore.Domain.Introductions
 {
     public class Introduction : Entity<IntroductionId>, IAggregateRoot
     {
-        public Decision Decision {get; private set;}
+        public DecisionState decision {get; private set;}
         public MissionId MissionId {get; private set;}
-        public string Description {get; private set;}
+        public Description Description {get; private set;}
         public UserId Requester {get; private set;}
         public UserId Enabler {get;private set;}
         public UserId TargetUser {get; private set;} 
@@ -24,10 +24,10 @@ namespace DDDNetCore.Domain.Introductions
             this.Active = true;
         }
 
-        public Introduction(string Description,MissionId missionId,UserId Requester, UserId Enabler, UserId TargetUser){
+        public Introduction(Description description,MissionId missionId,UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = new IntroductionId(Guid.NewGuid());
-            this.Decision = Decision.PENDING;
-            this.Description = Description;
+            this.decision = new DecisionState(Shared.Decision.PENDING);
+            this.Description = description;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
             this.Requester = Requester;
@@ -35,10 +35,10 @@ namespace DDDNetCore.Domain.Introductions
             this.Active = true;
         }
 
-        public Introduction(string Description,MissionId missionId,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
+        public Introduction(Description description,MissionId missionId,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = new IntroductionId(Guid.NewGuid());
-            this.Decision = decision;
-            this.Description = Description;
+            this.decision = new DecisionState(Shared.Decision.PENDING);
+            this.Description = description;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
             this.Requester = Requester;
@@ -47,24 +47,24 @@ namespace DDDNetCore.Domain.Introductions
         }
 
         public void AcceptedIntroduction(){
-            this.Decision = Decision.ACCEPTED;
+            this.decision = new DecisionState(Decision.ACCEPTED);
         }
 
         public void DeclinedIntroduction(){
-            this.Decision = Decision.DECLINED;
+            this.decision = new DecisionState(Decision.PENDING);
         }
 
         public void MarkAsInative(){
             this.Active = false;
         }
 
-        public void MakeDecision(Decision newDecision){
+        public void MakeDecision(DecisionState newDecision){
             if(!this.Active)
                 throw new BusinessRuleValidationException("It is not possible to change the decision to an inactive introduction.");
-            this.Decision = newDecision;    
+            this.decision = newDecision;    
         }
 
-        public void ChangeDescription(string newDescription){
+        public void ChangeDescription(Description newDescription){
             if(!this.Active)
                 throw new BusinessRuleValidationException("It is not possible to change the description to an inactive introduction.");
             this.Description = newDescription;
