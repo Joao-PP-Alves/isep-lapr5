@@ -29,7 +29,7 @@ namespace DDDNetCore.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Server=vs398.dei.isep.ipp.pt;Database=master;User Id=Zezoca;Password=Tropita123;Trusted_Connection=True;");
+                @"Server=vs366.dei.isep.ipp.pt;Database=master;User ID=sa;Password=rOfhiwMtvA==Xa5");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

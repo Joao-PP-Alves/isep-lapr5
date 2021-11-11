@@ -20,7 +20,7 @@ namespace DDDNetCore.Domain.Users
         }
 
         public static void updateElapsedTime(EmotionalState emotionalState){
-            emotionalState.TimeElapsed = DateTime.UtcNow - emotionalState.Time;
+            //emotionalState.TimeElapsed = DateTime.UtcNow - emotionalState.Time;
         }
     }
 }
