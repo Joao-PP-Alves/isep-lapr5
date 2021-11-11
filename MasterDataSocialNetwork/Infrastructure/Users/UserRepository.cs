@@ -17,11 +17,21 @@ namespace DDDNetCore.Infrastructure.Users {
             _context = context;
         }
 
-        public List<User> friendsSuggestion(UserId id)
+        public List<string> friendsSuggestion(UserId id)
         {
-            List<User> friends = new List<User>();
-            var tags = _context.Users.SelectMany(user => user.tags).ToList();
-
+            List<string> friends = new List<String>();
+            using (SqlConnection connection = new SqlConnection("DefaultConnection"))
+            {
+                SqlCommand command = new SqlCommand("SELECT * FROM USER", connection);
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        friends.Add(reader.ToString());
+                    }
+                }
+            }
             return friends;
         }
     }
