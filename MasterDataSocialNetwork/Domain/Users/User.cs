@@ -4,6 +4,7 @@ using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using DDDNetCore.Domain.Services.DTO;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -30,6 +31,7 @@ namespace DDDNetCore.Domain.Users
 
         public EmotionalState emotionalState { get; set; }
 
+        public List<Friendship> friendsList { get; set; }
 
         public bool Active { get; set; }
 
@@ -41,10 +43,11 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(Name name, Email email, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
+        public User(Name name, Email email, List<Friendship> friendsList, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
+            this.friendsList = friendsList;
             this.Date = date;
             this.Email = email;
             this.Password = password;
@@ -106,6 +109,16 @@ namespace DDDNetCore.Domain.Users
                 return; //se a lista for nula, mantém a mesma
             }
             this.tags = tags;
+        }
+
+        public void AddFriendship(Friendship newFriendship)
+        {
+            this.friendsList.Add(newFriendship);
+        }
+
+        public void RemoveFriendship(Friendship friendship)
+        {
+            this.friendsList.Remove(friendship);
         }
 
         public void ChangePhoneNumber(PhoneNumber phoneNumber)

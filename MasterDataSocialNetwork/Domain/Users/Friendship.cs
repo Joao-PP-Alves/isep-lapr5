@@ -11,10 +11,8 @@ namespace DDDNetCore.Domain.Users
 
         public float relationship_strenght {get; set;}
 
-        public User user1 {get; set;}
-
-        public User user2 {get; set;}
-
+        public User friend {get; set;}
+        
         public Tag friendshipTag {get; set;}
 
         public bool Active{get; set;}
@@ -23,20 +21,18 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(User user1, User user2) {
+        public Friendship(User friend) {
             this.Id = new FriendshipId(Guid.NewGuid());
-            this.user1 = user1;
-            this.user2 = user2;
+            this.friend = friend;
             this.connection_strenght = 0;
             this.relationship_strenght = 0;
             this.friendshipTag = new Tag();
             this.Active = true;
         }
 
-        public Friendship(User user1, User user2, float connection_strenght, float relationship_strenght, Tag friendshipTags) {
+        public Friendship(User friend, float connection_strenght, float relationship_strenght, Tag friendshipTags) {
             this.Id = new FriendshipId(Guid.NewGuid());
-            this.user1 = user1;
-            this.user2 = user2;
+            this.friend = friend;
             this.connection_strenght = connection_strenght;
             this.relationship_strenght = relationship_strenght;
             this.friendshipTag = friendshipTag;
@@ -44,14 +40,14 @@ namespace DDDNetCore.Domain.Users
         }
 
         public void ChangeConnectionStrenght(float connection_strenght) {
-            if(this.user1 == null || this.user2 == null) {
+            if(this.friend == null) {
                 throw new BusinessRuleValidationException("The relationship is invalid. One or both users are null");
             }
             this.connection_strenght = connection_strenght;
         }
 
         public void ChangeFriendshipTag(Tag friendshipTag){
-            if(this.user1 == null || this.user2 == null){
+            if(this.friend == null){
                 throw new BusinessRuleValidationException("The relationship is invalid. One or both users are null");
             }
             this.friendshipTag = friendshipTag;

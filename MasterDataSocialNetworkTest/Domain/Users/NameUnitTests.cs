@@ -20,6 +20,13 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
         public void testRegularName(){
             Name name = new Name("Zezoca");
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(BusinessRuleValidationException),
+            "The name cannot start with a space.")]
+        public void testNameWithSpaceAtBeggining2(){
+            Name name = new Name(" Olinda");
+        }
     }
 
 }
