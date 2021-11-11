@@ -14,23 +14,25 @@ namespace DDDNetCore.Domain.Introductions
 {
     public class Introduction : Entity<IntroductionId>, IAggregateRoot
     {
-        public DecisionState decision {get; private set;}
+        public IntroductionStatus decisionStatus {get; private set;}
         public MissionId MissionId {get; private set;}
-        public Description Description {get; private set;}
+        public Description MessageToIntermediate{get;private set;}
+        public Description MessageToTargetUser {get;private set;}
+        public Description MessageFromIntermediateToTargetUser {get;private set;}
         public UserId Requester {get; private set;}
         public UserId Enabler {get;private set;}
         public UserId TargetUser {get; private set;}
-        public ConnectionId ConnectionId {get; private set;} 
         public bool Active {get; private set;}
 
         private Introduction(){
             this.Active = true;
         }
 
-        public Introduction(Description description,MissionId missionId,UserId Requester, UserId Enabler, UserId TargetUser){
+        public Introduction(Description messageToTargetUser,Description messageToIntermediate,MissionId missionId,UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = new IntroductionId(Guid.NewGuid());
-            this.decision = new DecisionState(IntroductionStatus.PENDING_APPROVAL.ToString());
-            this.Description = description;
+            this.decisionStatus = IntroductionStatus.PENDING_APPROVAL;
+            this.MessageToTargetUser = messageToTargetUser;
+            this.MessageToIntermediate = messageToIntermediate;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
             this.Requester = Requester;
@@ -38,10 +40,11 @@ namespace DDDNetCore.Domain.Introductions
             this.Active = true;
         }
 
-        public Introduction(Description description,MissionId missionId,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
+        public Introduction(Description messageToTargetUser,Description messageToIntermediate,MissionId missionId,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = new IntroductionId(Guid.NewGuid());
-            this.decision = new DecisionState(IntroductionStatus.PENDING_APPROVAL.ToString());
-            this.Description = description;
+            this.decisionStatus = IntroductionStatus.PENDING_APPROVAL;
+            this.MessageToTargetUser = messageToTargetUser;
+            this.MessageToIntermediate = messageToIntermediate;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
             this.Requester = Requester;
@@ -50,27 +53,39 @@ namespace DDDNetCore.Domain.Introductions
         }
 
         public void AcceptedIntroduction(){
-            this.decision = new DecisionState(IntroductionStatus.ACCEPTED.ToString());
+            this.decisionStatus = IntroductionStatus.ACCEPTED;
         }
 
         public void DeclinedIntroduction(){
-            this.decision = new DecisionState(IntroductionStatus.DECLINED.ToString());
+            this.decisionStatus = IntroductionStatus.DECLINED;
         }
 
         public void MarkAsInative(){
             this.Active = false;
         }
 
-        public void MakeDecision(DecisionState newDecision){
-            if(!this.Active)
-                throw new BusinessRuleValidationException("It is not possible to change the decision to an inactive introduction.");
-            this.decision = newDecision;    
+        public void changeMessageToTargetUser(Description message){
+            this.MessageToTargetUser = message;
         }
 
-        public void ChangeDescription(Description newDescription){
-            if(!this.Active)
-                throw new BusinessRuleValidationException("It is not possible to change the description to an inactive introduction.");
-            this.Description = newDescription;
+        public void changeMessageToIntermediate(Description message){
+            this.MessageToIntermediate = message;
+        }
+
+        public void changeIntermediateToTargetUserDescription(Description message){
+            this.MessageFromIntermediateToTargetUser = message;
+        }
+
+        public void approveIntermediate(){
+            this.decisionStatus = IntroductionStatus.APPROVAL_ACCEPTED;
+        }
+
+        public void declineIntermediate(){
+            this.decisionStatus = IntroductionStatus.APPROVAL_DECLINED;
+        }
+
+        public void makeDecision(IntroductionStatus decision){
+            this.decisionStatus = decision;
         }
 
         public void ChangeTargetUser(UserId userId){

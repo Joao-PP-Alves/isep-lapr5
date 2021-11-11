@@ -4,6 +4,7 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
+using DDDNetCore.Domain.Introductions;
 
 namespace DDDNetCore.Domain.Introductions
 {
@@ -24,7 +25,7 @@ namespace DDDNetCore.Domain.Introductions
             var list = await this._repo.GetAllAsync();
             
             List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro => 
-                new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decision,intro.Description,intro.Requester,intro.Enabler,intro.TargetUser));
+                new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus,intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser,intro.Requester,intro.Enabler,intro.TargetUser));
 
             return listDto;
         }
@@ -36,7 +37,7 @@ namespace DDDNetCore.Domain.Introductions
             if(intro == null)
                 return null;
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decision,intro.Description,intro.Requester,intro.Enabler,intro.TargetUser);
+            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus,intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser,intro.Requester,intro.Enabler,intro.TargetUser);
         }
 
         public async Task<IntroductionDto> InactivateAsync(IntroductionId id)
@@ -50,7 +51,7 @@ namespace DDDNetCore.Domain.Introductions
             
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(), introduction.MissionId,introduction.decision,introduction.Description,introduction.Requester,introduction.Enabler,introduction.TargetUser);
+            return new IntroductionDto(introduction.Id.AsGuid(), introduction.MissionId,introduction.decisionStatus,introduction.MessageToTargetUser,introduction.MessageToIntermediate,introduction.MessageFromIntermediateToTargetUser,introduction.Requester,introduction.Enabler,introduction.TargetUser);
         }
 
         public async Task<IntroductionDto> DeleteAsync(IntroductionId id)
@@ -66,7 +67,7 @@ namespace DDDNetCore.Domain.Introductions
             this._repo.Remove(introduction);
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(),introduction.MissionId,introduction.decision,introduction.Description,introduction.Requester,introduction.Enabler,introduction.TargetUser);
+            return new IntroductionDto(introduction.Id.AsGuid(),introduction.MissionId,introduction.decisionStatus,introduction.MessageToTargetUser,introduction.MessageToIntermediate,introduction.MessageFromIntermediateToTargetUser,introduction.Requester,introduction.Enabler,introduction.TargetUser);
         }
 
         private async Task checkUserIdAsync(UserId userId)
@@ -81,12 +82,12 @@ namespace DDDNetCore.Domain.Introductions
             await checkUserIdAsync(dto.Requester);
             await checkUserIdAsync(dto.Enabler);
             await checkUserIdAsync(dto.TargetUser);
-            var intro = new Introduction(dto.Description,dto.MissionId,dto.Requester,dto.Enabler,dto.TargetUser);
+            var intro = new Introduction(dto.MessageToTargetUser,dto.MessageToIntermediate,dto.MissionId,dto.Requester,dto.Enabler,dto.TargetUser);
 
             await this._repo.AddAsync(intro);
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decision, intro.Description, intro.Requester, intro.Enabler, intro.TargetUser);
+            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser);
 
         }
 
@@ -101,15 +102,27 @@ namespace DDDNetCore.Domain.Introductions
                 return null;
             }
 
-            intro.ChangeDescription(dto.Description);
-            intro.MakeDecision(dto.Decision);
+            intro.changeMessageToTargetUser(dto.MessageToTargetUser);
+            intro.changeMessageToIntermediate(dto.MessageToIntermediate);
+            intro.changeIntermediateToTargetUserDescription(dto.MessageFromIntermediateToTargetUser);
+            intro.makeDecision(dto.decisionStatus);
             intro.ChangeRequester(dto.Requester);
             intro.ChangeEnabler(dto.Enabler);
             intro.ChangeTargetUser(dto.TargetUser);
 
             await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decision, intro.Description, intro.Requester, intro.Enabler, intro.TargetUser);
+            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser);
+        }
+
+        public async Task<List<IntroductionDto>> GetPendentIntroductions(UserId id){
+
+            var list = await this._repo.getPendentIntroductions(id);
+
+            List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro =>
+                new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser));
+        
+            return listDto;
         }
         
     }

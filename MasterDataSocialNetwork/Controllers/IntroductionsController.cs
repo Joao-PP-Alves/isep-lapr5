@@ -118,6 +118,11 @@ namespace DDDNetCore.Controllers{
                return BadRequest(new {Message = ex.Message});
             }
         }
+
+        [HttpGet("pendent/{id}")]
+        public async Task<ActionResult<IEnumerable<IntroductionDto>>> GetPendent(Guid id){
+            return await _service.GetPendentIntroductions(new UserId(id));
+        }
         
 
 
