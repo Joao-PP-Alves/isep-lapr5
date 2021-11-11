@@ -28,7 +28,7 @@ namespace DDDNetCore.Domain.Introductions
 
         public Introduction(Description description,MissionId missionId,UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = new IntroductionId(Guid.NewGuid());
-            this.decision = new DecisionState(Shared.Decision.PENDING);
+            this.decision = new DecisionState(IntroductionStatus.PENDING);
             this.Description = description;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
@@ -39,7 +39,7 @@ namespace DDDNetCore.Domain.Introductions
 
         public Introduction(Description description,MissionId missionId,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = new IntroductionId(Guid.NewGuid());
-            this.decision = new DecisionState(Shared.Decision.PENDING);
+            this.decision = new DecisionState(IntroductionStatus.PENDING);
             this.Description = description;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
@@ -49,11 +49,11 @@ namespace DDDNetCore.Domain.Introductions
         }
 
         public void AcceptedIntroduction(){
-            this.decision = new DecisionState(Decision.ACCEPTED);
+            this.decision = new DecisionState(IntroductionStatus.ACCEPTED);
         }
 
         public void DeclinedIntroduction(){
-            this.decision = new DecisionState(Decision.PENDING);
+            this.decision = new DecisionState(IntroductionStatus.DECLINED);
         }
 
         public void MarkAsInative(){
