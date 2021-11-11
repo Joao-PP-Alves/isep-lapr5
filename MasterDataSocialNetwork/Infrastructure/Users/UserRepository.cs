@@ -1,25 +1,42 @@
-using DDDNetCore.Domain.Users;
-using DDDNetCore.Infrastructure.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DDDNetCore.Domain.Services.DTO;
-using Microsoft.EntityFrameworkCore;
+using DDDNetCore.Domain.Users;
+using DDDNetCore.Infrastructure.Shared;
+using Microsoft.Data.SqlClient;
 
-namespace DDDNetCore.Infrastructure.Users {
+namespace DDDNetCore.Infrastructure.Users
+{
 
     public class UserRepository : BaseRepository<User, UserId>, IUserRepository
     {
+        private readonly DDDNetCoreDbContext _context;
+
         public UserRepository(DDDNetCoreDbContext context) : base(context.Users)
         {
         }
 
-     /*   public async Task<List<Friendship>> GetAllFriendshipsFromUser(UserId id)
+        public List<User> friendsSuggestion(UserId id)
+        {
+            List<string> friends = new List<String>();
+            using (SqlConnection connection = new SqlConnection("DefaultConnection"))
             {
-                return await ((DbSet<Friendship>)base.getContext()).Where()
-            } */
-                
+                SqlCommand command = new SqlCommand("SELECT * FROM USER", connection);
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        friends.Add(reader.ToString());
+                    }
+                }
+            }
+
+            // return friends;
+            return null;
         }
     }
+}
 
 

@@ -1,10 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DDDNetCore.Domain.Users;
-using DDDNetCore.Domain.Shared;
-using System.ComponentModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MasterDataSocialNetworkTest.Domain.Users {
 
@@ -99,6 +96,13 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
         public void testChangeEmotionalStateNull(){
             user.ChangeEmotionalState(null);
             Assert.AreEqual(Emotion.anger,user.emotionalState.emotion);
+        }
+
+        [TestMethod]
+        public void testUpdateEmotionTime(){
+            user.updateEmotionTime();
+            var expected = 0;
+            Assert.IsTrue(Math.Abs(user.EmotionTime.Seconds-expected) < 0.01);
         }
     }
 
