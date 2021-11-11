@@ -3,7 +3,7 @@ using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Domain.Introductions
 {
-    public enum IntroductionDecision
+    public enum IntroductionStatus
      {
         PENDING_APPROVAL=0,
         APPROVAL_ACCEPTED=1,

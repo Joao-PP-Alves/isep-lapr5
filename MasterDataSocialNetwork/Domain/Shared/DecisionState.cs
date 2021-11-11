@@ -2,9 +2,9 @@
 {
     public class DecisionState
     {
-        public Decision decision { get; set; }
+        public string decision { get; set; }
 
-        public DecisionState(Decision decision)
+        public DecisionState(string decision)
         {
             this.decision = decision;
         }

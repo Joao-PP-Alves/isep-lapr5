@@ -6,6 +6,7 @@ using DDDNetCore.Domain.Connections;
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
+using DDDNetCore.Domain.Introductions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
@@ -28,7 +29,7 @@ namespace DDDNetCore.Domain.Introductions
 
         public Introduction(Description description,MissionId missionId,UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = new IntroductionId(Guid.NewGuid());
-            this.decision = new DecisionState(IntroductionStatus.PENDING);
+            this.decision = new DecisionState(IntroductionStatus.PENDING_APPROVAL.ToString());
             this.Description = description;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
@@ -39,7 +40,7 @@ namespace DDDNetCore.Domain.Introductions
 
         public Introduction(Description description,MissionId missionId,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = new IntroductionId(Guid.NewGuid());
-            this.decision = new DecisionState(IntroductionStatus.PENDING);
+            this.decision = new DecisionState(IntroductionStatus.PENDING_APPROVAL.ToString());
             this.Description = description;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
@@ -49,11 +50,11 @@ namespace DDDNetCore.Domain.Introductions
         }
 
         public void AcceptedIntroduction(){
-            this.decision = new DecisionState(IntroductionStatus.ACCEPTED);
+            this.decision = new DecisionState(IntroductionStatus.ACCEPTED.ToString());
         }
 
         public void DeclinedIntroduction(){
-            this.decision = new DecisionState(IntroductionStatus.DECLINED);
+            this.decision = new DecisionState(IntroductionStatus.DECLINED.ToString());
         }
 
         public void MarkAsInative(){
