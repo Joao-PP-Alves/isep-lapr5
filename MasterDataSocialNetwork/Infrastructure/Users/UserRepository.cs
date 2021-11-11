@@ -17,9 +17,10 @@ namespace DDDNetCore.Infrastructure.Users
         {
         }
 
-        public List<User> friendsSuggestion(UserId id)
+        public List<string> friendsSuggestion(UserId id)
+
         {
-            List<string> friends = new List<String>();
+             List<string> friends = new List<String>();
             using (SqlConnection connection = new SqlConnection("DefaultConnection"))
             {
                 SqlCommand command = new SqlCommand("SELECT * FROM USER", connection);
@@ -33,8 +34,7 @@ namespace DDDNetCore.Infrastructure.Users
                 }
             }
 
-            // return friends;
-            return null;
+            return friends;
         }
     }
 }
