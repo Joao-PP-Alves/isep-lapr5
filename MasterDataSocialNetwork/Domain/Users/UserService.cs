@@ -121,5 +121,15 @@ namespace DDDNetCore.Domain.Users
             await this._unitOfWork.CommitAsync();
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
         }
+
+         // public async Task<List<UserDto>> friendsSuggestion(UserDto dto)
+         // {
+         //     // var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
+         //     //
+         //     // if (user == null)
+         //     // {
+         //     //     return null;
+         //     // }
+         // }
     }
 }
