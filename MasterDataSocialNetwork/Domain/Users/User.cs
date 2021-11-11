@@ -30,7 +30,9 @@ namespace DDDNetCore.Domain.Users
 
         public EmotionalState emotionalState { get; set; }
 
+        public DateTime LastEmotionalChange {get;set;}
 
+        public TimeSpan EmotionTime {get;set;}
         public bool Active { get; set; }
 
         //private HyperLink facebook;
@@ -51,6 +53,7 @@ namespace DDDNetCore.Domain.Users
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
+            this.LastEmotionalChange = DateTime.UtcNow;
             this.Active = true;
         }
 
@@ -63,6 +66,7 @@ namespace DDDNetCore.Domain.Users
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
+            this.LastEmotionalChange = DateTime.UtcNow;
             this.Active = true;
         }
 
@@ -134,6 +138,7 @@ namespace DDDNetCore.Domain.Users
                 return; //se o emotional state for nulo, mantém o mesmo
             } 
             this.emotionalState = emotionalState;
+            this.LastEmotionalChange = DateTime.UtcNow;
         }
 
 
@@ -159,6 +164,11 @@ namespace DDDNetCore.Domain.Users
             {
                 this.Active = false;
             }
+        }
+
+        
+        public void updateEmotionTime(){
+            this.EmotionTime = DateTime.UtcNow - this.LastEmotionalChange;
         }
 
     }

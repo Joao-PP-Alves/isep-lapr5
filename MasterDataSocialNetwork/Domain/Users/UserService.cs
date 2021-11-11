@@ -22,13 +22,15 @@ namespace DDDNetCore.Domain.Users
         {
             var list = await this._repo.GetAllAsync();
 
+            foreach (var notDto in list)
+            {
+                notDto.updateEmotionTime();
+            }
+
             List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
                 new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState));
 
-            foreach (var dto in listDto)
-            {
-                EmotionalState.updateElapsedTime(dto.emotionalState);
-            }
+            
             return listDto;
         } 
 
@@ -40,7 +42,8 @@ namespace DDDNetCore.Domain.Users
             {
                 return null;
             }
-            EmotionalState.updateElapsedTime(user.emotionalState);
+
+            user.updateEmotionTime();
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
         }
 
@@ -49,7 +52,7 @@ namespace DDDNetCore.Domain.Users
             var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState);
             await this._repo.AddAsync(user);
             await this._unitOfWork.CommitAsync();
-            EmotionalState.updateElapsedTime(dto.emotionalState);
+            user.updateEmotionTime();
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
         }
 
@@ -71,7 +74,7 @@ namespace DDDNetCore.Domain.Users
             user.ChangePhoneNumber(dto.phoneNumber);
             user.ChangeEmotionalState(dto.emotionalState);
             user.ChangeEmail(dto.email);
-            EmotionalState.updateElapsedTime(dto.emotionalState);
+            user.updateEmotionTime();
             await this._unitOfWork.CommitAsync();
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
         }
@@ -117,7 +120,7 @@ namespace DDDNetCore.Domain.Users
 
             //change all field
             user.ChangeEmotionalState(dto.emotionalState);
-            EmotionalState.updateElapsedTime(dto.emotionalState);
+            user.updateEmotionTime();
             await this._unitOfWork.CommitAsync();
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
         }
