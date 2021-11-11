@@ -4,6 +4,7 @@ using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using DDDNetCore.Domain.Services.DTO;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -30,7 +31,11 @@ namespace DDDNetCore.Domain.Users
 
         public EmotionalState emotionalState { get; set; }
 
+        public List<Friendship> friendsList { get; set; }
+        
+        public TimeSpan EmotionTime {get;set;}
 
+        public DateTime LastEmotionalChange;
         public bool Active { get; set; }
 
         //private HyperLink facebook;
@@ -41,16 +46,18 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(Name name, Email email, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
+        public User(Name name, Email email, List<Friendship> friendsList, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
+            this.friendsList = friendsList;
             this.Date = date;
             this.Email = email;
             this.Password = password;
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
+            this.LastEmotionalChange = DateTime.UtcNow;
             this.Active = true;
         }
 
@@ -63,6 +70,7 @@ namespace DDDNetCore.Domain.Users
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
+       //     this.LastEmotionalChange = DateTime.UtcNow;
             this.Active = true;
         }
 
@@ -108,6 +116,16 @@ namespace DDDNetCore.Domain.Users
             this.tags = tags;
         }
 
+        public void AddFriendship(Friendship newFriendship)
+        {
+            this.friendsList.Add(newFriendship);
+        }
+
+        public void RemoveFriendship(Friendship friendship)
+        {
+            this.friendsList.Remove(friendship);
+        }
+
         public void ChangePhoneNumber(PhoneNumber phoneNumber)
         {
             if (!this.Active)
@@ -134,6 +152,7 @@ namespace DDDNetCore.Domain.Users
                 return; //se o emotional state for nulo, mantém o mesmo
             } 
             this.emotionalState = emotionalState;
+            this.LastEmotionalChange = DateTime.UtcNow;
         }
 
 
@@ -159,6 +178,11 @@ namespace DDDNetCore.Domain.Users
             {
                 this.Active = false;
             }
+        }
+
+        
+        public void updateEmotionTime(){
+            this.EmotionTime = DateTime.UtcNow - this.LastEmotionalChange;
         }
 
     }

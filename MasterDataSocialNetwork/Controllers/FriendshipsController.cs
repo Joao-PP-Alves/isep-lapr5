@@ -6,6 +6,7 @@ using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
+using DDDNetCore.Network;
 
 namespace DDDNetCore.Controllers{
     [Route("api/[controller]")]
@@ -115,18 +116,15 @@ namespace DDDNetCore.Controllers{
             }
         }
 
-        public async Task<ActionResult<Dictionary<int, List<UserDto>>>> UserFriendships(int level, Guid userId)
+      /*  public async Task<ActionResult<Network<UserDto,ConnectionDto>>> UserFriendships(int level, Guid userId)
         {
-            /**
-             * isto é um mapa que vai conter a rede de utilizadores: key: inteiros(níveis de distância ao user atual); value: lista de users pertencentes ao nível
-             **/
-            Dictionary<int, List<UserDto>> web = await _service.createMap(level);
-           // var friendsList = await _service.GetByUserId(userId);
             
-            //TODO
+            Network<UserDto, ConnectionDto> network = new Network<UserDto, ConnectionDto>(false);
+            var friendsList = await _service.GetByUserId(new UserId(userId));
+            
 
-            return web;
-        }
+            return network;
+        } */
             
     }
 }

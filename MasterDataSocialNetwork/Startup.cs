@@ -61,7 +61,6 @@ namespace DDDNetCore
                     .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
             ConfigureMyServices(services);
             
-
             services.AddControllers().AddNewtonsoftJson();
         }
 
