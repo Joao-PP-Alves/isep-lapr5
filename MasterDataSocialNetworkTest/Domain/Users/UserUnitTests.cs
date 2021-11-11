@@ -4,6 +4,7 @@ using DDDNetCore.Domain.Shared;
 using System.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MasterDataSocialNetworkTest.Domain.Users {
 
@@ -41,7 +42,64 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
             Assert.AreEqual("Barros",user.Name.ToString());
         }
 
-    
+        [TestMethod]
+
+        public void testChangeEmailNull(){
+            user.ChangeEmail(null);
+            Assert.AreEqual("email@gmail.com",user.Email.EmailAddress);
+        }
+
+        [TestMethod]
+
+        public void testChangeEmailCorrect(){
+            user.ChangeEmail(new Email("new@gmail.com"));
+            Assert.AreEqual("new@gmail.com",user.Email.EmailAddress);
+        }
+
+        [TestMethod]
+
+        public void testChangeTagsCorrect(){
+            var list1 = new List<Tag>();
+            list1.Add(new Tag("testTag"));
+            list1.Add(new Tag("testTag2"));
+            user.ChangeTags(list1);
+            Assert.AreEqual(2,user.tags.Count);
+        }
+
+        [TestMethod]
+
+        public void testChangeTagsNull(){
+            user.ChangeTags(null);
+            Assert.AreEqual(1,user.tags.Count);
+        }
+
+        [TestMethod]
+
+        public void testChangePhoneNumberNull(){
+            user.ChangePhoneNumber(null);
+            Assert.AreEqual("911197791",user.PhoneNumber.Number);
+        }
+
+        [TestMethod]
+
+        public void testChangePhoneNumberCorrect(){
+            user.ChangePhoneNumber(new PhoneNumber("933333333"));
+            Assert.AreEqual("933333333",user.PhoneNumber.Number);
+        }
+
+        [TestMethod]
+
+        public void testChangeEmotionalStateCorrect(){
+            user.ChangeEmotionalState(new EmotionalState(Emotion.stress));
+            Assert.AreEqual(Emotion.stress,user.emotionalState.emotion);
+        }
+
+         [TestMethod]
+
+        public void testChangeEmotionalStateNull(){
+            user.ChangeEmotionalState(null);
+            Assert.AreEqual(Emotion.anger,user.emotionalState.emotion);
+        }
     }
 
 }
