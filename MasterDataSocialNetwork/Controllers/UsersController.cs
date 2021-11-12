@@ -176,5 +176,15 @@ namespace DDDNetCore.Controllers{
                return BadRequest(new {Message = ex.Message});
             }
         }
+
+        // public async Task<ActionResult<IEnumerable<UserDto>>> getFriendsSuggestion(Guid id)
+        // {
+        //     // var user = await _service.GetByIdAsync(new UserId(id));
+        //     // if(user == null){
+        //     //     return NotFound();
+        //     // }
+        //     // return await _service.GetPossibleIntroductionTargets(new UserId(user.Id), new UserId(user2.Id));
+        //
+        // }
     }
 }

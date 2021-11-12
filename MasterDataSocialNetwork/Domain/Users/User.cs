@@ -32,7 +32,7 @@ namespace DDDNetCore.Domain.Users
         public EmotionalState emotionalState { get; set; }
 
         public List<Friendship> friendsList { get; set; }
-        public EmotionTime EmotionTime {get;set;} 
+        public EmotionTime EmotionTime {get; private set;} 
         public bool Active { get; set; }
 
         //private HyperLink facebook;

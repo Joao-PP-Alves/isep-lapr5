@@ -13,7 +13,7 @@ namespace DDDNetCore.Infrastructure.Users{
             builder.OwnsOne(b => b.PhoneNumber);
             builder.OwnsOne(b => b.Email);
             builder.OwnsOne(b => b.Password);
-            builder.OwnsOne(b => b.EmotionTime);
+           // builder.OwnsOne(b => b.EmotionTime);
             builder.OwnsMany(b => b.tags);
         }
     }

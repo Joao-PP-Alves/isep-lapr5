@@ -13,8 +13,12 @@
         {
             if (text != null)
             {
+                if (text.Length > 10000){
+                    throw new BusinessRuleValidationException("The description cannot be longer than 10000 characters.");
+                }
                 this.text = text;
             }
+            
         }
 
         public override string ToString()
