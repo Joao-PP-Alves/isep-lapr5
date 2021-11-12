@@ -64,7 +64,7 @@ namespace DDDNetCore.Controllers{
         } 
         
 
-        // POST: api/Products
+        // POST: api/Users
         [HttpPost]
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)
         {
