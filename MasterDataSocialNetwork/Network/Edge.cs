@@ -27,6 +27,34 @@ namespace DDDNetCore.Network
                 vd = vDest;
             }
             
+            public V[] GetEndpoints() {
+                //retorna os vértices na extremidade do ramo
+
+                V oElem = default(V), dElem=default(V), typeElem=default(V);
+
+                if (this.vOrig != null)
+                    oElem = vOrig.element;
+
+                if (this.vDest != null)
+                    dElem = vDest.element;
+
+                if (oElem == null && dElem == null)
+                    return null;
+
+                if (oElem != null)          // To get type
+                    typeElem = oElem;
+
+                if (dElem != null)
+                    typeElem = dElem;
+
+                V[] endverts = (V []) Array.CreateInstance(typeElem.GetType(), 2);
+
+                endverts[0]= oElem;
+                endverts[1]= dElem;
+
+                return endverts;
+            }
+            
             public override bool Equals(Object obj)
             {
                 if (this == obj)

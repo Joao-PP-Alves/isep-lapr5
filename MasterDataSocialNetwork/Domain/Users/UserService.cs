@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
+using System.Linq;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -12,12 +13,55 @@ namespace DDDNetCore.Domain.Users
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo)
+        private readonly FriendshipService _serviceFrienships;
+
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, FriendshipService serviceFriendships)
         {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
+            this._serviceFrienships = serviceFriendships;
         }
 
+        public async Task<List<UserDto>> GetMyFriends(UserId id){
+            var list = await this._serviceFrienships.GetByUserId(id);
+            var returnableList = new List<UserDto>();
+            foreach (var dto in list)
+            {
+                var user = await this._repo.GetByIdAsync(dto.friend);
+                returnableList.Add(new UserDto(user.Id.AsGuid(),user.Name,user.Email,user.PhoneNumber,user.tags,user.emotionalState,user.EmotionTime,user.LastEmotionalChange));
+            }
+
+            return returnableList; 
+        }
+
+        public async Task<List<UserDto>> GetPossibleIntroductionTargets(UserId myId, UserId friendId){
+            var myUserProfile = await this.GetByIdAsync(myId);
+            var myFriends = await this.GetMyFriends(myId);
+            var friendFriends = await this.GetMyFriends(friendId);
+            var myIds = new List<Guid>();
+            var friendIds = new List<Guid>();
+            foreach (var dto in myFriends)
+            {
+                if (!dto.Id.Equals(friendId.AsGuid())){
+                    myIds.Add(dto.Id);
+                }
+            }
+            foreach (var dto in friendFriends)
+            {
+                if (!dto.Id.Equals(myId.AsGuid())){
+                    friendIds.Add(dto.Id);
+                }
+            }
+            var finalList = new List<UserDto>();
+            var finalIdsList = friendIds.Except(myIds);
+            foreach (var dto in friendFriends)
+            {
+                if (finalIdsList.Contains(dto.Id)){
+                    finalList.Add(dto);
+                }
+            }
+            return finalList;
+        }
         public async Task<List<UserDto>> GetAllAsync()
         {
             var list = await this._repo.GetAllAsync();
@@ -28,7 +72,7 @@ namespace DDDNetCore.Domain.Users
             }
 
             List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState));
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange));
 
             
             return listDto;
@@ -44,7 +88,7 @@ namespace DDDNetCore.Domain.Users
             }
 
             user.updateEmotionTime();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
         }
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
@@ -53,7 +97,7 @@ namespace DDDNetCore.Domain.Users
             await this._repo.AddAsync(user);
             await this._unitOfWork.CommitAsync();
             user.updateEmotionTime();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
         }
 
         /**
@@ -76,7 +120,7 @@ namespace DDDNetCore.Domain.Users
             user.ChangeEmail(dto.email);
             user.updateEmotionTime();
             await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
         }
 
         public async Task<UserDto> InactivateAsync(UserId id)
@@ -90,7 +134,7 @@ namespace DDDNetCore.Domain.Users
             
             await this._unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
         }
 
         public async Task<UserDto> DeleteAsync(UserId id)
@@ -106,7 +150,7 @@ namespace DDDNetCore.Domain.Users
             this._repo.Remove(user);
             await this._unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
         }
 
          public async Task<UserDto> UpdateEmotionalStateAsync(UserDto dto)
@@ -122,7 +166,7 @@ namespace DDDNetCore.Domain.Users
             user.ChangeEmotionalState(dto.emotionalState);
             user.updateEmotionTime();
             await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
         }
 
          // public async Task<List<UserDto>> friendsSuggestion(UserDto dto)
