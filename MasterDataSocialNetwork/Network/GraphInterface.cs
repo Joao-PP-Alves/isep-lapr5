@@ -32,7 +32,7 @@ namespace DDDNetCore.Network
      * @param edge
      * @return opposite vertex, or null if vertex or edge don't exist
      */
-    V Opposite(V vert, Edge<V,E> edge);
+    object Opposite(V vert, Edge<V, E> edge);
 
     /**
      * Returns the number of edges leaving vertex v

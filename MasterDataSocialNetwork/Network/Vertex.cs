@@ -8,8 +8,26 @@ namespace DDDNetCore.Network
     public class Vertex<V, E>
     {
         public int key { get; set; }
-        private V element { get; set; }
-        private Dictionary<V, Edge<V, E>> outVerts;
+        public V element { get; set; }
+        public Dictionary<V, Edge<V, E>> outVerts;
+
+        public Vertex () {
+            key = -1; element = default(V); outVerts = new Dictionary<V, Edge<V, E>>();
+        }
+
+        public Vertex (int k, V vInf) {
+            key = k; element = vInf; outVerts = new Dictionary<V, Edge<V, E>>();
+        }
+
+        public Vertex (Vertex<V,E> v) {
+            key = v.key;
+            element = v.element;
+            outVerts = new Dictionary<V, Edge<V, E>>();
+            foreach (V vert in v.outVerts.Keys){
+                Edge<V,E> edge = v.outVerts[vert];
+                outVerts[vert]=edge;
+            }
+        }
 
         public void AddAdjVert(V vAdj, Edge<V, E> edge)
         {
@@ -36,9 +54,9 @@ namespace DDDNetCore.Network
             return outVerts.Keys.ToList();
         }
 
-        public ICollection<Edge<V, E>> getAllOutEdges()
+        public IList getAllOutEdges()
         {
-            return outVerts.Values;
+            return outVerts.Values.ToList();
         }
 
 
@@ -67,10 +85,10 @@ namespace DDDNetCore.Network
                 return false;
 
             //and edges also
-            ICollection<Edge<V, E>> it1 = this.getAllOutEdges();
+            IList it1 = this.getAllOutEdges();
             foreach (object edge in it1)
             {
-                ICollection<Edge<V, E>> it2 = otherVertex.getAllOutEdges();
+                IList it2 = otherVertex.getAllOutEdges();
                 bool exists = false;
                 foreach (var edge2 in it2)
                 {
@@ -98,6 +116,15 @@ namespace DDDNetCore.Network
                 newVertex.AddAdjVert(vert, this.getEdge(vert));
 
             return newVertex;
+        }
+        
+        public object GetAdjVert(Edge<V,E> edge){
+
+            foreach (V vert in outVerts.Keys )
+            if (edge.Equals(outVerts[vert]))
+                return vert;
+
+            return null;
         }
 
     }
