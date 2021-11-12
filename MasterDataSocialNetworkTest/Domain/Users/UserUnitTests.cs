@@ -15,7 +15,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
         public void setup(){
             var list  = new List<Tag>();
             list.Add(new Tag("tag1"));
-            user = new User(new Name("Joao"), new Email("email@gmail.com"),new Password(), DateTime.UtcNow, new PhoneNumber("911197791"), list , new EmotionalState(Emotion.anger));
+            user = new User(new Name("Joao"), new Email("email@gmail.com"),new Password(), new PhoneNumber("911197791"), list , new EmotionalState(Emotion.anger), new EmotionTime(DateTime.UtcNow));
 
         }
 
@@ -100,9 +100,9 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
 
         [TestMethod]
         public void testUpdateEmotionTime(){
-            user.updateEmotionTime();
+            user.updateEmotionTime(new EmotionTime(DateTime.UtcNow));
             var expected = 0;
-            Assert.IsTrue(Math.Abs(user.EmotionTime.Seconds-expected) < 0.01);
+            Assert.IsTrue(Math.Abs(user.EmotionTime.Time.Seconds-expected) < 0.01);
         }
     }
 

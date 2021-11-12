@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DDDNetCore.Domain.Users;
 
@@ -11,6 +12,8 @@ namespace DDDNetCore.Domain.Services.CreatingDTO{
 
         public EmotionalState emotionalState {get;set;}
 
+        public EmotionTime EmotionTime {get;set;}
+
         public CreatingUserDto(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState){
             this.name = name;
             this.email=email;
@@ -19,6 +22,7 @@ namespace DDDNetCore.Domain.Services.CreatingDTO{
             this.phoneNumber = phoneNumber;
             this.tags=tags;
             this.emotionalState = emotionalState;
+            this.EmotionTime = new EmotionTime(DateTime.UtcNow);
         }
     }
 }

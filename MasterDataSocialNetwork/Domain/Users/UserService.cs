@@ -28,7 +28,7 @@ namespace DDDNetCore.Domain.Users
             foreach (var dto in list)
             {
                 var user = await this._repo.GetByIdAsync(dto.friend);
-                returnableList.Add(new UserDto(user.Id.AsGuid(),user.Name,user.Email,user.PhoneNumber,user.tags,user.emotionalState,user.EmotionTime,user.LastEmotionalChange));
+                returnableList.Add(new UserDto(user.Id.AsGuid(),user.Name,user.Email,user.PhoneNumber,user.tags,user.emotionalState,user.EmotionTime));
             }
 
             return returnableList; 
@@ -68,11 +68,11 @@ namespace DDDNetCore.Domain.Users
 
             foreach (var notDto in list)
             {
-                notDto.updateEmotionTime();
+                notDto.updateEmotionTime(new EmotionTime(notDto.EmotionTime.LastEmotionalUpdate));
             }
 
             List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange));
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime));
 
             
             return listDto;
@@ -87,17 +87,17 @@ namespace DDDNetCore.Domain.Users
                 return null;
             }
 
-            user.updateEmotionTime();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
+            user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
         }
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState);
+            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState,dto.EmotionTime);
             await this._repo.AddAsync(user);
             await this._unitOfWork.CommitAsync();
-            user.updateEmotionTime();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
+            user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
         }
 
         /**
@@ -118,9 +118,9 @@ namespace DDDNetCore.Domain.Users
             user.ChangePhoneNumber(dto.phoneNumber);
             user.ChangeEmotionalState(dto.emotionalState);
             user.ChangeEmail(dto.email);
-            user.updateEmotionTime();
+            user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
         }
 
         public async Task<UserDto> InactivateAsync(UserId id)
@@ -134,7 +134,7 @@ namespace DDDNetCore.Domain.Users
             
             await this._unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
         }
 
         public async Task<UserDto> DeleteAsync(UserId id)
@@ -150,7 +150,7 @@ namespace DDDNetCore.Domain.Users
             this._repo.Remove(user);
             await this._unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
         }
 
          public async Task<UserDto> UpdateEmotionalStateAsync(UserDto dto)
@@ -164,9 +164,9 @@ namespace DDDNetCore.Domain.Users
 
             //change all field
             user.ChangeEmotionalState(dto.emotionalState);
-            user.updateEmotionTime();
+            user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime,user.LastEmotionalChange);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
         }
 
          // public async Task<List<UserDto>> friendsSuggestion(UserDto dto)
