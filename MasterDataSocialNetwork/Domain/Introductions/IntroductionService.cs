@@ -124,6 +124,35 @@ namespace DDDNetCore.Domain.Introductions
         
             return listDto;
         }
+
+        public async Task<IntroductionDto> ApproveIntroduction(IntroductionId id, Description message){
+            var intro = await this._repo.GetByIdAsync(id);
+
+            if (intro == null){
+                return null;
+            }
+            
+            intro.approveIntermediate();
+            intro.changeIntermediateToTargetUserDescription(message);
+
+            await this._unitOfWork.CommitAsync();
+
+            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser);
+        }
+
+        public async Task<IntroductionDto> ReproveIntroduction(IntroductionId id){
+            var intro = await this._repo.GetByIdAsync(id);
+
+            if (intro == null){
+                return null;
+            }
+            
+            intro.declineIntermediate();
+
+            await this._unitOfWork.CommitAsync();
+
+            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser);
+        }
         
     }
 }

@@ -123,6 +123,16 @@ namespace DDDNetCore.Controllers{
         public async Task<ActionResult<IEnumerable<IntroductionDto>>> GetPendent(Guid id){
             return await _service.GetPendentIntroductions(new UserId(id));
         }
+
+        [HttpPut("approve/{id}")]
+        public async Task<ActionResult<IntroductionDto>> ApproveIntroduction(Guid id,Description message){
+            return await _service.ApproveIntroduction(new IntroductionId(id),message);
+        }
+
+        [HttpPut("reprove/{id}")]
+        public async Task<ActionResult<IntroductionDto>> ReproveIntroduction(Guid id){
+            return await _service.ReproveIntroduction(new IntroductionId(id));
+        }
         
 
 
