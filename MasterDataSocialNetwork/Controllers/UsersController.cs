@@ -37,6 +37,33 @@ namespace DDDNetCore.Controllers{
             return user;
         }
 
+        //GET: api/Users/GetMyFriends/5
+        [HttpGet("GetMyFriends/{id}")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetMyFriends(Guid id){
+            var user = await _service.GetByIdAsync(new UserId(id));
+            if(user == null){
+                return NotFound();
+            }
+            return await _service.GetMyFriends(new UserId(user.Id));
+        } 
+
+        
+        //GET: api/Users/GetPossibleIntroductionTargets/1/2
+        [HttpGet("GetPossibleIntroductionTargets/{id}/{id2}")]
+        
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetPossibleIntroductionTargets(Guid id, Guid id2){
+            var user = await _service.GetByIdAsync(new UserId(id));
+            if(user == null){
+                return NotFound();
+            }
+            var user2 = await _service.GetByIdAsync(new UserId(id));
+            if(user == null){
+                return NotFound();
+            }
+            return await _service.GetPossibleIntroductionTargets(new UserId(user.Id), new UserId(user2.Id));
+        } 
+        
+
         // POST: api/Products
         [HttpPost]
         public async Task<ActionResult<UserDto>> Create(CreatingUserDto dto)

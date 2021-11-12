@@ -35,7 +35,7 @@ namespace DDDNetCore.Domain.Users
         
         public TimeSpan EmotionTime {get;set;}
 
-        public DateTime LastEmotionalChange;
+        public DateTime LastEmotionalChange {get;set;} 
         public bool Active { get; set; }
 
         //private HyperLink facebook;

@@ -14,13 +14,19 @@ namespace DDDNetCore.Domain.Services.DTO{
 
         public EmotionalState emotionalState {get;set;}
 
-        public UserDto(Guid Id, Name name, Email email, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState){
+        public TimeSpan EmotionTime {get;set;}
+
+        public DateTime LastEmotionalChange {get;set;} 
+
+        public UserDto(Guid Id, Name name, Email email, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState,TimeSpan EmotionTime, DateTime LastEmotionalChange){
             this.Id = Id;
             this.name = name;
             this.phoneNumber = phoneNumber;
             this.email = email;
             this.tags = tags;
             this.emotionalState = emotionalState;
+            this.EmotionTime = EmotionTime;
+            this.LastEmotionalChange = LastEmotionalChange;
         }
     }
 }

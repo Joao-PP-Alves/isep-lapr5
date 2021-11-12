@@ -11,14 +11,14 @@ namespace DDDNetCore.Domain.Users {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFriendshipRepository _repo;
         private readonly IUserRepository _repoUser;
-        private readonly UserService _serviceUser;
+        //private readonly UserService _serviceUser;
 
-        public FriendshipService(IUnitOfWork unitOfWork, IFriendshipRepository repo, IUserRepository _repoUser, UserService uservice)
+        public FriendshipService(IUnitOfWork unitOfWork, IFriendshipRepository repo, IUserRepository _repoUser/*, UserService uservice*/)
         {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._repoUser = _repoUser;
-            this._serviceUser = uservice;
+           /* this._serviceUser = uservice; */
         }
 
         public async Task<List<FriendshipDto>> GetAllAsync()
@@ -101,7 +101,7 @@ namespace DDDNetCore.Domain.Users {
 
         private async Task checkUserIdAsync(UserId userId)
         {
-           var category = await _serviceUser.GetByIdAsync(userId);
+           var category = await this._repoUser.GetByIdAsync(userId);
            if (category == null)
                 throw new BusinessRuleValidationException("Invalid Category Id.");
         }
