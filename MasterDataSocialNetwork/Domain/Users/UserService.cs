@@ -5,6 +5,7 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using System.Linq;
+using DDDNetCore.Network;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -22,46 +23,78 @@ namespace DDDNetCore.Domain.Users
             this._serviceFrienships = serviceFriendships;
         }
 
-        public async Task<List<UserDto>> GetMyFriends(UserId id){
-            var list = await this._serviceFrienships.GetByUserId(id);
-            var returnableList = new List<UserDto>();
-            foreach (var dto in list)
+        public async Task<Network<UserDto, UserDto>> GetMyFriends(UserId id, Network<User, Friendship> friendsNet, int level, int current)
+        {
+            // Base case
+            if (current == level)
             {
-                var user = await this._repo.GetByIdAsync(dto.friend);
-                returnableList.Add(new UserDto(user.Id.AsGuid(),user.Name,user.Email,user.PhoneNumber,user.tags,user.emotionalState,user.EmotionTime));
+                // Convert all users to UserDTO and FriendShips To friendShipsDTO
+                return null;
+            }
+            // Starts by inserting the central user vertex
+            if (current == 0)
+            {
+                friendsNet.InsertVertex(this._repo.GetByIdAsync(id).Result);
             }
 
-            return returnableList; 
+            // Goes trough all users in the network 
+            foreach (var user in friendsNet.Vertices())
+            {
+                // Gets their friends
+                var friends = user.friendsList;
+                foreach (var user_friendship in friends)
+                {
+                    // Adds each of the friends to the network
+                    friendsNet.InsertVertex(user_friendship.friend);
+                    friendsNet.InsertEdge(user_friendship.friend, user, user_friendship, 0);
+                }
+            }
+
+            // Recursive call to add friends of friends
+            current++;
+            GetMyFriends(id, friendsNet, level, current);
+
+            return new Network<UserDto, UserDto>(false);
         }
 
-        public async Task<List<UserDto>> GetPossibleIntroductionTargets(UserId myId, UserId friendId){
+        public async Task<List<UserDto>> GetPossibleIntroductionTargets(UserId myId, UserId friendId)
+        {
             var myUserProfile = await this.GetByIdAsync(myId);
-            var myFriends = await this.GetMyFriends(myId);
-            var friendFriends = await this.GetMyFriends(friendId);
-            var myIds = new List<Guid>();
-            var friendIds = new List<Guid>();
-            foreach (var dto in myFriends)
-            {
-                if (!dto.Id.Equals(friendId.AsGuid())){
-                    myIds.Add(dto.Id);
-                }
-            }
-            foreach (var dto in friendFriends)
-            {
-                if (!dto.Id.Equals(myId.AsGuid())){
-                    friendIds.Add(dto.Id);
-                }
-            }
-            var finalList = new List<UserDto>();
-            var finalIdsList = friendIds.Except(myIds);
-            foreach (var dto in friendFriends)
-            {
-                if (finalIdsList.Contains(dto.Id)){
-                    finalList.Add(dto);
-                }
-            }
-            return finalList;
+            // Estas linhas têm de ser corrigidas
+            var myFriends = await this.GetMyFriends(myId,new Network<User, Friendship>(false), 1, 0);
+            var friendFriends = await this.GetMyFriends(friendId, new Network<User, Friendship>(false), 1, 0);
+            // var myIds = new List<Guid>();
+            // var friendIds = new List<Guid>();
+            // foreach (var dto in myFriends)
+            // {
+            //     if (!dto.Id.Equals(friendId.AsGuid()))
+            //     {
+            //         myIds.Add(dto.Id);
+            //     }
+            // }
+            //
+            // foreach (var dto in friendFriends)
+            // {
+            //     if (!dto.Id.Equals(myId.AsGuid()))
+            //     {
+            //         friendIds.Add(dto.Id);
+            //     }
+            // }
+            //
+            // var finalList = new List<UserDto>();
+            // var finalIdsList = friendIds.Except(myIds);
+            // foreach (var dto in friendFriends)
+            // {
+            //     if (finalIdsList.Contains(dto.Id))
+            //     {
+            //         finalList.Add(dto);
+            //     }
+            // }
+
+            //return finalList;
+            return null;
         }
+
         public async Task<List<UserDto>> GetAllAsync()
         {
             var list = await this._repo.GetAllAsync();
@@ -72,11 +105,12 @@ namespace DDDNetCore.Domain.Users
             }
 
             List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime));
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState,
+                    user.EmotionTime));
 
-            
+
             return listDto;
-        } 
+        }
 
         public async Task<UserDto> GetByIdAsync(UserId id)
         {
@@ -88,16 +122,19 @@ namespace DDDNetCore.Domain.Users
             }
 
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+                user.emotionalState, user.EmotionTime);
         }
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState,dto.EmotionTime);
+            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState,
+                dto.EmotionTime);
             await this._repo.AddAsync(user);
             await this._unitOfWork.CommitAsync();
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+                user.emotionalState, user.EmotionTime);
         }
 
         /**
@@ -120,21 +157,23 @@ namespace DDDNetCore.Domain.Users
             user.ChangeEmail(dto.email);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+                user.emotionalState, user.EmotionTime);
         }
 
         public async Task<UserDto> InactivateAsync(UserId id)
         {
-            var user = await this._repo.GetByIdAsync(id); 
+            var user = await this._repo.GetByIdAsync(id);
 
             if (user == null)
-                return null;   
+                return null;
 
             user.MarkAsInative();
-            
+
             await this._unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+                user.emotionalState, user.EmotionTime);
         }
 
         public async Task<UserDto> DeleteAsync(UserId id)
@@ -150,10 +189,11 @@ namespace DDDNetCore.Domain.Users
             this._repo.Remove(user);
             await this._unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+                user.emotionalState, user.EmotionTime);
         }
 
-         public async Task<UserDto> UpdateEmotionalStateAsync(UserDto dto)
+        public async Task<UserDto> UpdateEmotionalStateAsync(UserDto dto)
         {
             var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
 
@@ -166,17 +206,18 @@ namespace DDDNetCore.Domain.Users
             user.ChangeEmotionalState(dto.emotionalState);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState, user.EmotionTime);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+                user.emotionalState, user.EmotionTime);
         }
 
-         // public async Task<List<UserDto>> friendsSuggestion(UserDto dto)
-         // {
-         //     // var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
-         //     //
-         //     // if (user == null)
-         //     // {
-         //     //     return null;
-         //     // }
-         // }
+        // public async Task<List<UserDto>> friendsSuggestion(UserDto dto)
+        // {
+        //     // var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
+        //     //
+        //     // if (user == null)
+        //     // {
+        //     //     return null;
+        //     // }
+        // }
     }
 }
