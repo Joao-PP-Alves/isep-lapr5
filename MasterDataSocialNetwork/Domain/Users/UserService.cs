@@ -219,5 +219,17 @@ namespace DDDNetCore.Domain.Users
         //     //     return null;
         //     // }
         // }
+
+        public async Task<List<UserDto>> GetFriendsSuggestionForNewUsers(UserDto dto)
+        {
+            var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
+            if (user == null)
+            {
+                return null;
+            }
+
+            var friends = this._repo.friendsSuggestion(user.Id);
+            return null;
+        }
     }
 }
