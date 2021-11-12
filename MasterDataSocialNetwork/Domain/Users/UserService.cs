@@ -233,9 +233,9 @@ namespace DDDNetCore.Domain.Users
         //     // }
         // }
 
-        public async Task<List<UserDto>> GetFriendsSuggestionForNewUsers(UserDto dto)
+        public async Task<List<UserDto>> GetFriendsSuggestionForNewUsers(UserId id)
         {
-            var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
+            var user = await this._repo.GetByIdAsync(id);
             if (user == null)
             {
                 return null;
