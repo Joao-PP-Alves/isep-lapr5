@@ -126,6 +126,12 @@ namespace DDDNetCore.Domain.Users {
 
             return web;
         }
+
+        public async Task<FriendshipDto> ConvertToDto(Friendship friendship)
+        {
+            return new FriendshipDto(friendship.Id, friendship.connection_strenght, friendship.relationship_strenght,
+                friendship.friend.Id, friendship.friendshipTag);
+        }
         
        // public async Task<Dictionary<int, List<UserDto>>> friendShipLevelMap(int level, Dictionary<int, >)
     }

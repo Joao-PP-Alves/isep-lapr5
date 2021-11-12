@@ -14,18 +14,18 @@ namespace DDDNetCore.Domain.Users
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
 
-        private readonly FriendshipService _serviceFrienships;
+        private readonly FriendshipService _serviceFriendships;
 
         public UserService(IUnitOfWork unitOfWork, IUserRepository repo, FriendshipService serviceFriendships)
         {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
-            this._serviceFrienships = serviceFriendships;
+            this._serviceFriendships = serviceFriendships;
         }
 
-        public async Task<Network<UserDto, UserDto>> GetMyFriends(UserId id, Network<User, Friendship> friendsNet, int level, int current)
+        public async Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level)
         {
-            // Base case
+           /* // Base case
             if (current == level)
             {
                 // Convert all users to UserDTO and FriendShips To friendShipsDTO
@@ -35,34 +35,41 @@ namespace DDDNetCore.Domain.Users
             if (current == 0)
             {
                 friendsNet.InsertVertex(this._repo.GetByIdAsync(id).Result);
-            }
+            } */
 
-            // Goes trough all users in the network 
-            foreach (var user in friendsNet.Vertices())
+           // Starts by inserting the central user vertex
+           friendsNet.InsertVertex(await ConvertToDto(this._repo.GetByIdAsync(id).Result));
+
+           for (int i = 0; i < level; i++)
             {
-                // Gets their friends
-                var friends = user.friendsList;
-                foreach (var user_friendship in friends)
+                // Goes trough all users in the network 
+                foreach (var user in friendsNet.Vertices())
                 {
-                    // Adds each of the friends to the network
-                    friendsNet.InsertVertex(user_friendship.friend);
-                    friendsNet.InsertEdge(user_friendship.friend, user, user_friendship, 0);
+                    // Gets their friends
+                    var friends = user.friendsList;
+                    foreach (var user_friendship in friends)
+                    {
+                        // Adds each of the friends to the network
+                        
+                        friendsNet.InsertVertex(await ConvertToDto(user_friendship.friend));
+                        friendsNet.InsertEdge(await ConvertToDto(user_friendship.friend), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
+                    }
                 }
             }
 
             // Recursive call to add friends of friends
-            current++;
-            GetMyFriends(id, friendsNet, level, current);
+            /*current++;
+            GetMyFriends(id, friendsNet, level, current); */
 
-            return new Network<UserDto, UserDto>(false);
+            return friendsNet;
         }
 
         public async Task<List<UserDto>> GetPossibleIntroductionTargets(UserId myId, UserId friendId)
         {
             var myUserProfile = await this.GetByIdAsync(myId);
             // Estas linhas têm de ser corrigidas
-            var myFriends = await this.GetMyFriends(myId,new Network<User, Friendship>(false), 1, 0);
-            var friendFriends = await this.GetMyFriends(friendId, new Network<User, Friendship>(false), 1, 0);
+    //        var myFriends = await this.GetMyFriends(myId,new Network<User, Friendship>(false), 1, 0);
+    //        var friendFriends = await this.GetMyFriends(friendId, new Network<User, Friendship>(false), 1, 0);
             // var myIds = new List<Guid>();
             // var friendIds = new List<Guid>();
             // foreach (var dto in myFriends)
@@ -207,6 +214,12 @@ namespace DDDNetCore.Domain.Users
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await this._unitOfWork.CommitAsync();
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+                user.emotionalState, user.EmotionTime);
+        }
+
+        public async Task<UserDto> ConvertToDto(User user)
+        {
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
