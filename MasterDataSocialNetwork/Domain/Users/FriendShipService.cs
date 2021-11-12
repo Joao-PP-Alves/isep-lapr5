@@ -109,7 +109,7 @@ namespace DDDNetCore.Domain.Users {
         public async Task<List<FriendshipDto>> GetByUserId(UserId userId)
         {
             List<FriendshipDto> friendships = new List<FriendshipDto>();
-            friendships = _repoUser.GetByIdAsync(userId).Result.friendsList.ConvertAll<FriendshipDto>(friendship =>
+            friendships =  _repoUser.GetByIdAsync(userId).Result.friendsList.ConvertAll<FriendshipDto>(friendship =>
                 new FriendshipDto(friendship.Id, friendship.connection_strenght, friendship.relationship_strenght, friendship.friend.Id, friendship.friendshipTag));
             
             return friendships;

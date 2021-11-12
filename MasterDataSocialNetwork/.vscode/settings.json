@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/fb942af4-2392-4394-a34c-dbf7557d503b/resourceGroups/LAPR5/providers/Microsoft.Web/sites/21S5DD20SocialGame",
+    "appService.deploySubpath": "publish"
+}

@@ -22,7 +22,7 @@ namespace DDDNetCore.Domain.Services.CreatingDTO{
             this.phoneNumber = phoneNumber;
             this.tags=tags;
             this.emotionalState = emotionalState;
-            this.EmotionTime = new EmotionTime(DateTime.UtcNow);
+            this.EmotionTime = new EmotionTime((new DateTime()).Date);
         }
     }
 }

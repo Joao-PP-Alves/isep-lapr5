@@ -5,7 +5,7 @@ using DDDNetCore.Domain.Shared;
 namespace DDDNetCore.Domain.Users{
     public interface IUserRepository : IRepository<User,UserId>
     {
-        public List<string> friendsSuggestion(UserId id);
+        public List<UserId> friendsSuggestion(UserId id);
 
     }
 }

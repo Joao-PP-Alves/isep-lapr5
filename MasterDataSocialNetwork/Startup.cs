@@ -25,30 +25,6 @@ namespace DDDNetCore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
-            // try 
-            // { 
-            //     SqlConnection connection = new SqlConnection();
-            //     connection.ConnectionString =
-            //         "Data Source=vs398.dei.isep.ipp.pt;" +
-            //         "Initial Catalog=master;" +
-            //         "User id=Zezoca;" +
-            //         "Password=Tropita123;";
-            //     
-            //     
-            //     //SqlConnection connection = new SqlConnection();
-            //     //connection.ConnectionString = configuration.GetConnectionString("ConnectionString");
-            //
-            //         var sql = "CREATE TABLE teste3(id int primary key)";
-            //         
-            //     using var command = new SqlCommand(sql, connection);
-            //     connection.Open();
-            //     command.ExecuteNonQuery();
-            // }
-            // catch (SqlException e)
-            // {
-            //     Console.WriteLine(e.ToString());
-            // }
         }
 
         public IConfiguration Configuration { get; }
