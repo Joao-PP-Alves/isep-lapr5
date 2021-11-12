@@ -4,11 +4,12 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
+using DDDNetCore.Domain.Connections;
 
 
 namespace DDDNetCore.Domain.Connections
 {
-    public class ConnectionService
+    public class ConnectionService : IConnectionService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConnectionRepository _repo;
@@ -79,7 +80,7 @@ namespace DDDNetCore.Domain.Connections
             return new ConnectionDto(connection.Id.AsGuid(),connection.requester,connection.targetUser,connection.description,connection.decision);
         }
 
-        private async Task checkUserIdAsync(UserId userId)
+        public async Task checkUserIdAsync(UserId userId)
         {
             var user = await _repoUser.GetByIdAsync(userId);
             if (user == null)
