@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using DDDNetCore.Domain.Connections;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Shared;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace DDDNetCore.Infrastructure.Users
 {
@@ -17,24 +20,34 @@ namespace DDDNetCore.Infrastructure.Users
         {
         }
 
-        public List<string> friendsSuggestion(UserId id)
-
+        public List<UserId> friendsSuggestion(UserId id)
         {
-             List<string> friends = new List<String>();
-            using (SqlConnection connection = new SqlConnection("DefaultConnection"))
+            List<UserId> friend = new List<UserId>();
+            var user = _context.Users.Find(id);
+            var tags = user.tags;
+            foreach (Tag usertag in tags)
             {
-                SqlCommand command = new SqlCommand("SELECT * FROM USER", connection);
-                connection.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (_context.Database.OpenConnectionAsync())
                 {
-                    while (reader.Read())
+                    SqlCommand command = new SqlCommand("SELECT UserId FROM Users_tags ut WHERE ut.name = @userTag");
+                    command.Parameters.AddWithValue("@userTag", usertag);
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    try
                     {
-                        friends.Add(reader.ToString());
+                        while (reader.Read())
+                        {
+                            friend.Add(new UserId(reader["UserId"].ToString()));
+                        }
+                    }
+                    finally
+                    {
+                        reader.Close();
+                        _context.Database.CloseConnectionAsync();
                     }
                 }
             }
-
-            return friends;
+            return friend;
         }
     }
 }

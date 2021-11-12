@@ -6,6 +6,7 @@ using System;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
+using DDDNetCore.Network;
 
 
 namespace DDDNetCore.Controllers{
@@ -37,17 +38,23 @@ namespace DDDNetCore.Controllers{
             return user;
         }
 
-        //GET: api/Users/GetMyFriends/5
-        [HttpGet("GetMyFriends/{id}")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetMyFriends(Guid id){
+        //GET: api/Users/MyFriends/(GUID)/1
+        [HttpGet("MyFriends/{id}/{level}")]
+        // Level is the depth of the friendships
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetMyFriends(Guid id, int level)
+        {
             var user = await _service.GetByIdAsync(new UserId(id));
-            if(user == null){
+            if (user == null)
+            {
                 return NotFound();
             }
-            return await _service.GetMyFriends(new UserId(user.Id));
-        } 
 
-        
+            var net = _service.GetMyFriends(new UserId(user.Id), new Network<User, Friendship>(false), level, 0);
+            // NOt implemented
+            return null;
+        }
+
+
         //GET: api/Users/GetPossibleIntroductionTargets/1/2
         [HttpGet("GetPossibleIntroductionTargets/{id}/{id2}")]
         
