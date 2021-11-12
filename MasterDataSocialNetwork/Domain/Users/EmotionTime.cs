@@ -6,7 +6,7 @@ namespace DDDNetCore.Domain.Users
     public class EmotionTime : IValueObject{
         public DateTime LastEmotionalUpdate {get; set;}
 
-        public TimeSpan Time {get;set;}
+        public TimeSpan Time {get;}
 
         public EmotionTime (DateTime date){
             if (date == null){
@@ -14,7 +14,7 @@ namespace DDDNetCore.Domain.Users
             } else {
                 this.LastEmotionalUpdate = date;
             }
-            this.Time = DateTime.UtcNow - date;            
+            Time = DateTime.UtcNow - date;            
         }
     }
 }
