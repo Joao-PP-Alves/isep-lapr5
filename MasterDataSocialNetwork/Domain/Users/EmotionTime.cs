@@ -8,13 +8,13 @@ namespace DDDNetCore.Domain.Users
 
         public TimeSpan Time {get;set;}
 
-        public EmotionTime (DateTime Date){
-            if (Date == null){
+        public EmotionTime (DateTime date){
+            if (date == null){
                 this.LastEmotionalUpdate = DateTime.UtcNow;    
             } else {
-                this.LastEmotionalUpdate = Date;
+                this.LastEmotionalUpdate = date;
             }
-            this.Time = DateTime.UtcNow - Date;            
+            this.Time = DateTime.UtcNow - date;            
         }
     }
 }
