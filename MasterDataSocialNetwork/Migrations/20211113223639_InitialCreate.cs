@@ -90,9 +90,10 @@ namespace DDDNetCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    connection_strenght_value = table.Column<float>(type: "real", nullable: true),
-                    relationship_strenght_value = table.Column<float>(type: "real", nullable: true),
+                    connection_strenght_value = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    relationship_strenght_value = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     friendId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    requesterId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     friendshipTag_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -102,6 +103,13 @@ namespace DDDNetCore.Migrations
                     table.ForeignKey(
                         name: "FK_Friendships_Users_friendId",
                         column: x => x.friendId,
+                        principalSchema: "LAPR5",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Friendships_Users_requesterId",
+                        column: x => x.requesterId,
                         principalSchema: "LAPR5",
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -135,6 +143,12 @@ namespace DDDNetCore.Migrations
                 schema: "LAPR5",
                 table: "Friendships",
                 column: "friendId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friendships_requesterId",
+                schema: "LAPR5",
+                table: "Friendships",
+                column: "requesterId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

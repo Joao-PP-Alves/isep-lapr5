@@ -4,16 +4,14 @@ using DDDNetCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDNetCoreDbContext))]
-    [Migration("20211113184827_InitialCreate")]
-    partial class InitialCreate
+    partial class DDDNetCoreDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,9 +95,14 @@ namespace DDDNetCore.Migrations
                     b.Property<string>("friendId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("requesterId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("friendId");
+
+                    b.HasIndex("requesterId");
 
                     b.ToTable("Friendships");
                 });
@@ -243,13 +246,17 @@ namespace DDDNetCore.Migrations
                         .WithMany("friendsList")
                         .HasForeignKey("friendId");
 
+                    b.HasOne("DDDNetCore.Domain.Users.User", "requester")
+                        .WithMany()
+                        .HasForeignKey("requesterId");
+
                     b.OwnsOne("DDDNetCore.Domain.Users.ConnectionStrength", "connection_strenght", b1 =>
                         {
                             b1.Property<string>("FriendshipId")
                                 .HasColumnType("nvarchar(450)");
 
-                            b1.Property<float>("value")
-                                .HasColumnType("real");
+                            b1.Property<string>("value")
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("FriendshipId");
 
@@ -264,8 +271,8 @@ namespace DDDNetCore.Migrations
                             b1.Property<string>("FriendshipId")
                                 .HasColumnType("nvarchar(450)");
 
-                            b1.Property<float>("value")
-                                .HasColumnType("real");
+                            b1.Property<string>("value")
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("FriendshipId");
 
@@ -298,6 +305,8 @@ namespace DDDNetCore.Migrations
                     b.Navigation("friendshipTag");
 
                     b.Navigation("relationship_strenght");
+
+                    b.Navigation("requester");
                 });
 
             modelBuilder.Entity("DDDNetCore.Domain.Users.User", b =>
