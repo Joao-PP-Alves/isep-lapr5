@@ -12,7 +12,7 @@ namespace DDDNetCore.Infrastructure.Users
         //  builder.H(b => b.user1);
         //   builder.HasOne(b => b.user2);
             builder.OwnsOne(b => b.friendshipTag);
-            builder.HasOne(b => b.friend);
+            // builder.HasOne(b => b.friend);
         }
     }
 }
