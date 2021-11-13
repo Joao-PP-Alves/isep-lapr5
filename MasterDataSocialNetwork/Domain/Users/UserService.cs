@@ -51,8 +51,8 @@ namespace DDDNetCore.Domain.Users
                    {
                        // Adds each of the friends to the network
                         
-                       friendsNet.InsertVertex(await ConvertToDto(user_friendship.friend));
-                       friendsNet.InsertEdge(await ConvertToDto(user_friendship.friend), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
+                       friendsNet.InsertVertex(await ConvertToDto(this._repo.GetByIdAsync(new UserId(user_friendship.friend.AsGuid())).Result));
+                       friendsNet.InsertEdge(await ConvertToDto(this._repo.GetByIdAsync(new UserId(user_friendship.friend.AsGuid())).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
                    }
                }
            }

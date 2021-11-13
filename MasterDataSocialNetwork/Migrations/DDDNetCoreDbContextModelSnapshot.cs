@@ -4,16 +4,14 @@ using DDDNetCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDNetCoreDbContext))]
-    [Migration("20211110161841_MigrationTest")]
-    partial class MigrationTest
+    partial class DDDNetCoreDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,9 +51,6 @@ namespace DDDNetCore.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ConnectionId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Enabler")
                         .HasColumnType("nvarchar(max)");
 
@@ -64,6 +59,9 @@ namespace DDDNetCore.Migrations
 
                     b.Property<string>("TargetUser")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("decisionStatus")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -94,23 +92,21 @@ namespace DDDNetCore.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<float>("connection_strenght")
                         .HasColumnType("real");
+
+                    b.Property<string>("friend")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("relationship_strenght")
                         .HasColumnType("real");
 
-                    b.Property<string>("user1Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("user2Id")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("user1Id");
-
-                    b.HasIndex("user2Id");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Friendships");
                 });
@@ -154,13 +150,13 @@ namespace DDDNetCore.Migrations
 
             modelBuilder.Entity("DDDNetCore.Domain.Introductions.Introduction", b =>
                 {
-                    b.OwnsOne("DDDNetCore.Domain.Shared.DecisionState", "decision", b1 =>
+                    b.OwnsOne("DDDNetCore.Domain.Shared.Description", "MessageFromIntermediateToTargetUser", b1 =>
                         {
                             b1.Property<string>("IntroductionId")
                                 .HasColumnType("nvarchar(450)");
 
-                            b1.Property<int>("decision")
-                                .HasColumnType("int");
+                            b1.Property<string>("text")
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("IntroductionId");
 
@@ -170,7 +166,23 @@ namespace DDDNetCore.Migrations
                                 .HasForeignKey("IntroductionId");
                         });
 
-                    b.OwnsOne("DDDNetCore.Domain.Shared.Description", "Description", b1 =>
+                    b.OwnsOne("DDDNetCore.Domain.Shared.Description", "MessageToIntermediate", b1 =>
+                        {
+                            b1.Property<string>("IntroductionId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<string>("text")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("IntroductionId");
+
+                            b1.ToTable("Introductions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IntroductionId");
+                        });
+
+                    b.OwnsOne("DDDNetCore.Domain.Shared.Description", "MessageToTargetUser", b1 =>
                         {
                             b1.Property<string>("IntroductionId")
                                 .HasColumnType("nvarchar(450)");
@@ -202,9 +214,11 @@ namespace DDDNetCore.Migrations
                                 .HasForeignKey("IntroductionId");
                         });
 
-                    b.Navigation("decision");
+                    b.Navigation("MessageFromIntermediateToTargetUser");
 
-                    b.Navigation("Description");
+                    b.Navigation("MessageToIntermediate");
+
+                    b.Navigation("MessageToTargetUser");
 
                     b.Navigation("Requester");
                 });
@@ -232,13 +246,9 @@ namespace DDDNetCore.Migrations
 
             modelBuilder.Entity("DDDNetCore.Domain.Users.Friendship", b =>
                 {
-                    b.HasOne("DDDNetCore.Domain.Users.User", "user1")
-                        .WithMany()
-                        .HasForeignKey("user1Id");
-
-                    b.HasOne("DDDNetCore.Domain.Users.User", "user2")
-                        .WithMany()
-                        .HasForeignKey("user2Id");
+                    b.HasOne("DDDNetCore.Domain.Users.User", null)
+                        .WithMany("friendsList")
+                        .HasForeignKey("UserId");
 
                     b.OwnsOne("DDDNetCore.Domain.Users.Tag", "friendshipTag", b1 =>
                         {
@@ -257,10 +267,6 @@ namespace DDDNetCore.Migrations
                         });
 
                     b.Navigation("friendshipTag");
-
-                    b.Navigation("user1");
-
-                    b.Navigation("user2");
                 });
 
             modelBuilder.Entity("DDDNetCore.Domain.Users.User", b =>
@@ -285,12 +291,6 @@ namespace DDDNetCore.Migrations
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("nvarchar(450)");
-
-                            b1.Property<DateTime>("Time")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<TimeSpan>("TimeElapsed")
-                                .HasColumnType("time");
 
                             b1.Property<int>("emotion")
                                 .HasColumnType("int");
@@ -386,6 +386,11 @@ namespace DDDNetCore.Migrations
                     b.Navigation("PhoneNumber");
 
                     b.Navigation("tags");
+                });
+
+            modelBuilder.Entity("DDDNetCore.Domain.Users.User", b =>
+                {
+                    b.Navigation("friendsList");
                 });
 #pragma warning restore 612, 618
         }
