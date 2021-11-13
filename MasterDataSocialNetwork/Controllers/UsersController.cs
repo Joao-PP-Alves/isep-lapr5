@@ -177,9 +177,11 @@ namespace DDDNetCore.Controllers{
             }
         }
 
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetFriendsSuggestion(Guid id)
+        //GET: api/Users/GetFriendsSuggestion/1
+        [HttpGet("GetFriendsSuggestion/{id}")]
+        public async Task<ActionResult<IEnumerable<UserId>>> GetFriendsSuggestion(Guid id)
         {
-            var user = GetGetById(id);
+            var user = await GetGetById(id);
             if (user == null)
             {
                 return NotFound();
