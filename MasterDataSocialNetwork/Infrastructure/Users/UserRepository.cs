@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
+using System.Threading.Tasks;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Shared;
+using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,31 +21,28 @@ namespace DDDNetCore.Infrastructure.Users
             _context = context;
         }
 
+        public async Task<List<Tag>> GetTagList(UserId id)
+        {
+            return _context.Users.Find(id).tags;
+        }
+
+        public async Task<List<User>> GetUserSuggestion(Tag usertag)
+        {
+            return await _context.Users.Where(user => ((user.tags).Contains(usertag))).ToListAsync();
+        }
+
         public List<UserId> friendsSuggestion(UserId id)
         {
             List<UserId> friend = new List<UserId>();
-            var tags = _context.Users.FirstOrDefault().tags;
-            Console.WriteLine(tags);
-            foreach (Tag usertag in tags)
+            var tag = GetTagList(id).Result;
+            foreach (Tag usertag in tag)
             {
-                using (_context.Database.OpenConnectionAsync())
+                var userSuggestions = GetUserSuggestion(usertag).Result;
+                foreach (User u in userSuggestions)
                 {
-                    SqlCommand command = new SqlCommand("SELECT UserId FROM Users_tags ut WHERE ut.name = @userTag");
-                    //command.CreateParameter("@usertag", usertag)
-                    command.Parameters.AddWithValue("@userTag", usertag);
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    try
+                    if (!friend.Contains(u.Id))
                     {
-                        while (reader.Read())
-                        {
-                            friend.Add(new UserId(reader["UserId"].ToString()));
-                        }
-                    }
-                    finally
-                    {
-                        reader.Close();
-                        _context.Database.CloseConnectionAsync();
+                        friend.Add(u.Id);
                     }
                 }
             }
