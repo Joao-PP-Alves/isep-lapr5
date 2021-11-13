@@ -20,5 +20,15 @@ namespace DDDNetCore.Infrastructure.Introductions
             || (id.Equals(x.TargetUser) && x.decisionStatus.Equals(IntroductionStatus.APPROVAL_ACCEPTED))
             )).ToListAsync();
         }
+
+        public async Task<List<Introduction>> getPendentIntroductionsOnlyIntermediate(UserId id){
+            return await ((DbSet<Introduction>)base.getContext()).Where(x => (
+                (id.Equals(x.Enabler) && x.decisionStatus.Equals(IntroductionStatus.PENDING_APPROVAL)))).ToListAsync();
+        }
+
+        public async Task<List<Introduction>> getPendentIntroductionsOnlyTargetUser(UserId id){
+            return await ((DbSet<Introduction>)base.getContext()).Where(x => (
+                (id.Equals(x.TargetUser) && x.decisionStatus.Equals(IntroductionStatus.APPROVAL_ACCEPTED)))).ToListAsync();
+        }
     }
 }
