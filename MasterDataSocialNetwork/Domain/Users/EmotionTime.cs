@@ -16,5 +16,10 @@ namespace DDDNetCore.Domain.Users
             }
             Time = DateTime.UtcNow - date;            
         }
+
+        public EmotionTime(){
+            this.LastEmotionalUpdate = DateTime.UtcNow;
+            this.Time = DateTime.UtcNow - this.LastEmotionalUpdate;            
+        }
     }
 }
