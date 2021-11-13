@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDDNetCore.Migrations
 {
-    public partial class MigrationTest : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,13 +33,14 @@ namespace DDDNetCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    decision_decision = table.Column<int>(type: "int", nullable: true),
+                    decisionStatus = table.Column<int>(type: "int", nullable: false),
                     MissionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description_text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MessageToIntermediate_text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MessageToTargetUser_text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MessageFromIntermediateToTargetUser_text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Requester_Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Enabler = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TargetUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -75,8 +76,6 @@ namespace DDDNetCore.Migrations
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PhoneNumber_Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     emotionalState_emotion = table.Column<int>(type: "int", nullable: true),
-                    emotionalState_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    emotionalState_TimeElapsed = table.Column<TimeSpan>(type: "time", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -92,24 +91,17 @@ namespace DDDNetCore.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     connection_strenght = table.Column<float>(type: "real", nullable: false),
                     relationship_strenght = table.Column<float>(type: "real", nullable: false),
-                    user1Id = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    user2Id = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    friend = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     friendshipTag_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
+                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Friendships", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Friendships_Users_user1Id",
-                        column: x => x.user1Id,
-                        principalSchema: "LAPR5",
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Friendships_Users_user2Id",
-                        column: x => x.user2Id,
+                        name: "FK_Friendships_Users_UserId",
+                        column: x => x.UserId,
                         principalSchema: "LAPR5",
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -139,16 +131,10 @@ namespace DDDNetCore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friendships_user1Id",
+                name: "IX_Friendships_UserId",
                 schema: "LAPR5",
                 table: "Friendships",
-                column: "user1Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Friendships_user2Id",
-                schema: "LAPR5",
-                table: "Friendships",
-                column: "user2Id");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
