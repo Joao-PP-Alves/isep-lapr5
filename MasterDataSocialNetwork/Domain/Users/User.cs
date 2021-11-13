@@ -43,12 +43,11 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(Name name, Email email, List<Friendship> friendsList, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
+        public User(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
             this.friendsList = friendsList;
-            this.Date = date;
             this.Email = email;
             this.Password = password;
             this.PhoneNumber = phoneNumber;

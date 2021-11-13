@@ -24,8 +24,8 @@ namespace DDDNetCore.Domain.Users
         public Friendship(User friend) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
-            this.connection_strenght = new ConnectionStrength(1);
-            this.relationship_strenght = new RelationshipStrength(1);
+            this.connection_strenght = new ConnectionStrength("1");
+            this.relationship_strenght = new RelationshipStrength("1");
             this.friendshipTag = new Tag();
             this.Active = true;
         }

@@ -4,13 +4,13 @@ namespace DDDNetCore.Domain.Users
 {
     public class ConnectionStrength
     {
-        public float value { get; set; }
+        public string value { get; set; }
         
         public ConnectionStrength(){}
 
-        public ConnectionStrength(float value)
+        public ConnectionStrength(string value)
         {
-            if (value <= 0.0)
+            if (float.Parse(value) <= 0.0)
             {
                 throw new BusinessRuleValidationException("The relationship strength must be a positive number!");
             }

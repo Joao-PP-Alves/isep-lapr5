@@ -4,16 +4,16 @@ namespace DDDNetCore.Domain.Users
 {
     public class RelationshipStrength : IValueObject
     {
-        public float value { get; set; }
+        public string value { get; set; }
 
         public RelationshipStrength()
         {
             
         }
 
-        public RelationshipStrength(float value)
+        public RelationshipStrength(string value)
         {
-            if (value <= 0.0)
+            if (float.Parse(value) <= 0.0)
             {
                 throw new BusinessRuleValidationException("The relationship strength value must be a positive number.");
             }
