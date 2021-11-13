@@ -231,7 +231,7 @@ namespace DDDNetCore.Domain.Users
                 return null;
             }
 
-            var friends = this._repo.friendsSuggestion(user.Id);
+            var friends = this._repo.GetFriendsSuggestion(user.Id);
             return friends;
         }
     }
