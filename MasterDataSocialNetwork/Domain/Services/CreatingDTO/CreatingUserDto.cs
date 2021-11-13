@@ -12,7 +12,7 @@ namespace DDDNetCore.Domain.Services.CreatingDTO{
 
         public EmotionalState emotionalState {get;set;}
 
-      //  public EmotionTime EmotionTime {get;set;}
+       public EmotionTime EmotionTime {get;set;}
 
         public CreatingUserDto(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState/*, EmotionTime EmotionTime*/){
             this.name = name;
@@ -22,7 +22,7 @@ namespace DDDNetCore.Domain.Services.CreatingDTO{
             this.phoneNumber = phoneNumber;
             this.tags=tags;
             this.emotionalState = emotionalState;
-          //  this.EmotionTime = new EmotionTime(new DateTime());
+            this.EmotionTime = new EmotionTime(new DateTime());
         }
     }
 }
