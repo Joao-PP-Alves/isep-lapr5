@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Domain.Users
 {
-    public class Friendship : Entity<FriendshipId> {
-
+    public class Friendship : Entity<FriendshipId>
+    {
 
         public ConnectionStrength connection_strenght {get; set;}
 
         public RelationshipStrength relationship_strenght {get; set;}
 
         public User friend {get; set;}
+        
+        public User requester { get; set; }
         
         public Tag friendshipTag {get; set;}
 
@@ -21,18 +24,20 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(User friend) {
+        public Friendship(User friend, User requester) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
+            this.requester = requester;
             this.connection_strenght = new ConnectionStrength("1");
             this.relationship_strenght = new RelationshipStrength("1");
             this.friendshipTag = new Tag();
             this.Active = true;
         }
 
-        public Friendship(User friend, ConnectionStrength connection_strenght, RelationshipStrength relationship_strenght, Tag friendshipTags) {
+        public Friendship(User friend, User requester, ConnectionStrength connection_strenght, RelationshipStrength relationship_strenght, Tag friendshipTags) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
+            this.requester = requester;
             this.connection_strenght = connection_strenght;
             this.relationship_strenght = relationship_strenght;
             this.friendshipTag = friendshipTags;

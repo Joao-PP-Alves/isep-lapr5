@@ -15,6 +15,8 @@ namespace DDDNetCore.Domain.Services.DTO
         public RelationshipStrength relationship_strenght { get; set; }
 
         public User friend { get; set; }
+        
+        public User requester { get; set; }
 
         public Tag friendshipTag { get; set; }
 

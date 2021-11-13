@@ -42,7 +42,7 @@ namespace DDDNetCore.Domain.Users {
         {
             var friend = (dto.friend);
 
-            var friendship = new Friendship(friend, dto.connection_strenght,dto.relationship_strenght,dto.friendshipTag);
+            var friendship = new Friendship(friend, dto.requester, dto.connection_strenght,dto.relationship_strenght,dto.friendshipTag);
 
             await this._repo.AddAsync(friendship);
 
@@ -134,7 +134,7 @@ namespace DDDNetCore.Domain.Users {
         public async void UpdateFriendsList(FriendshipDto dto, Guid id)
         {
             var user = _repoUser.GetByIdAsync(new UserId(id)).Result;
-            user.friendsList.Add(new Friendship(dto.friend,dto.connection_strenght,dto.relationship_strenght,dto.friendshipTag));
+            user.friendsList.Add(new Friendship(dto.friend, dto.requester, dto.connection_strenght,dto.relationship_strenght,dto.friendshipTag));
         }
         
        // public async Task<Dictionary<int, List<UserDto>>> friendShipLevelMap(int level, Dictionary<int, >)
