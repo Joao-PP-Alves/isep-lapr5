@@ -28,7 +28,8 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<List<User>> GetUserSuggestion(Tag usertag)
         {
-            return await _context.Users.Where(user => ((user.tags).Contains(usertag))).ToListAsync();
+            //return await ((DbSet<User>) base.getContext()).Where(user => user.tags.Contains(usertag)).ToListAsync();
+            return await _context.Users.Where(u => u.tags.All(t => t.name.Equals(usertag))).ToListAsync();
         }
 
         public List<UserId> friendsSuggestion(UserId id)
