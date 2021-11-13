@@ -32,7 +32,7 @@ namespace DDDNetCore.Domain.Users
         public EmotionalState emotionalState { get; set; }
 
         public List<Friendship> friendsList { get; set; }
-        public EmotionTime EmotionTime {get; private set;} 
+        //public EmotionTime EmotionTime {get; private set;} 
         public bool Active { get; set; }
 
         //private HyperLink facebook;
@@ -43,7 +43,7 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public User(Name name, Email email, List<Friendship> friendsList, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState, EmotionTime EmotionTime)
+        public User(Name name, Email email, List<Friendship> friendsList, Password password, DateTime date, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState /*EmotionTime EmotionTime*/)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
@@ -54,11 +54,11 @@ namespace DDDNetCore.Domain.Users
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
-            this.EmotionTime = EmotionTime;
+           // this.EmotionTime = EmotionTime;
             this.Active = true;
         }
 
-        public User(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
+        public User(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState/*,EmotionTime EmotionTime*/)
         {
             this.Id = new UserId(Guid.NewGuid());
             this.Name = name;
@@ -67,7 +67,7 @@ namespace DDDNetCore.Domain.Users
             this.PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
-            this.EmotionTime = EmotionTime;
+          //  this.EmotionTime = EmotionTime;
             this.Active = true;
         }
 
@@ -149,7 +149,7 @@ namespace DDDNetCore.Domain.Users
                 return; //se o emotional state for nulo, mantém o mesmo
             } 
             this.emotionalState = emotionalState;
-            this.EmotionTime = new EmotionTime(DateTime.UtcNow);
+            //this.EmotionTime = new EmotionTime(DateTime.UtcNow);
         }
 
 
@@ -177,10 +177,10 @@ namespace DDDNetCore.Domain.Users
             }
         }
 
-        
-        public void updateEmotionTime(EmotionTime time){
-            this.EmotionTime = time;
-        }
+        //
+        // public void updateEmotionTime(EmotionTime time){
+        //     this.EmotionTime = time;
+        // }
 
     }
 }

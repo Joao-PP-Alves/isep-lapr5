@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using DDDNetCore.Domain.Connections;
-using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Shared;
 using Microsoft.Data.SqlClient;
@@ -23,8 +20,8 @@ namespace DDDNetCore.Infrastructure.Users
         public List<UserId> friendsSuggestion(UserId id)
         {
             List<UserId> friend = new List<UserId>();
-            var user = _context.Users.Find(id);
-            var tags = user.tags;
+            var tags = _context.Users.FirstOrDefault().tags;
+            Console.WriteLine(tags);
             foreach (Tag usertag in tags)
             {
                 using (_context.Database.OpenConnectionAsync())

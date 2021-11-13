@@ -5,6 +5,7 @@ using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Introductions;
+using DDDNetCore.Domain.Missions;
 
 namespace DDDNetCore.Domain.Introductions
 {
@@ -13,11 +14,13 @@ namespace DDDNetCore.Domain.Introductions
         private readonly IUnitOfWork _unitOfWork;
         private readonly IIntroductionRepository _repo;
         private readonly IUserRepository _repoUser;
+        private readonly IMissionRepository _repoMission;
 
-        public IntroductionService(IUnitOfWork unitOfWork, IIntroductionRepository repo, IUserRepository repoUser){
+        public IntroductionService(IUnitOfWork unitOfWork, IIntroductionRepository repo, IUserRepository repoUser, IMissionRepository repoMission){
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._repoUser = repoUser;
+            this._repoMission = repoMission;
         }
 
         public async Task<List<IntroductionDto>> GetAllAsync()
@@ -146,12 +149,36 @@ namespace DDDNetCore.Domain.Introductions
             if (intro == null){
                 return null;
             }
+
+            var mission = await this._repoMission.GetByIdAsync(intro.MissionId);
             
             intro.declineIntermediate();
+
+            mission.UnsucessMissionStatus();
 
             await this._unitOfWork.CommitAsync();
 
             return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser);
+        }
+
+        public async Task<List<IntroductionDto>> GetPendentIntroductionsOnlyIntermediate(UserId id){
+
+            var list = await this._repo.getPendentIntroductionsOnlyIntermediate(id);
+
+            List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro =>
+                new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser));
+        
+            return listDto;
+        }
+
+        public async Task<List<IntroductionDto>> GetPendentIntroductionsOnlyTargetUser(UserId id){
+
+            var list = await this._repo.getPendentIntroductionsOnlyTargetUser(id);
+
+            List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro =>
+                new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser));
+        
+            return listDto;
         }
         
     }

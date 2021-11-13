@@ -41,17 +41,17 @@ namespace DDDNetCore.Controllers{
         //GET: api/Users/MyFriends/(GUID)/1
         [HttpGet("MyFriends/{id}/{level}")]
         // Level is the depth of the friendships
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetMyFriends(Guid id, int level)
+        public async Task<Task<Network<UserDto, FriendshipDto>>> GetMyFriends(Guid id, int level)
         {
             var user = await _service.GetByIdAsync(new UserId(id));
             if (user == null)
             {
-                return NotFound();
+                return null;
             }
 
-            var net = _service.GetMyFriends(new UserId(user.Id), new Network<User, Friendship>(false), level, 0);
+            Task<Network<UserDto, FriendshipDto>> net = _service.GetMyFriends(new UserId(user.Id), new Network<UserDto, FriendshipDto>(false), level);
             // NOt implemented
-            return null;
+            return net;
         }
 
 
@@ -177,14 +177,17 @@ namespace DDDNetCore.Controllers{
             }
         }
 
-        // public async Task<ActionResult<IEnumerable<UserDto>>> getFriendsSuggestion(Guid id)
-        // {
-        //     // var user = await _service.GetByIdAsync(new UserId(id));
-        //     // if(user == null){
-        //     //     return NotFound();
-        //     // }
-        //     // return await _service.GetPossibleIntroductionTargets(new UserId(user.Id), new UserId(user2.Id));
-        //
-        // }
+        //GET: api/Users/GetFriendsSuggestion/1
+        [HttpGet("GetFriendsSuggestion/{id}")]
+        public async Task<ActionResult<IEnumerable<UserId>>> GetFriendsSuggestion(Guid id)
+        {
+            var user = await GetGetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return await _service.GetFriendsSuggestionForNewUsers(new UserId(id));
+        }
     }
 }
