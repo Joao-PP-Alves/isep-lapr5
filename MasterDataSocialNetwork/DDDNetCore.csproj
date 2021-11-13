@@ -34,6 +34,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
       <PackageReference Include="zxcvbn-core" Version="7.0.92" />
   </ItemGroup>
+ 
+  <ItemGroup>
+    <Compile Remove="Infrastructure\Users\UserRepository.cs.BASE.cs" />
+    <Compile Remove="Infrastructure\Users\UserRepository.cs.LOCAL.cs" />
+    <Compile Remove="Infrastructure\Users\UserRepository.cs.REMOTE.cs" />
+  </ItemGroup>
 
 </Project>
  

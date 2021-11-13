@@ -6,10 +6,11 @@ using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Introductions;
 using DDDNetCore.Domain.Missions;
+using System;
 
 namespace DDDNetCore.Domain.Introductions
 {
-    public class IntroductionService
+    public class IntroductionService : IIntroductionService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IIntroductionRepository _repo;
@@ -85,13 +86,16 @@ namespace DDDNetCore.Domain.Introductions
             await checkUserIdAsync(dto.Requester);
             await checkUserIdAsync(dto.Enabler);
             await checkUserIdAsync(dto.TargetUser);
-            var intro = new Introduction(dto.MessageToTargetUser,dto.MessageToIntermediate,dto.MissionId,dto.Requester,dto.Enabler,dto.TargetUser);
+            if (_repoUser.checkIfNotFriends(dto.Requester,dto.Enabler) || _repoUser.checkIfNotFriends(dto.Enabler,dto.TargetUser) || _repoUser.checkIfFriends(dto.Requester,dto.TargetUser)){
+                throw new BusinessRuleValidationException("Users might not be connected. Check friendships between them.");
+            } else {
+                var intro = new Introduction(dto.MessageToTargetUser,dto.MessageToIntermediate,dto.MissionId,dto.Requester,dto.Enabler,dto.TargetUser);
 
-            await this._repo.AddAsync(intro);
-            await this._unitOfWork.CommitAsync();
+                await this._repo.AddAsync(intro);
+                await this._unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser);
-
+                return new IntroductionDto(intro.Id.AsGuid(),intro.MissionId,intro.decisionStatus, intro.MessageToTargetUser,intro.MessageToIntermediate,intro.MessageFromIntermediateToTargetUser, intro.Requester, intro.Enabler, intro.TargetUser);
+            }
         }
 
         public async Task<IntroductionDto> UpdateAsync(IntroductionDto dto)

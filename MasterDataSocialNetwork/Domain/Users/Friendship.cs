@@ -7,11 +7,11 @@ namespace DDDNetCore.Domain.Users
     public class Friendship : Entity<FriendshipId> {
 
 
-        public float connection_strenght {get; set;}
+        public ConnectionStrength connection_strenght {get; set;}
 
-        public float relationship_strenght {get; set;}
+        public RelationshipStrength relationship_strenght {get; set;}
 
-        public UserId friend {get; set;}
+        public User friend {get; set;}
         
         public Tag friendshipTag {get; set;}
 
@@ -21,25 +21,25 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(UserId friend) {
+        public Friendship(User friend) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
-            this.connection_strenght = 0;
-            this.relationship_strenght = 0;
+            this.connection_strenght = new ConnectionStrength("1");
+            this.relationship_strenght = new RelationshipStrength("1");
             this.friendshipTag = new Tag();
             this.Active = true;
         }
 
-        public Friendship(UserId friend, float connection_strenght, float relationship_strenght, Tag friendshipTags) {
+        public Friendship(User friend, ConnectionStrength connection_strenght, RelationshipStrength relationship_strenght, Tag friendshipTags) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
             this.connection_strenght = connection_strenght;
             this.relationship_strenght = relationship_strenght;
-            this.friendshipTag = friendshipTag;
+            this.friendshipTag = friendshipTags;
             this.Active = true;
         }
 
-        public void ChangeConnectionStrenght(float connection_strenght) {
+        public void ChangeConnectionStrenght(ConnectionStrength connection_strenght) {
             if(this.friend == null) {
                 throw new BusinessRuleValidationException("The relationship is invalid. One or both users are null");
             }

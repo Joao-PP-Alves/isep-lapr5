@@ -18,7 +18,7 @@ namespace DDDNetCore.Infrastructure.Users
 
         public UserRepository(DDDNetCoreDbContext context) : base(context.Users)
         {
-            this._context = context;
+            _context = context;
         }
 
         public async Task<List<Tag>> GetTagList(UserId id)
@@ -48,6 +48,26 @@ namespace DDDNetCore.Infrastructure.Users
             }
             return friend;
         }
+
+        public Boolean checkIfFriends(UserId id, UserId id2){
+            var friendships = _context.Users.Find(id).friendsList;
+            if (friendships == null){
+                return false;
+            }
+            foreach (var friendship in friendships)
+            {
+                if (friendship.friend == GetByIdAsync(id2).Result){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Boolean checkIfNotFriends(UserId id, UserId id2){
+            return (!checkIfFriends(id,id2));
+        }
+
+
     }
 }
 

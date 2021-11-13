@@ -4,14 +4,16 @@ using DDDNetCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDNetCoreDbContext))]
-    partial class DDDNetCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211113184827_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,21 +94,12 @@ namespace DDDNetCore.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("friendId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<float>("connection_strenght")
-                        .HasColumnType("real");
-
-                    b.Property<string>("friend")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("relationship_strenght")
-                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("friendId");
 
                     b.ToTable("Friendships");
                 });
@@ -246,9 +239,41 @@ namespace DDDNetCore.Migrations
 
             modelBuilder.Entity("DDDNetCore.Domain.Users.Friendship", b =>
                 {
-                    b.HasOne("DDDNetCore.Domain.Users.User", null)
+                    b.HasOne("DDDNetCore.Domain.Users.User", "friend")
                         .WithMany("friendsList")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("friendId");
+
+                    b.OwnsOne("DDDNetCore.Domain.Users.ConnectionStrength", "connection_strenght", b1 =>
+                        {
+                            b1.Property<string>("FriendshipId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<float>("value")
+                                .HasColumnType("real");
+
+                            b1.HasKey("FriendshipId");
+
+                            b1.ToTable("Friendships");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FriendshipId");
+                        });
+
+                    b.OwnsOne("DDDNetCore.Domain.Users.RelationshipStrength", "relationship_strenght", b1 =>
+                        {
+                            b1.Property<string>("FriendshipId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<float>("value")
+                                .HasColumnType("real");
+
+                            b1.HasKey("FriendshipId");
+
+                            b1.ToTable("Friendships");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FriendshipId");
+                        });
 
                     b.OwnsOne("DDDNetCore.Domain.Users.Tag", "friendshipTag", b1 =>
                         {
@@ -266,7 +291,13 @@ namespace DDDNetCore.Migrations
                                 .HasForeignKey("FriendshipId");
                         });
 
+                    b.Navigation("connection_strenght");
+
+                    b.Navigation("friend");
+
                     b.Navigation("friendshipTag");
+
+                    b.Navigation("relationship_strenght");
                 });
 
             modelBuilder.Entity("DDDNetCore.Domain.Users.User", b =>
@@ -278,6 +309,22 @@ namespace DDDNetCore.Migrations
 
                             b1.Property<string>("EmailAddress")
                                 .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsOne("DDDNetCore.Domain.Users.EmotionTime", "EmotionTime", b1 =>
+                        {
+                            b1.Property<string>("UserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<DateTime>("LastEmotionalUpdate")
+                                .HasColumnType("datetime2");
 
                             b1.HasKey("UserId");
 
@@ -378,6 +425,8 @@ namespace DDDNetCore.Migrations
                     b.Navigation("Email");
 
                     b.Navigation("emotionalState");
+
+                    b.Navigation("EmotionTime");
 
                     b.Navigation("Name");
 

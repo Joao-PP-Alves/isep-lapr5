@@ -11,14 +11,12 @@ namespace DDDNetCore.Domain.Users {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFriendshipRepository _repo;
         private readonly IUserRepository _repoUser;
-        //private readonly UserService _serviceUser;
 
-        public FriendshipService(IUnitOfWork unitOfWork, IFriendshipRepository repo, IUserRepository _repoUser/*, UserService uservice*/)
+        public FriendshipService(IUnitOfWork unitOfWork, IFriendshipRepository repo, IUserRepository _repoUser)
         {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._repoUser = _repoUser;
-           /* this._serviceUser = uservice; */
         }
 
         public async Task<List<FriendshipDto>> GetAllAsync()
@@ -42,15 +40,15 @@ namespace DDDNetCore.Domain.Users {
 
         public async Task<FriendshipDto> AddAsync(CreatingFriendshipDto dto)
         {
-            var friend = await _repoUser.GetByIdAsync(dto.friend);
+            var friend = (dto.friend);
 
-            var friendship = new Friendship(friend.Id, dto.connection_strenght,dto.relationship_strenght,dto.friendshipTag);
+            var friendship = new Friendship(friend, dto.connection_strenght,dto.relationship_strenght,dto.friendshipTag);
 
             await this._repo.AddAsync(friendship);
 
             await this._unitOfWork.CommitAsync();
 
-            return new FriendshipDto(friendship.Id, friendship.connection_strenght, friendship.relationship_strenght, friend.Id, friendship.friendshipTag);
+            return new FriendshipDto(friendship.Id, friendship.connection_strenght, friendship.relationship_strenght, friend, friendship.friendshipTag);
         }
 
         public async Task<FriendshipDto> UpdateAsync(FriendshipDto dto)
@@ -131,6 +129,12 @@ namespace DDDNetCore.Domain.Users {
         {
             return new FriendshipDto(friendship.Id, friendship.connection_strenght, friendship.relationship_strenght,
                 friendship.friend, friendship.friendshipTag);
+        }
+
+        public async void UpdateFriendsList(FriendshipDto dto, Guid id)
+        {
+            var user = _repoUser.GetByIdAsync(new UserId(id)).Result;
+            user.friendsList.Add(new Friendship(dto.friend,dto.connection_strenght,dto.relationship_strenght,dto.friendshipTag));
         }
         
        // public async Task<Dictionary<int, List<UserDto>>> friendShipLevelMap(int level, Dictionary<int, >)
