@@ -124,6 +124,16 @@ namespace DDDNetCore.Controllers{
             return await _service.GetPendentIntroductions(new UserId(id));
         }
 
+        [HttpGet("pendentOnlyIntermediate/{id}")]
+        public async Task<ActionResult<IEnumerable<IntroductionDto>>> GetPendentOnlyIntermediate(Guid id){
+            return await _service.GetPendentIntroductionsOnlyIntermediate(new UserId(id));
+        }
+
+        [HttpGet("pendentOnlyTargetUser/{id}")]
+        public async Task<ActionResult<IEnumerable<IntroductionDto>>> GetPendentOnlyTargetUser(Guid id){
+            return await _service.GetPendentIntroductionsOnlyIntermediate(new UserId(id));
+        }
+
         [HttpPut("approve/{id}")]
         public async Task<ActionResult<IntroductionDto>> ApproveIntroduction(Guid id,Description message){
             return await _service.ApproveIntroduction(new IntroductionId(id),message);

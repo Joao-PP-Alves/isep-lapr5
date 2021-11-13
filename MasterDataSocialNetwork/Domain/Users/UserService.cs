@@ -223,7 +223,7 @@ namespace DDDNetCore.Domain.Users
                 user.emotionalState/*, user.EmotionTime*/);
         }
 
-        public async Task<List<UserDto>> GetFriendsSuggestionForNewUsers(UserId id)
+        public async Task<List<UserId>> GetFriendsSuggestionForNewUsers(UserId id)
         {
             var user = await this._repo.GetByIdAsync(id);
             if (user == null)
@@ -232,7 +232,7 @@ namespace DDDNetCore.Domain.Users
             }
 
             var friends = this._repo.friendsSuggestion(user.Id);
-            return null;
+            return friends;
         }
     }
 }

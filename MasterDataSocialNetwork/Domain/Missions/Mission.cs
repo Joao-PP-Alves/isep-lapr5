@@ -35,6 +35,10 @@ namespace DDDNetCore.Domain.Missions
             this.dificultyDegree = dificultyDegree;
         }
 
+        public void UnsucessMissionStatus(){
+            this.status = Status.INACTIVE;
+        }
+
         public void deactivate()
         {
             if (this.Active == false)
