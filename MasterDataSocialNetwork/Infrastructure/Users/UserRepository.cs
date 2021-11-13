@@ -56,7 +56,7 @@ namespace DDDNetCore.Infrastructure.Users
             }
             foreach (var friendship in friendships)
             {
-                if (friendship.friend == id2){
+                if (friendship.friend == GetByIdAsync(id2).Result){
                     return true;
                 }
             }

@@ -16,7 +16,7 @@ namespace DDDNetCore.Controllers{
         private readonly UserService _service;
 
         /**
-        * contrutor do controller  
+        * construtor do controller  
         **/
         public UsersController(UserService service){
             _service = service;
@@ -186,8 +186,10 @@ namespace DDDNetCore.Controllers{
             {
                 return NotFound();
             }
-
+            
             return await _service.GetFriendsSuggestionForNewUsers(new UserId(id));
         }
     }
+    
+    
 }

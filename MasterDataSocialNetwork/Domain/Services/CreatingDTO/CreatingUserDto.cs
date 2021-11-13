@@ -10,15 +10,17 @@ namespace DDDNetCore.Domain.Services.CreatingDTO{
         public PhoneNumber phoneNumber {get; set;}
         public List<Tag> tags {get; set;}
 
+        public List<Friendship> friendsList { get; set; }
+
         public EmotionalState emotionalState {get;set;}
 
        public EmotionTime EmotionTime {get;set;}
 
-        public CreatingUserDto(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState/*, EmotionTime EmotionTime*/){
+        public CreatingUserDto(Name name, Email email, List<Friendship> friendsList, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState/*, EmotionTime EmotionTime*/){
             this.name = name;
             this.email=email;
             this.password = new Password(password.Value);
-            //this.password = password;
+            this.friendsList = friendsList;
             this.phoneNumber = phoneNumber;
             this.tags=tags;
             this.emotionalState = emotionalState;

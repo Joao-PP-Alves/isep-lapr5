@@ -5,13 +5,13 @@ namespace DDDNetCore.Domain.Services.CreatingDTO
 {
     public class CreatingFriendshipDto
     {
-        public float connection_strenght {get;set;}
-        public float relationship_strenght {get;set;}
-        public UserId friend {get;set;}
+        public ConnectionStrength connection_strenght {get;set;}
+        public RelationshipStrength relationship_strenght {get;set;}
+        public User friend {get;set;}
 
         public Tag friendshipTag {get; set;}
 
-        public CreatingFriendshipDto(float connection_strenght, float relationship_strenght, UserId friend, Tag friendshipTag){
+        public CreatingFriendshipDto(ConnectionStrength connection_strenght, RelationshipStrength relationship_strenght, User friend, Tag friendshipTag){
             this.connection_strenght = connection_strenght;
             this.relationship_strenght = relationship_strenght;
             this.friend = friend;
