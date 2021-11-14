@@ -125,11 +125,6 @@ namespace DDDNetCore.Domain.Users
             }
         }
 
-        public void AddFriendship(Friendship newFriendship)
-        {
-            this.friendsList.Add(newFriendship);
-        }
-
         public void RemoveFriendship(Friendship friendship)
         {
             this.friendsList.Remove(friendship);
@@ -192,6 +187,20 @@ namespace DDDNetCore.Domain.Users
         
         public void updateEmotionTime(EmotionTime time){
             this.EmotionTime = time;
+        }
+
+        public void AddFriendship(Friendship friendship)
+        {
+            if (this.friendsList == null)
+            {
+                friendsList = new List<Friendship>();
+            }
+
+            if (friendship == null)
+            {
+                throw new Exception("The friendship is invalid!");
+            }
+            this.friendsList.Add(friendship);
         }
 
     }
