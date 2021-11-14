@@ -51,8 +51,8 @@ namespace DDDNetCore.Domain.Users
                    {
                        // Adds each of the friends to the network
                         
-                       friendsNet.InsertVertex(await ConvertToDto(this._repo.GetByIdAsync(new UserId(user_friendship.friend.AsGuid())).Result));
-                       friendsNet.InsertEdge(await ConvertToDto(this._repo.GetByIdAsync(new UserId(user_friendship.friend.AsGuid())).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
+                       friendsNet.InsertVertex(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result));
+                       friendsNet.InsertEdge(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
                    }
                }
            }
@@ -112,7 +112,7 @@ namespace DDDNetCore.Domain.Users
             }
 
             List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState,
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags, user.emotionalState,
                     user.EmotionTime));
 
 
@@ -129,7 +129,7 @@ namespace DDDNetCore.Domain.Users
             }
 
            user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState , user.EmotionTime);
         }
 
@@ -181,12 +181,12 @@ namespace DDDNetCore.Domain.Users
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState,
+            var user = new User(dto.name, dto.email, dto.friendsList, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState,
                 dto.EmotionTime);
             await this._repo.AddAsync(user);
             await this._unitOfWork.CommitAsync();
           user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -207,10 +207,11 @@ namespace DDDNetCore.Domain.Users
             user.ChangeTags(dto.tags);
             user.ChangePhoneNumber(dto.phoneNumber);
             user.ChangeEmotionalState(dto.emotionalState);
+            user.updateFriendShips(dto.friendsList);
             user.ChangeEmail(dto.email);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -225,7 +226,7 @@ namespace DDDNetCore.Domain.Users
 
             await this._unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -242,7 +243,7 @@ namespace DDDNetCore.Domain.Users
             this._repo.Remove(user);
             await this._unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -259,7 +260,7 @@ namespace DDDNetCore.Domain.Users
             user.ChangeEmotionalState(dto.emotionalState);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -277,7 +278,7 @@ namespace DDDNetCore.Domain.Users
                 return null;
             }
 
-            var friends = this._repo.friendsSuggestion(user.Id);
+            var friends = this._repo.GetFriendsSuggestion(user.Id);
             return friends;
         }
     }

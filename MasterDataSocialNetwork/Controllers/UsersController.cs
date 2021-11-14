@@ -16,7 +16,7 @@ namespace DDDNetCore.Controllers{
         private readonly UserService _service;
 
         /**
-        * contrutor do controller  
+        * construtor do controller  
         **/
         public UsersController(UserService service){
             _service = service;
@@ -111,7 +111,7 @@ namespace DDDNetCore.Controllers{
 
             try
             {
-                var showUser = GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
+                var showUser = await GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
 
                 var user = await _service.UpdateProfileAsync(dto);
                 
@@ -198,8 +198,10 @@ namespace DDDNetCore.Controllers{
             {
                 return NotFound();
             }
-
+            
             return await _service.GetFriendsSuggestionForNewUsers(new UserId(id));
         }
     }
+    
+    
 }

@@ -10,20 +10,23 @@ namespace DDDNetCore.Domain.Services.DTO
     public class FriendshipDto
     {
         public FriendshipId Id { get; set; }
-        public float connection_strenght { get; set; }
+        public ConnectionStrength connection_strength { get; set; }
 
-        public float relationship_strenght { get; set; }
+        public RelationshipStrength relationship_strength { get; set; }
 
         public UserId friend { get; set; }
+        
+        public UserId requester { get; set; }
 
         public Tag friendshipTag { get; set; }
 
-        public FriendshipDto(FriendshipId Id, float connection_strenght, float relationship_strenght, UserId friend, Tag friendshipTag)
+        public FriendshipDto(FriendshipId Id, ConnectionStrength connection_strength, RelationshipStrength relationship_strength, UserId friend, UserId requester, Tag friendshipTag)
         {
             this.Id = Id;
-            this.connection_strenght = connection_strenght;
-            this.relationship_strenght = relationship_strenght;
+            this.connection_strength = connection_strength;
+            this.relationship_strength = relationship_strength;
             this.friend = friend;
+            this.requester = requester;
             this.friendshipTag = friendshipTag;
         }
     }
