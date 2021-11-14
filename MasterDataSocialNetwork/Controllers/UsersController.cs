@@ -15,7 +15,7 @@ namespace DDDNetCore.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserService _service;
+        private readonly IUserService _service;
 
         /**
         * construtor do controller  
@@ -24,6 +24,10 @@ namespace DDDNetCore.Controllers
         {
             _service = service;
         }
+
+    /*    public UsersController(IUserService service){
+            _service = service;
+        } */
 
         //GET: api/Users
         [HttpGet]

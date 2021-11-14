@@ -16,9 +16,12 @@ namespace DDDNetCore.Controllers{
     [ApiController]
     public class IntroductionsController : ControllerBase
     {
-        private readonly IntroductionService _service;
+        private readonly IIntroductionService _service;
 
         public IntroductionsController(IntroductionService service){
+            _service = service;
+        }
+        public IntroductionsController(IIntroductionService service){
             _service = service;
         }
 

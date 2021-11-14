@@ -7,7 +7,7 @@ using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 
 namespace DDDNetCore.Domain.Users {
-    public class FriendshipService {
+    public class FriendshipService : IFriendshipService {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFriendshipRepository _repo;
         private readonly IUserRepository _repoUser;
@@ -122,6 +122,11 @@ namespace DDDNetCore.Domain.Users {
         {
             return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength,
                 friendship.friend, friendship.requester, friendship.friendshipTag);
+        }
+
+        public void UpdateFriendsList(FriendshipDto dto, Guid id)
+        {
+            throw new NotImplementedException();
         }
 
         /* public async void UpdateFriendsList(FriendshipDto dto, Guid id)
