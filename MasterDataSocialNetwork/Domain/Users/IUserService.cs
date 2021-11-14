@@ -5,6 +5,7 @@ using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using System;
 using DDDNetCore.Network;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace DDDNetCore.Domain.Users{
@@ -23,5 +24,6 @@ namespace DDDNetCore.Domain.Users{
         public Task<List<UserId>> GetFriendsSuggestionForNewUsers(UserId id);
         public Task<List<UserDto>> GetPossibleIntroductionTargets(UserId myId, UserId friendId);
         public Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level);
+        Task<FriendshipDto> NewFriendship(CreatingFriendshipDto dto);
     }
 }

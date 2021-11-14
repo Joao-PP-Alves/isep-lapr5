@@ -47,7 +47,6 @@ namespace DDDNetCore.Controllers{
             try
             {
                 var friendship = await _service.AddAsync(dto);
-                _service.UpdateFriendsList(friendship, dto.requester.AsGuid());
 
                 return CreatedAtAction(nameof(GetById), new { id = friendship.Id }, friendship);
             }
@@ -55,7 +54,7 @@ namespace DDDNetCore.Controllers{
             {
                 return BadRequest(new {Message = ex.Message});
             }
-        }
+        } 
 
         // PUT: api/Introductions/5
         [HttpPut("{id}")]

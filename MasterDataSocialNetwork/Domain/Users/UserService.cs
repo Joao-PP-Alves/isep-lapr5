@@ -13,6 +13,7 @@ namespace DDDNetCore.Domain.Users
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
+        private readonly IFriendshipRepository _friendshipRepository;
 
         private readonly IFriendshipService _serviceFriendships;
 
@@ -33,20 +34,12 @@ namespace DDDNetCore.Domain.Users
 
         public async Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level)
         {
-           /* // Base case
-            if (current == level)
-            {
-                // Convert all users to UserDTO and FriendShips To friendShipsDTO
-                return null;
-            }
-            // Starts by inserting the central user vertex
-            if (current == 0)
-            {
-                friendsNet.InsertVertex(this._repo.GetByIdAsync(id).Result);
-            } */
 
-           // Starts by inserting the central user vertex
-           friendsNet.InsertVertex(await ConvertToDto(this._repo.GetByIdAsync(id).Result));
+            // Starts by inserting the central user vertex
+           var current = _repo.GetByIdAsync(id).Result;
+           var dto = await ConvertToDto(current);
+           friendsNet.InsertVertex(dto);
+           List<Friendship> friendships = new List<Friendship>();
 
            for (int i = 0; i < level; i++)
            {
@@ -54,12 +47,15 @@ namespace DDDNetCore.Domain.Users
                foreach (var user in friendsNet.Vertices())
                {
                    // Gets their friends
-                   var friends = user.friendsList;
-                   foreach (var user_friendship in friends)
+                   friendships = await _friendshipRepository.GetAllByUser(current);
+                   
+                   
+                   //var friends = user.friendsList;
+                   foreach (var user_friendship in friendships)
                    {
                        // Adds each of the friends to the network
-                        
-                       friendsNet.InsertVertex(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result));
+                       current = _repo.GetByIdAsync(id).Result;
+                       friendsNet.InsertVertex(await ConvertToDto(current));
                        friendsNet.InsertEdge(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
                    }
                }
@@ -288,6 +284,28 @@ namespace DDDNetCore.Domain.Users
 
             var friends = this._repo.GetFriendsSuggestion(user.Id);
             return friends;
+        }
+        
+        public async Task<FriendshipDto> NewFriendship(CreatingFriendshipDto dto)
+        {
+            await checkUserIdAsync(dto.friend);
+            await checkUserIdAsync(dto.requester);
+            var friend = await (_repo.GetByIdAsync(dto.friend));
+            var requester = await _repo.GetByIdAsync(dto.requester);
+            
+            var friendship = new Friendship(friend.Id, requester.Id, dto.connection_strength,dto.relationship_strength,dto.friendshipTag);
+            _repo.NewFriendship(new FriendshipDto(friendship.Id.AsGuid(),dto.connection_strength, dto.relationship_strength, dto.friend, dto.requester, dto.friendshipTag));
+            
+            await _unitOfWork.CommitAsync();
+
+            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
+        }
+        
+        private async Task checkUserIdAsync(UserId userId)
+        {
+            var category = await this._repo.GetByIdAsync(userId);
+            if (category == null)
+                throw new BusinessRuleValidationException("Invalid User Id.");
         }
     }
 }

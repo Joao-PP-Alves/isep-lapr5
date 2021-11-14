@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DDDNetCore.Domain.Services.DTO;
+using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Shared;
 using Microsoft.Data.SqlClient;
@@ -105,7 +107,23 @@ namespace DDDNetCore.Infrastructure.Users
             return await ((DbSet<User>)base.getContext()).Where(x => name.Equals(x.Name.text)).ToListAsync();
         }
 
+        public async void NewFriendship(FriendshipDto dto)
+        { 
+            var friend  = GetByIdAsync(new UserId(dto.friend.AsGuid())).Result;
+            var requester = GetByIdAsync(new UserId(dto.requester.AsString())).Result;
+            if (friend == null || requester == null)
+            {
+                throw new Exception("Invalid User Id.");
+            }
+            
+            /**
+             * TODO (próximo sprint): relationship strength é calculada, connection strength + tag pode ser diferente
+             **/
 
+            requester.AddFriendship(new Friendship(dto.friend, dto.requester, dto.connection_strength,dto.relationship_strength,dto.friendshipTag));
+            friend.AddFriendship(new Friendship(dto.requester, dto.friend, dto.connection_strength, dto.relationship_strength, dto.friendshipTag));
+
+        }
     }
 }
 

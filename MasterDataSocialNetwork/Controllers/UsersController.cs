@@ -9,11 +9,14 @@ using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Network;
 
 
-namespace DDDNetCore.Controllers{
+namespace DDDNetCore.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase{
+    public class UsersController : ControllerBase
+    {
         private readonly IUserService _service;
+
 
         public UsersController(IUserService service){
             _service = service;
@@ -21,29 +24,35 @@ namespace DDDNetCore.Controllers{
 
         //GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll(){
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
+        {
             return await _service.GetAllAsync();
-        } 
+        }
 
         //GET: api/users/ByEmail/j@gmail.com
         [HttpGet("ByEmail/{email}")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetByEmail(string email){
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetByEmail(string email)
+        {
             return await _service.GetByEmail(email);
         }
-        
+
         //GET: api/users/ByEmail/j
         [HttpGet("ByName/{name}")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetByName(string name){
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetByName(string name)
+        {
             return await _service.GetByName(name);
         }
 
         //GET: api/Users
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetGetById(Guid id){
+        public async Task<ActionResult<UserDto>> GetGetById(Guid id)
+        {
             var user = await _service.GetByIdAsync(new UserId(id));
-            if(user == null){
+            if (user == null)
+            {
                 return NotFound();
             }
+
             return user;
         }
 
@@ -58,27 +67,33 @@ namespace DDDNetCore.Controllers{
                 return null;
             }
 
-            Task<Network<UserDto, FriendshipDto>> net = _service.GetMyFriends(new UserId(user.Id), new Network<UserDto, FriendshipDto>(false), level);
-            // NOt implemented
+            Task<Network<UserDto, FriendshipDto>> net = _service.GetMyFriends(new UserId(user.Id),
+                new Network<UserDto, FriendshipDto>(false), level);
+            
             return net;
         }
 
 
         //GET: api/Users/GetPossibleIntroductionTargets/1/2
         [HttpGet("GetPossibleIntroductionTargets/{id}/{id2}")]
-        
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetPossibleIntroductionTargets(Guid id, Guid id2){
+
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetPossibleIntroductionTargets(Guid id, Guid id2)
+        {
             var user = await _service.GetByIdAsync(new UserId(id));
-            if(user == null){
+            if (user == null)
+            {
                 return NotFound();
             }
+
             var user2 = await _service.GetByIdAsync(new UserId(id));
-            if(user == null){
+            if (user == null)
+            {
                 return NotFound();
             }
+
             return await _service.GetPossibleIntroductionTargets(new UserId(user.Id), new UserId(user2.Id));
-        } 
-        
+        }
+
 
         // POST: api/Users
         [HttpPost]
@@ -88,15 +103,15 @@ namespace DDDNetCore.Controllers{
             {
                 var user = await _service.AddAsync(dto);
 
-                return CreatedAtAction(nameof(GetGetById), new { id = user.Id }, user);
+                return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
             }
-            catch(BusinessRuleValidationException ex)
+            catch (BusinessRuleValidationException ex)
             {
                 return BadRequest(new {Message = ex.Message});
             }
         }
 
-        
+
         // PUT: api/Users/5
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDto>> UpdateProfile(Guid id, UserDto dto)
@@ -108,23 +123,24 @@ namespace DDDNetCore.Controllers{
 
             try
             {
-                var showUser = await GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
+                var showUser = await GetGetById(id); //para mostrar as informações do perfil do user antes de as alterar
 
                 var user = await _service.UpdateProfileAsync(dto);
-                
+
                 if (user == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(user);
             }
-            catch(BusinessRuleValidationException ex)
+            catch (BusinessRuleValidationException ex)
             {
                 return BadRequest(new {Message = ex.Message});
             }
         }
 
-         // PUT: api/Users/5/EmotionalStateUpdate
+        // PUT: api/Users/5/EmotionalStateUpdate
         [HttpPut("{id}/EmotionalStateUpdate")]
         public async Task<ActionResult<UserDto>> UpdateEmotionalState(Guid id, UserDto dto)
         {
@@ -138,14 +154,15 @@ namespace DDDNetCore.Controllers{
                 var showUser = await GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
 
                 var user = await _service.UpdateEmotionalStateAsync(dto);
-                
+
                 if (user == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(user);
             }
-            catch(BusinessRuleValidationException ex)
+            catch (BusinessRuleValidationException ex)
             {
                 return BadRequest(new {Message = ex.Message});
             }
@@ -164,7 +181,7 @@ namespace DDDNetCore.Controllers{
 
             return Ok(user);
         }
-        
+
         // DELETE: api/Users/5
         [HttpDelete("{id}/hard")]
         public async Task<ActionResult<UserDto>> HardDelete(Guid id)
@@ -180,9 +197,9 @@ namespace DDDNetCore.Controllers{
 
                 return Ok(user);
             }
-            catch(BusinessRuleValidationException ex)
+            catch (BusinessRuleValidationException ex)
             {
-               return BadRequest(new {Message = ex.Message});
+                return BadRequest(new {Message = ex.Message});
             }
         }
 
@@ -195,10 +212,26 @@ namespace DDDNetCore.Controllers{
             {
                 return NotFound();
             }
-            
+
             return await _service.GetFriendsSuggestionForNewUsers(new UserId(id));
         }
+        
+        [HttpPost("NewFriendship/{id}")]
+        public async Task<ActionResult<FriendshipDto>> NewFriendship(CreatingFriendshipDto dto)
+        {
+            try
+            {
+                return await _service.NewFriendship(dto);
+                //var friendship = await _service.AddAsync(dto);
+
+                //return CreatedAtAction(nameof(GetById), new { id = friendship.Id }, friendship);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
     }
-    
-    
 }
+    
+    
