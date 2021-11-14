@@ -14,11 +14,6 @@ namespace DDDNetCore.Controllers{
     public class FriendshipsController : ControllerBase
     {
         private readonly IFriendshipService _service;
-
-        public FriendshipsController(FriendshipService service){
-            _service = service;
-        }
-
         public FriendshipsController(IFriendshipService service){
             _service = service;
         }

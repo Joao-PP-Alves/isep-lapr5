@@ -7,7 +7,7 @@ using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 
 namespace DDDNetCore.Domain.Missions {
-    public class MissionService {
+    public class MissionService  : IMissionService{
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMissionRepository _repo;
 

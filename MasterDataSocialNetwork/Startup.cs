@@ -70,19 +70,19 @@ namespace DDDNetCore
             services.AddTransient<IUnitOfWork,UnitOfWork>();
 
             services.AddTransient<IUserRepository,UserRepository>();
-            services.AddTransient<UserService>();
+            services.AddTransient<IUserService,UserService>();
 
             services.AddTransient<IFriendshipRepository,FriendshipRepository>();
-            services.AddTransient<FriendshipService>();   
+            services.AddTransient<IFriendshipService,FriendshipService>();   
             
             services.AddTransient<IMissionRepository,MissionRepository>();
-            services.AddTransient<MissionService>();
+            services.AddTransient<IMissionService,MissionService>();
 
             services.AddTransient<IConnectionRepository,ConnectionRepository>();
-            services.AddTransient<ConnectionService>();
+            services.AddTransient<IConnectionService,ConnectionService>();
 
             services.AddTransient<IIntroductionRepository,IntroductionRepository>();
-            services.AddTransient<IntroductionService>();
+            services.AddTransient<IIntroductionService,IntroductionService>();
         }
     }
 }

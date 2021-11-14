@@ -17,10 +17,6 @@ namespace DDDNetCore.Controllers{
     public class IntroductionsController : ControllerBase
     {
         private readonly IIntroductionService _service;
-
-        public IntroductionsController(IntroductionService service){
-            _service = service;
-        }
         public IntroductionsController(IIntroductionService service){
             _service = service;
         }

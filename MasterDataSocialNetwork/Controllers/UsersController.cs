@@ -15,13 +15,6 @@ namespace DDDNetCore.Controllers{
     public class UsersController : ControllerBase{
         private readonly IUserService _service;
 
-        /**
-        * construtor do controller  
-        **/
-        public UsersController(UserService service){
-            _service = service;
-        }
-
         public UsersController(IUserService service){
             _service = service;
         }
@@ -142,7 +135,7 @@ namespace DDDNetCore.Controllers{
 
             try
             {
-                var showUser = GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
+                var showUser = await GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
 
                 var user = await _service.UpdateEmotionalStateAsync(dto);
                 

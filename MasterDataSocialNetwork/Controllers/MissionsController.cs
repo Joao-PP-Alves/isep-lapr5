@@ -15,9 +15,9 @@ namespace DDDNetCore.Controllers{
     [ApiController]
     public class MissionsController : ControllerBase
     {
-        private readonly MissionService _service;
+        private readonly IMissionService _service;
 
-        public MissionsController(MissionService service){
+        public MissionsController(IMissionService service){
             _service = service;
         }
 

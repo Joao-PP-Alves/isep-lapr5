@@ -18,10 +18,6 @@ namespace DDDNetCore.Controllers{
     {
         private readonly IConnectionService _service;
 
-        public ConnectionsController(ConnectionService service){
-            _service = service;
-        }
-
         public ConnectionsController(IConnectionService service){
             _service = service;
         }
