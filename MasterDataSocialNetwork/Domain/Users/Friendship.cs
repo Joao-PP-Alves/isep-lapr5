@@ -12,9 +12,9 @@ namespace DDDNetCore.Domain.Users
 
         public RelationshipStrength relationship_strength {get; set;}
 
-        public UserId friend {get; set;}
+        public UserId friend {get; private set;}
         
-        public UserId requester { get; set; }
+        public UserId requester { get; private set; }
         
         public Tag friendshipTag {get; set;}
 

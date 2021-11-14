@@ -9,7 +9,7 @@ namespace DDDNetCore.Domain.Services.DTO
 {
     public class FriendshipDto
     {
-        public FriendshipId Id { get; set; }
+        public Guid Id { get; set; }
         public ConnectionStrength connection_strength { get; set; }
 
         public RelationshipStrength relationship_strength { get; set; }
@@ -20,7 +20,7 @@ namespace DDDNetCore.Domain.Services.DTO
 
         public Tag friendshipTag { get; set; }
 
-        public FriendshipDto(FriendshipId Id, ConnectionStrength connection_strength, RelationshipStrength relationship_strength, UserId friend, UserId requester, Tag friendshipTag)
+        public FriendshipDto(Guid Id, ConnectionStrength connection_strength, RelationshipStrength relationship_strength, UserId friend, UserId requester, Tag friendshipTag)
         {
             this.Id = Id;
             this.connection_strength = connection_strength;

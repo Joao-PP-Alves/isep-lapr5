@@ -23,7 +23,7 @@ namespace DDDNetCore.Domain.Users {
         {
             var list = await this._repo.GetAllAsync();
             
-            List<FriendshipDto> listDto = list.ConvertAll<FriendshipDto>(f => new FriendshipDto(f.Id, f.connection_strength, f.relationship_strength, f.friend, f.requester, f.friendshipTag));
+            List<FriendshipDto> listDto = list.ConvertAll<FriendshipDto>(f => new FriendshipDto(f.Id.AsGuid(), f.connection_strength, f.relationship_strength, f.friend, f.requester, f.friendshipTag));
 
             return listDto;
         }
@@ -35,11 +35,13 @@ namespace DDDNetCore.Domain.Users {
             if(friendship == null)
                 return null;
 
-            return new FriendshipDto(friendship.Id, friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag);
+            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag);
         }
 
         public async Task<FriendshipDto> AddAsync(CreatingFriendshipDto dto)
         {
+            await checkUserIdAsync(dto.friend);
+            await checkUserIdAsync(dto.requester);
             var friend = await (_repoUser.GetByIdAsync(dto.friend));
             var requester = await _repoUser.GetByIdAsync(dto.requester);
             
@@ -49,12 +51,13 @@ namespace DDDNetCore.Domain.Users {
 
             await _unitOfWork.CommitAsync();
 
-            return new FriendshipDto(friendship.Id, friendship.connection_strength, friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
+            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
         }
+        
 
         public async Task<FriendshipDto> UpdateAsync(FriendshipDto dto)
         {
-            var friendship = await this._repo.GetByIdAsync(dto.Id); 
+            var friendship = await this._repo.GetByIdAsync(new FriendshipId(dto.Id)); 
 
             if (friendship == null){
                 return null;   
@@ -65,7 +68,7 @@ namespace DDDNetCore.Domain.Users {
             
             await this._unitOfWork.CommitAsync();
 
-            return new FriendshipDto(friendship.Id, friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag);
+            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag);
         }
 
         public async Task<FriendshipDto> InactivateAsync(FriendshipId id)
@@ -79,7 +82,7 @@ namespace DDDNetCore.Domain.Users {
             
             await this._unitOfWork.CommitAsync();
 
-            return new FriendshipDto(friendship.Id, friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag);
+            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag);
         }
 
         public async Task<FriendshipDto> DeleteAsync(FriendshipId id)
@@ -95,21 +98,21 @@ namespace DDDNetCore.Domain.Users {
             this._repo.Remove(friendship);
             await this._unitOfWork.CommitAsync();
 
-            return new FriendshipDto(friendship.Id, friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag);
+            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag);
         }
 
         private async Task checkUserIdAsync(UserId userId)
         {
            var category = await this._repoUser.GetByIdAsync(userId);
            if (category == null)
-                throw new BusinessRuleValidationException("Invalid Category Id.");
+                throw new BusinessRuleValidationException("Invalid User Id.");
         }
 
         public async Task<List<FriendshipDto>> GetByUserId(UserId userId)
         {
             List<FriendshipDto> friendships = new List<FriendshipDto>();
             friendships =  _repoUser.GetByIdAsync(userId).Result.friendsList.ConvertAll<FriendshipDto>(friendship =>
-                new FriendshipDto(friendship.Id, friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag));
+                new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friendship.friend, friendship.requester, friendship.friendshipTag));
             
             return friendships;
         }
@@ -128,7 +131,7 @@ namespace DDDNetCore.Domain.Users {
 
         public async Task<FriendshipDto> ConvertToDto(Friendship friendship)
         {
-            return new FriendshipDto(friendship.Id, friendship.connection_strength, friendship.relationship_strength,
+            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength,
                 friendship.friend, friendship.requester, friendship.friendshipTag);
         }
 

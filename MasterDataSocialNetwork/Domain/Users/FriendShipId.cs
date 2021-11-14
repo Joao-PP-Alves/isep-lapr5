@@ -26,5 +26,9 @@ namespace DDDNetCore.Domain.Users {
         {
             return new Guid(text);
         }
+        
+        public Guid AsGuid(){
+            return (Guid) base.ObjValue;
+        }
     }
 }
