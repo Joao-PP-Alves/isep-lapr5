@@ -150,7 +150,7 @@ namespace DDDNetCore.Domain.Users
                 user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             }
             List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState,
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList,user.PhoneNumber, user.tags, user.emotionalState,
                     user.EmotionTime));
             
             return listDto;
@@ -173,7 +173,7 @@ namespace DDDNetCore.Domain.Users
                 user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             }
             List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState,
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags, user.emotionalState,
                     user.EmotionTime));
             
             return listDto;
