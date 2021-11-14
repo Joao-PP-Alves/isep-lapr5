@@ -33,13 +33,13 @@ namespace MasterDataSocialNetworkTest.Domain.Users{
             friendship.friend = null;
             friendship.ChangeConnectionStrenght("20.0");
         } */
-        [TestMethod]
+    /*    [TestMethod]
         [ExpectedException(typeof(BusinessRuleValidationException),
             "The relationship is invalid. One or both users are null")]
         public void testChangeTag(){
-            friendship.friend = null;
+            friendship.friend = new UserId();
             friendship.ChangeFriendshipTag(new Tag("po"));
-        }
+        } */
 
 
 
