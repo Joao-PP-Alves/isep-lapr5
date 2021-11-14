@@ -7,7 +7,7 @@ using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 
 namespace DDDNetCore.Domain.Users {
-    public class FriendshipService {
+    public class FriendshipService : IFriendshipService {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFriendshipRepository _repo;
         private readonly IUserRepository _repoUser;

@@ -13,11 +13,16 @@ namespace DDDNetCore.Controllers{
     [ApiController]
     public class FriendshipsController : ControllerBase
     {
-        private readonly FriendshipService _service;
+        private readonly IFriendshipService _service;
 
         public FriendshipsController(FriendshipService service){
             _service = service;
         }
+
+        public FriendshipsController(IFriendshipService service){
+            _service = service;
+        }
+
 
         // GET: api/Friendships
         [HttpGet]

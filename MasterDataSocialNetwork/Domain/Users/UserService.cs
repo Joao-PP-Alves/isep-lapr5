@@ -9,12 +9,12 @@ using DDDNetCore.Network;
 
 namespace DDDNetCore.Domain.Users
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
 
-        private readonly FriendshipService _serviceFriendships;
+        private readonly IFriendshipService _serviceFriendships;
 
         public UserService(IUnitOfWork unitOfWork, IUserRepository repo, FriendshipService serviceFriendships)
         {
@@ -22,6 +22,14 @@ namespace DDDNetCore.Domain.Users
             this._repo = repo;
             this._serviceFriendships = serviceFriendships;
         }
+
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService serviceFriendships)
+        {
+            this._unitOfWork = unitOfWork;
+            this._repo = repo;
+            this._serviceFriendships = serviceFriendships;
+        }
+
 
         public async Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level)
         {

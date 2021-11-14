@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Threading.Tasks;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Shared;
-using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DDDNetCore.Infrastructure.Users
 {
@@ -92,7 +89,7 @@ namespace DDDNetCore.Infrastructure.Users
             if (friendships == null){
                 return false;
             }
-
+            
             return friendships.Any(friendship => friendship.friend == id2);
         }
 

@@ -13,12 +13,16 @@ namespace DDDNetCore.Controllers{
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase{
-        private readonly UserService _service;
+        private readonly IUserService _service;
 
         /**
         * construtor do controller  
         **/
         public UsersController(UserService service){
+            _service = service;
+        }
+
+        public UsersController(IUserService service){
             _service = service;
         }
 
