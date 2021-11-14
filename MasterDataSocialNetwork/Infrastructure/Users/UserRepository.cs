@@ -26,9 +26,10 @@ namespace DDDNetCore.Infrastructure.Users
             return _context.Users.Find(id).tags;
         }
 
-        public async Task<List<User>> GetUserSuggestion(Tag usertag)
+       /* public async Task<List<User>> GetUserSuggestion(Tag usertag)
         {
-            return await _context.Users.Where(user => ((user.tags).Contains(usertag))).ToListAsync();
+            //return await ((DbSet<User>) base.getContext()).Where(user => user.tags.Contains(usertag)).ToListAsync();
+            return await _context.Users.Where(u => u.tags.All(t => t.name.Equals(usertag))).ToListAsync();
         }
 
         public List<UserId> friendsSuggestion(UserId id)
@@ -46,6 +47,42 @@ namespace DDDNetCore.Infrastructure.Users
                     }
                 }
             }
+            return friend;
+        }*/
+
+        public List<UserId> GetFriendsSuggestion(UserId userId)
+        {
+            List<UserId> friend = new List<UserId>();
+            var tag = GetTagList(userId).Result;
+            foreach (Tag usertag in tag)
+            {
+                using (SqlConnection connection =
+                    new SqlConnection(
+                        "Server=vs366.dei.isep.ipp.pt;Database=master;User id=sa;Password=rOfhiwMtvA==Xa5;"))
+                {
+                    SqlCommand command = new SqlCommand("SELECT UserId FROM LAPR5.Users_tags WHERE name = @usertag",
+                        connection);
+                    command.Parameters.AddWithValue("@usertag", usertag.name);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    try
+                    {
+                        while (reader.Read())
+                        {
+                            UserId uid = new UserId(reader["UserId"].ToString());
+                            if (!(userId.AsString().Equals(uid.AsString()) || friend.Contains(uid)))
+                            {
+                                friend.Add(uid);
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        reader.Close();
+                    }
+                }
+            }
+
             return friend;
         }
 
