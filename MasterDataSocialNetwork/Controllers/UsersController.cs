@@ -28,6 +28,18 @@ namespace DDDNetCore.Controllers{
             return await _service.GetAllAsync();
         } 
 
+        //GET: api/users/ByEmail/j@gmail.com
+        [HttpGet("ByEmail/{email}")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetByEmail(string email){
+            return await _service.GetByEmail(email);
+        }
+        
+        //GET: api/users/ByEmail/j
+        [HttpGet("ByName/{name}")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetByName(string name){
+            return await _service.GetByName(name);
+        }
+
         //GET: api/Users
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetGetById(Guid id){

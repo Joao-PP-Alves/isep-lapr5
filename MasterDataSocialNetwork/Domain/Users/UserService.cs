@@ -108,7 +108,7 @@ namespace DDDNetCore.Domain.Users
 
             foreach (var notDto in list)
             {
-               //notDto.updateEmotionTime(new EmotionTime(notDto.EmotionTime.LastEmotionalUpdate));
+               notDto.updateEmotionTime(new EmotionTime(notDto.EmotionTime.LastEmotionalUpdate));
             }
 
             List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
@@ -132,6 +132,52 @@ namespace DDDNetCore.Domain.Users
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags,
                 user.emotionalState , user.EmotionTime);
         }
+
+         public async Task<List<UserDto>> GetByEmail(string email){
+            try {
+                var emailConfirmation = new Email(email);
+            } catch (BusinessRuleValidationException b){
+                throw b;
+            }
+            var list = await this._repo.GetByEmail(email);
+
+            if (list == null) {
+                 return null;
+            }
+
+            foreach (var user in list)
+            {
+                user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
+            }
+            List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState,
+                    user.EmotionTime));
+            
+            return listDto;
+         }
+
+         public async Task<List<UserDto>> GetByName(string name){
+             try {
+                var nameConfirmation = new Name(name);
+            } catch (BusinessRuleValidationException b){
+                throw b;
+            }
+            var list = await this._repo.GetByName(name);
+
+            if (list == null) {
+                 return null;
+            }
+
+            foreach (var user in list)
+            {
+                user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
+            }
+            List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber, user.tags, user.emotionalState,
+                    user.EmotionTime));
+            
+            return listDto;
+         }
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {

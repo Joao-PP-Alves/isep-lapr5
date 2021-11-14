@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Shared;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DDDNetCore.Infrastructure.Users
 {
@@ -65,6 +67,14 @@ namespace DDDNetCore.Infrastructure.Users
 
         public Boolean checkIfNotFriends(UserId id, UserId id2){
             return (!checkIfFriends(id,id2));
+        }
+
+        public async Task<List<User>> GetByEmail(string email){
+            return await ((DbSet<User>)base.getContext()).Where(x => email.Equals(x.Email.EmailAddress)).ToListAsync();
+        }
+
+        public async Task<List<User>> GetByName(string name){
+            return await ((DbSet<User>)base.getContext()).Where(x => name.Equals(x.Name.text)).ToListAsync();
         }
 
 
