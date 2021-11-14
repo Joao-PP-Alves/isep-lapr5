@@ -41,13 +41,13 @@ namespace DDDNetCore.Controllers{
         }
 
         // POST: api/Friendships/id
-       [HttpPost("{id}")]
-        public async Task<ActionResult<FriendshipDto>> Create(CreatingFriendshipDto dto, Guid id)
+       [HttpPost]
+        public async Task<ActionResult<FriendshipDto>> Create(CreatingFriendshipDto dto)
         {
             try
             {
                 var friendship = await _service.AddAsync(dto);
-                _service.UpdateFriendsList(friendship, id);
+                _service.UpdateFriendsList(friendship, dto.requester.AsGuid());
 
                 return CreatedAtAction(nameof(GetById), new { id = friendship.Id }, friendship);
             }

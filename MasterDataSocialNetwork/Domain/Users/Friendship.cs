@@ -8,13 +8,13 @@ namespace DDDNetCore.Domain.Users
     public class Friendship : Entity<FriendshipId>
     {
 
-        public ConnectionStrength connection_strenght {get; set;}
+        public ConnectionStrength connection_strength {get; set;}
 
-        public RelationshipStrength relationship_strenght {get; set;}
+        public RelationshipStrength relationship_strength {get; set;}
 
-        public User friend {get; set;}
+        public UserId friend {get; set;}
         
-        public User requester { get; set; }
+        public UserId requester { get; set; }
         
         public Tag friendshipTag {get; set;}
 
@@ -24,31 +24,31 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(User friend, User requester) {
+        public Friendship(UserId friend, UserId requester) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
             this.requester = requester;
-            this.connection_strenght = new ConnectionStrength("1");
-            this.relationship_strenght = new RelationshipStrength("1");
+            this.connection_strength = new ConnectionStrength("1");
+            this.relationship_strength = new RelationshipStrength("1");
             this.friendshipTag = new Tag();
             this.Active = true;
         }
 
-        public Friendship(User friend, User requester, ConnectionStrength connection_strenght, RelationshipStrength relationship_strenght, Tag friendshipTags) {
+        public Friendship(UserId friend, UserId requester, ConnectionStrength connection_strength, RelationshipStrength relationship_strength, Tag friendshipTags) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
             this.requester = requester;
-            this.connection_strenght = connection_strenght;
-            this.relationship_strenght = relationship_strenght;
+            this.connection_strength = connection_strength;
+            this.relationship_strength = relationship_strength;
             this.friendshipTag = friendshipTags;
             this.Active = true;
         }
 
-        public void ChangeConnectionStrenght(ConnectionStrength connection_strenght) {
+        public void ChangeConnectionStrenght(ConnectionStrength connection_strength) {
             if(this.friend == null) {
                 throw new BusinessRuleValidationException("The relationship is invalid. One or both users are null");
             }
-            this.connection_strenght = connection_strenght;
+            this.connection_strength = connection_strength;
         }
 
         public void ChangeFriendshipTag(Tag friendshipTag){

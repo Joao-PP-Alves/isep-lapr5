@@ -54,13 +54,8 @@ namespace DDDNetCore.Infrastructure.Users
             if (friendships == null){
                 return false;
             }
-            foreach (var friendship in friendships)
-            {
-                if (friendship.friend == GetByIdAsync(id2).Result){
-                    return true;
-                }
-            }
-            return false;
+
+            return friendships.Any(friendship => friendship.friend == id2);
         }
 
         public Boolean checkIfNotFriends(UserId id, UserId id2){

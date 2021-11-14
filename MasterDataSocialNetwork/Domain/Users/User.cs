@@ -113,6 +113,18 @@ namespace DDDNetCore.Domain.Users
             this.tags = tags;
         }
 
+        public void updateFriendShips(IList<Friendship> friendships)
+        {
+            if (friendships.Count == 0) return;
+            foreach (var friendship in friendships)
+            {
+                if (!this.friendsList.Contains(friendship))
+                {
+                    AddFriendship(friendship);
+                }
+            }
+        }
+
         public void AddFriendship(Friendship newFriendship)
         {
             this.friendsList.Add(newFriendship);

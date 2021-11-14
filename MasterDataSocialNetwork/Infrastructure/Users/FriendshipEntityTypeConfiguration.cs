@@ -9,10 +9,11 @@ namespace DDDNetCore.Infrastructure.Users
         public void Configure(EntityTypeBuilder<Friendship> builder)
         {
             builder.HasKey(b => b.Id);
-            builder.HasOne(b => b.friend).WithMany(f=>f.friendsList);
+            //builder.OwnsOne(b => b.friend);
+            //builder.OwnsOne(b => b.requester);
             builder.OwnsOne(b => b.friendshipTag);
-            builder.OwnsOne(b => b.connection_strenght);
-            builder.OwnsOne(b => b.relationship_strenght);
+            builder.OwnsOne(b => b.connection_strength);
+            builder.OwnsOne(b => b.relationship_strength);
         }
     }
 }

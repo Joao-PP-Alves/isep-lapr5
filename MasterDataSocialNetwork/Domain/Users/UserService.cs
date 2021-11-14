@@ -51,8 +51,8 @@ namespace DDDNetCore.Domain.Users
                    {
                        // Adds each of the friends to the network
                         
-                       friendsNet.InsertVertex(await ConvertToDto(user_friendship.friend));
-                       friendsNet.InsertEdge(await ConvertToDto(user_friendship.friend), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
+                       friendsNet.InsertVertex(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result));
+                       friendsNet.InsertEdge(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
                    }
                }
            }
@@ -161,6 +161,7 @@ namespace DDDNetCore.Domain.Users
             user.ChangeTags(dto.tags);
             user.ChangePhoneNumber(dto.phoneNumber);
             user.ChangeEmotionalState(dto.emotionalState);
+            user.updateFriendShips(dto.friendsList);
             user.ChangeEmail(dto.email);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await this._unitOfWork.CommitAsync();

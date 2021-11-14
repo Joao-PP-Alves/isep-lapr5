@@ -99,7 +99,7 @@ namespace DDDNetCore.Controllers{
 
             try
             {
-                var showUser = GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
+                var showUser = await GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
 
                 var user = await _service.UpdateProfileAsync(dto);
                 
