@@ -34,7 +34,8 @@ namespace DDDNetCore.Domain.Users
 
         public async Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level)
         {
-
+            friendsNet = new Network<UserDto, FriendshipDto>(false);
+            
             // Starts by inserting the central user vertex
            var current = _repo.GetByIdAsync(id).Result;
            var dto = await ConvertToDto(current);

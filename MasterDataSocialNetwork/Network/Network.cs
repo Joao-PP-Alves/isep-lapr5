@@ -181,8 +181,8 @@ namespace DDDNetCore.Network
         public bool InsertVertex(V vert)
         {
 
-            if (ValidVertex(vert))
-                return false;
+        /*    if (ValidVertex(vert))
+                return false; */
 
             Vertex<V, E> vertex = new Vertex<V, E>(NumVert, vert);
             VerticesC[vert] = vertex;
