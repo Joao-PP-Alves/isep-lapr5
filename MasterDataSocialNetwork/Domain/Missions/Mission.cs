@@ -47,7 +47,7 @@ namespace DDDNetCore.Domain.Missions
             }
             else
             {
-                this.Active = true;
+                this.Active = false;
             }
         }
     }
