@@ -277,7 +277,7 @@ namespace DDDNetCore.Domain.Users
                 return null;
             }
 
-            var friends = this._repo.GetFriendsSuggestion(user.Id);
+            var friends = this._repo.ReturnFriendsSuggestionList(user.Id);
             return friends;
         }
         
@@ -302,5 +302,10 @@ namespace DDDNetCore.Domain.Users
             if (category == null)
                 throw new BusinessRuleValidationException("Invalid User Id.");
         }
+
+        // public async Task<List<UserId>> GetSuggestionFriendsWithXTags(int x, UserId userId)
+        // {
+        //     
+        // }
     }
 }

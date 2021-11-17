@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 namespace DDDNetCore.Domain.Users{
     public interface IUserRepository : IRepository<User,UserId>
     {
-        public List<UserId> GetFriendsSuggestion(UserId id);
-
         public Boolean checkIfFriends(UserId id, UserId id2);
 
         public Boolean checkIfNotFriends(UserId id, UserId id2);
@@ -19,5 +17,7 @@ namespace DDDNetCore.Domain.Users{
         public Task<List<User>> GetByName(string name);
 
         public void NewFriendship(FriendshipDto friendshipDto);
+
+        public List<UserId> ReturnFriendsSuggestionList(UserId userId);
     }
 }
