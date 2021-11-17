@@ -17,20 +17,14 @@ namespace DDDNetCore.Domain.Users
 
         private readonly IFriendshipService _serviceFriendships;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, FriendshipService serviceFriendships)
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo)
         {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
-            this._serviceFriendships = serviceFriendships;
+           // this._serviceFriendships = serviceFriendships;
         }
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService serviceFriendships)
-        {
-            this._unitOfWork = unitOfWork;
-            this._repo = repo;
-            this._serviceFriendships = serviceFriendships;
-        }
-
+        
 
         public async Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level)
         {
@@ -133,7 +127,7 @@ namespace DDDNetCore.Domain.Users
                 return null;
             }
 
-           user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
+            user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState , user.EmotionTime);
         }
@@ -297,7 +291,7 @@ namespace DDDNetCore.Domain.Users
             var friendship = new Friendship(friend.Id, requester.Id, dto.connection_strength,dto.relationship_strength,dto.friendshipTag);
             _repo.NewFriendship(new FriendshipDto(friendship.Id.AsGuid(),dto.connection_strength, dto.relationship_strength, dto.friend, dto.requester, dto.friendshipTag));
             
-            await _unitOfWork.CommitAsync();
+            //await _unitOfWork.CommitAsync();
 
             return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
         }

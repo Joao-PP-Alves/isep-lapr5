@@ -19,6 +19,7 @@ namespace DDDNetCore.Infrastructure.Users
         public UserRepository(DDDNetCoreDbContext context) : base(context.Users)
         {
             _context = context;
+            
         }
 
         public async Task<List<Tag>> GetTagList(UserId id)
@@ -60,7 +61,7 @@ namespace DDDNetCore.Infrastructure.Users
                     new SqlConnection(
                         "Server=vs366.dei.isep.ipp.pt;Database=master;User id=sa;Password=rOfhiwMtvA==Xa5;"))
                 {
-                    SqlCommand command = new SqlCommand("SELECT UserId FROM LAPR5.Users_tags WHERE name = @usertag",
+                    SqlCommand command = new SqlCommand("",
                         connection);
                     command.Parameters.AddWithValue("@usertag", usertag.name);
                     connection.Open();
@@ -109,8 +110,9 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async void NewFriendship(FriendshipDto dto)
         { 
-            var friend  = GetByIdAsync(new UserId(dto.friend.AsGuid())).Result;
+            //var friend  = GetByIdAsync(new UserId(dto.friend.AsGuid())).Result;
             var requester = GetByIdAsync(new UserId(dto.requester.AsString())).Result;
+            var friend = _context.Users.Include(f => f.friendsList).FirstOrDefault(u => u.Id == dto.friend);
             if (friend == null || requester == null)
             {
                 throw new Exception("Invalid User Id.");
@@ -123,6 +125,13 @@ namespace DDDNetCore.Infrastructure.Users
             requester.AddFriendship(new Friendship(dto.friend, dto.requester, dto.connection_strength,dto.relationship_strength,dto.friendshipTag));
             friend.AddFriendship(new Friendship(dto.requester, dto.friend, dto.connection_strength, dto.relationship_strength, dto.friendshipTag));
 
+            await _context.SaveChangesAsync();
+        }
+
+        public new async Task<List<User>> GetAllAsync()
+        {
+            return _context.Users.Include(f => f.friendsList).ToList();
+            
         }
     }
 }

@@ -12,11 +12,11 @@ namespace DDDNetCore.Infrastructure
 {
     public class DDDNetCoreDbContext : DbContext
     {
-        public DbSet<User> Users {get; set;}
+        public virtual DbSet<User> Users {get; set;}
 
         public DbSet<Introduction> Introductions {get; set;}
 
-        public DbSet<Friendship> Friendships {get; set;}
+        //public DbSet<Friendship> Friendships {get; set;}
 
         public DbSet<Connection> Connections {get; set;}
 
@@ -41,6 +41,7 @@ namespace DDDNetCore.Infrastructure
             modelBuilder.ApplyConfiguration(new IntroductionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ConnectionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new MissionEntityTypeConfiguration());
+            
         }
     }
 }
