@@ -133,6 +133,11 @@ namespace DDDNetCore.Infrastructure.Users
             return _context.Users.Include(f => f.friendsList).ToList();
             
         }
+
+        public Task<User> GetByIdAsync(UserId id)
+        {
+            return _context.Users.Include(f => f.friendsList).Where(user => user.Id == id).FirstOrDefaultAsync();
+        }
     }
 }
 
