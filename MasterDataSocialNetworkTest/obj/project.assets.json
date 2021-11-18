@@ -10563,19 +10563,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Davide\\.nuget\\packages\\": {}
+    "C:\\Users\\José Cruz\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+      "projectUniqueName": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
       "projectName": "MasterDataSocialNetworkTest",
-      "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
-      "packagesPath": "C:\\Users\\Davide\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
+      "projectPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+      "packagesPath": "C:\\Users\\José Cruz\\.nuget\\packages\\",
+      "outputPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Davide\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\José Cruz\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -10587,8 +10587,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
-              "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
+            "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
+              "projectPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
             }
           }
         }
@@ -10639,7 +10639,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }
