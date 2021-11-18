@@ -32,6 +32,13 @@ namespace DDDNetCore.Infrastructure.Users
            return _context.Users.Include(u => u.tags).ToList();
        }
 
+        /// <summary>
+        /// From a new userId registered, his tags are compared with other user's tags
+        /// to get the first one some friends suggestions
+        /// TODO: FALTA MUDAR DE USERID PARA DTO
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns> UserId list </returns>
         public List<UserId> ReturnFriendsSuggestionList(UserId userId)
         {
             List<UserId> friendsList = new List<UserId>();
