@@ -29,7 +29,7 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<List<User>> GetUsersWithTheirTags()
        {
-           return await _context.Users.Include(u => u.tags).ToListAsync();
+           return _context.Users.Include(u => u.tags).ToList();
        }
 
         public List<UserId> ReturnFriendsSuggestionList(UserId userId)
