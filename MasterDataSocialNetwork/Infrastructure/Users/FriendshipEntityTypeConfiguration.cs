@@ -8,7 +8,7 @@ namespace DDDNetCore.Infrastructure.Users
     {
         public void Configure(EntityTypeBuilder<Friendship> builder)
         {
-            builder.HasKey(b => b.Id);
+            builder.HasKey(f => new { f.Id, f.requester});
             //builder.OwnsOne(b => b.friend);
             //builder.OwnsOne(b => b.requester);
             builder.OwnsOne(b => b.friendshipTag);

@@ -72,8 +72,8 @@ namespace DDDNetCore
             services.AddTransient<IUserRepository,UserRepository>();
             services.AddTransient<IUserService,UserService>();
 
-            services.AddTransient<IFriendshipRepository,FriendshipRepository>();
-            services.AddTransient<IFriendshipService,FriendshipService>();   
+            //services.AddTransient<IFriendshipRepository,FriendshipRepository>();
+            //services.AddTransient<IFriendshipService,FriendshipService>();   
             
             services.AddTransient<IMissionRepository,MissionRepository>();
             services.AddTransient<IMissionService,MissionService>();
