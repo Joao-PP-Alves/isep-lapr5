@@ -13,15 +13,11 @@ namespace DDDNetCore.Domain.Users
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
-        private readonly IFriendshipRepository _friendshipRepository;
-
-        private readonly IFriendshipService _serviceFriendships;
 
         public UserService(IUnitOfWork unitOfWork, IUserRepository repo)
         {
-            this._unitOfWork = unitOfWork;
-            this._repo = repo;
-           // this._serviceFriendships = serviceFriendships;
+            _unitOfWork = unitOfWork;
+            _repo = repo;
         }
 
         
@@ -42,7 +38,7 @@ namespace DDDNetCore.Domain.Users
                foreach (var user in friendsNet.Vertices())
                {
                    // Gets their friends
-                   friendships = await _friendshipRepository.GetAllByUser(current);
+                   //friendships = await 
                    
                    
                    //var friends = user.friendsList;
@@ -51,7 +47,7 @@ namespace DDDNetCore.Domain.Users
                        // Adds each of the friends to the network
                        current = _repo.GetByIdAsync(id).Result;
                        friendsNet.InsertVertex(await ConvertToDto(current));
-                       friendsNet.InsertEdge(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
+                       //friendsNet.InsertEdge(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
                    }
                }
            }
@@ -214,6 +210,11 @@ namespace DDDNetCore.Domain.Users
                 user.emotionalState, user.EmotionTime);
         }
 
+        /// <summary>
+        /// Marks a user as inactive to the database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<UserDto> InactivateAsync(UserId id)
         {
             var user = await this._repo.GetByIdAsync(id);
@@ -223,12 +224,17 @@ namespace DDDNetCore.Domain.Users
 
             user.MarkAsInative();
 
-            await this._unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
 
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<UserDto> DeleteAsync(UserId id)
         {
             var user = await this._repo.GetByIdAsync(id);
@@ -246,6 +252,11 @@ namespace DDDNetCore.Domain.Users
                 user.emotionalState, user.EmotionTime);
         }
 
+        /// <summary>
+        /// Updates the emotional state of an user
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         public async Task<UserDto> UpdateEmotionalStateAsync(UserDto dto)
         {
             var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
@@ -263,6 +274,11 @@ namespace DDDNetCore.Domain.Users
                 user.emotionalState, user.EmotionTime);
         }
 
+        /// <summary>
+        /// Converts a user to a dto, for data policy purposes
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<UserDto> ConvertToDto(User user)
         {
             return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.tags,
@@ -281,6 +297,11 @@ namespace DDDNetCore.Domain.Users
             return friends;
         }
         
+        /// <summary>
+        /// Creates a new friendship between two friends
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         public async Task<FriendshipDto> NewFriendship(CreatingFriendshipDto dto)
         {
             await checkUserIdAsync(dto.friend);
@@ -290,22 +311,20 @@ namespace DDDNetCore.Domain.Users
             
             var friendship = new Friendship(friend.Id, requester.Id, dto.connection_strength,dto.relationship_strength,dto.friendshipTag);
             _repo.NewFriendship(new FriendshipDto(friendship.Id.AsGuid(),dto.connection_strength, dto.relationship_strength, dto.friend, dto.requester, dto.friendshipTag));
-            
-            //await _unitOfWork.CommitAsync();
 
             return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
         }
         
+        /// <summary>
+        /// Checks if a user exists
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <exception cref="BusinessRuleValidationException"></exception>
         private async Task checkUserIdAsync(UserId userId)
         {
-            var category = await this._repo.GetByIdAsync(userId);
-            if (category == null)
+            var user = await this._repo.GetByIdAsync(userId);
+            if (user == null)
                 throw new BusinessRuleValidationException("Invalid User Id.");
         }
-
-        // public async Task<List<UserId>> GetSuggestionFriendsWithXTags(int x, UserId userId)
-        // {
-        //     
-        // }
     }
 }
