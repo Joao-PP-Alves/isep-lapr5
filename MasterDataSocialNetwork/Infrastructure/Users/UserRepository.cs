@@ -27,66 +27,32 @@ namespace DDDNetCore.Infrastructure.Users
             return _context.Users.Find(id).tags;
         }
 
-       /* public async Task<List<User>> GetUserSuggestion(Tag usertag)
-        {
-            //return await ((DbSet<User>) base.getContext()).Where(user => user.tags.Contains(usertag)).ToListAsync();
-            return await _context.Users.Where(u => u.tags.All(t => t.name.Equals(usertag))).ToListAsync();
-        }
+        public async Task<List<User>> GetUsersWithTheirTags()
+       {
+           return await _context.Users.Include(u => u.tags).ToListAsync();
+       }
 
-        public List<UserId> friendsSuggestion(UserId id)
+        public List<UserId> ReturnFriendsSuggestionList(UserId userId)
         {
-            List<UserId> friend = new List<UserId>();
-            var tag = GetTagList(id).Result;
-            foreach (Tag usertag in tag)
-            {
-                var userSuggestions = GetUserSuggestion(usertag).Result;
-                foreach (User u in userSuggestions)
-                {
-                    if (!friend.Contains(u.Id))
-                    {
-                        friend.Add(u.Id);
-                    }
-                }
-            }
-            return friend;
-        }*/
-
-        public List<UserId> GetFriendsSuggestion(UserId userId)
-        {
-            List<UserId> friend = new List<UserId>();
+            List<UserId> friendsList = new List<UserId>();
             var tag = GetTagList(userId).Result;
-            foreach (Tag usertag in tag)
+            var possibleFriends = GetUsersWithTheirTags();
+            foreach (User u in possibleFriends.Result)
             {
-                using (SqlConnection connection =
-                    new SqlConnection(
-                        "Server=vs366.dei.isep.ipp.pt;Database=master;User id=sa;Password=rOfhiwMtvA==Xa5;"))
+                foreach (Tag usertag in tag)
                 {
-                    SqlCommand command = new SqlCommand("",
-                        connection);
-                    command.Parameters.AddWithValue("@usertag", usertag.name);
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
-                    try
+                    if ((!u.Id.Equals(userId)))
                     {
-                        while (reader.Read())
+                        if (u.tags.Contains(usertag) && (!friendsList.Contains(u.Id)))
                         {
-                            UserId uid = new UserId(reader["UserId"].ToString());
-                            if (!(userId.AsString().Equals(uid.AsString()) || friend.Contains(uid)))
-                            {
-                                friend.Add(uid);
-                            }
+                            friendsList.Add(u.Id);
                         }
                     }
-                    finally
-                    {
-                        reader.Close();
-                    }
                 }
             }
-
-            return friend;
+            return friendsList;
         }
-
+        
         public Boolean checkIfFriends(UserId id, UserId id2){
             var friendships = _context.Users.Find(id).friendsList;
             if (friendships == null){
