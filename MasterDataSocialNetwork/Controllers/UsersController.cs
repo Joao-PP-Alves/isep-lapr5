@@ -207,7 +207,7 @@ namespace DDDNetCore.Controllers
         [HttpGet("GetFriendsSuggestion/{id}")]
         public async Task<ActionResult<IEnumerable<UserId>>> GetFriendsSuggestion(Guid id)
         {
-            var user = await GetGetById(id);
+            var user = await _service.GetByIdAsync(new UserId(id));
             if (user == null)
             {
                 return NotFound();
