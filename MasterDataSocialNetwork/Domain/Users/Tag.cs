@@ -1,3 +1,5 @@
+using System;
+using System.Drawing;
 using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Domain.Users
@@ -22,5 +24,16 @@ namespace DDDNetCore.Domain.Users
         {
             return name;
         }
+        
+        public override bool Equals(Object obj)
+        {
+            Tag tag = obj as Tag;
+            if (tag == null)
+                return false;
+            else
+                return base.Equals((Tag)obj) && name == tag.name;
+        }
+        
+        
     }
 }
