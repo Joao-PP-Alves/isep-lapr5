@@ -216,7 +216,7 @@ namespace DDDNetCore.Controllers
             return await _service.GetFriendsSuggestionForNewUsers(new UserId(id));
         }
         
-        [HttpPost("NewFriendship/{id}")]
+        [HttpPost("NewFriendship")]
         public async Task<ActionResult<FriendshipDto>> NewFriendship(CreatingFriendshipDto dto)
         {
             try

@@ -23,7 +23,7 @@ namespace DDDNetCore.Domain.Introductions
 
         Task<List<IntroductionDto>> GetPendentIntroductions(UserId id);
 
-        Task<IntroductionDto> ApproveIntroduction(IntroductionId id, Description message);
+        Task<IntroductionDto> ApproveIntroduction(IntroductionId id);
 
         Task<IntroductionDto> ReproveIntroduction(IntroductionId id);
 

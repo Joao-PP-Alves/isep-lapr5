@@ -203,5 +203,26 @@ namespace DDDNetCore.Domain.Users
             this.friendsList.Add(friendship);
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (this.GetType().Name != obj.GetType().Name)
+            {
+                return false;
+            }
+
+            var u = (User) obj;
+
+            if (this.Id == u.Id)
+            {
+                return true;
+            }
+
+            return true;
+        }
     }
 }

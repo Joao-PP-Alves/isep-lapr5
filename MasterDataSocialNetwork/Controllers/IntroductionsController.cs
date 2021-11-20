@@ -117,7 +117,7 @@ namespace DDDNetCore.Controllers{
                return BadRequest(new {Message = ex.Message});
             }
         }
-
+        
         [HttpGet("pendent/{id}")]
         public async Task<ActionResult<IEnumerable<IntroductionDto>>> GetPendent(Guid id){
             return await _service.GetPendentIntroductions(new UserId(id));
@@ -134,8 +134,8 @@ namespace DDDNetCore.Controllers{
         }
 
         [HttpPut("approve/{id}")]
-        public async Task<ActionResult<IntroductionDto>> ApproveIntroduction(Guid id,Description message){
-            return await _service.ApproveIntroduction(new IntroductionId(id),message);
+        public async Task<ActionResult<IntroductionDto>> ApproveIntroduction(Guid id){
+            return await _service.ApproveIntroduction(new IntroductionId(id));
         }
 
         [HttpPut("reprove/{id}")]

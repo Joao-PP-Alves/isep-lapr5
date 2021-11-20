@@ -81,7 +81,7 @@ namespace DDDNetCore.Infrastructure.Users
             return await ((DbSet<User>)base.getContext()).Where(x => name.Equals(x.Name.text)).ToListAsync();
         }
 
-        public async void NewFriendship(FriendshipDto dto)
+        public async Task<int> NewFriendship(FriendshipDto dto)
         { 
             //var friend  = GetByIdAsync(new UserId(dto.friend.AsGuid())).Result;
             var requester = GetByIdAsync(new UserId(dto.requester.AsString())).Result;
@@ -98,7 +98,7 @@ namespace DDDNetCore.Infrastructure.Users
             requester.AddFriendship(new Friendship(dto.friend, dto.requester, dto.connection_strength,dto.relationship_strength,dto.friendshipTag));
             friend.AddFriendship(new Friendship(dto.requester, dto.friend, dto.connection_strength, dto.relationship_strength, dto.friendshipTag));
 
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
 
         public new async Task<List<User>> GetAllAsync()
