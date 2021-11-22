@@ -1,17 +1,16 @@
-using System.Threading.Tasks;
+using System;
 using System.Collections.Generic;
-using DDDNetCore.Domain.Shared;
-using DDDNetCore.Domain.Users;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DDDNetCore.Domain.Connections;
+using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
-using DDDNetCore.Domain.Introductions;
-using DDDNetCore.Domain.Missions;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Users;
 using Flurl.Http;
-
+using Microsoft.Data.SqlClient;
 
 namespace DDDNetCore.Domain.Introductions
 {
@@ -21,21 +20,23 @@ namespace DDDNetCore.Domain.Introductions
         private readonly IIntroductionRepository _repo;
         private readonly IUserRepository _repoUser;
         private readonly IMissionRepository _repoMission;
+        private readonly IConnectionService _connectionService;
 
         public IntroductionService(IUnitOfWork unitOfWork, IIntroductionRepository repo, IUserRepository repoUser,
-            IMissionRepository repoMission)
+            IMissionRepository repoMission, IConnectionService connectionService)
         {
-            this._unitOfWork = unitOfWork;
-            this._repo = repo;
-            this._repoUser = repoUser;
-            this._repoMission = repoMission;
+            _unitOfWork = unitOfWork;
+            _repo = repo;
+            _repoUser = repoUser;
+            _repoMission = repoMission;
+            _connectionService = connectionService;
         }
 
         public async Task<List<IntroductionDto>> GetAllAsync()
         {
-            var list = await this._repo.GetAllAsync();
+            var list = await _repo.GetAllAsync();
 
-            List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro =>
+            List<IntroductionDto> listDto = list.ConvertAll(intro =>
                 new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus, intro.MessageToTargetUser,
                     intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser, intro.Requester,
                     intro.Enabler, intro.TargetUser));
@@ -45,7 +46,7 @@ namespace DDDNetCore.Domain.Introductions
 
         public async Task<IntroductionDto> GetByIdAsync(IntroductionId id)
         {
-            var intro = await this._repo.GetByIdAsync(id);
+            var intro = await _repo.GetByIdAsync(id);
 
             if (intro == null)
                 return null;
@@ -57,14 +58,14 @@ namespace DDDNetCore.Domain.Introductions
 
         public async Task<IntroductionDto> InactivateAsync(IntroductionId id)
         {
-            var introduction = await this._repo.GetByIdAsync(id);
+            var introduction = await _repo.GetByIdAsync(id);
 
             if (introduction == null)
                 return null;
 
             introduction.MarkAsInative();
 
-            await this._unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
 
             return new IntroductionDto(introduction.Id.AsGuid(), introduction.MissionId, introduction.decisionStatus,
                 introduction.MessageToTargetUser, introduction.MessageToIntermediate,
@@ -74,7 +75,7 @@ namespace DDDNetCore.Domain.Introductions
 
         public async Task<IntroductionDto> DeleteAsync(IntroductionId id)
         {
-            var introduction = await this._repo.GetByIdAsync(id);
+            var introduction = await _repo.GetByIdAsync(id);
 
             if (introduction == null)
                 return null;
@@ -82,8 +83,8 @@ namespace DDDNetCore.Domain.Introductions
             if (introduction.Active)
                 throw new BusinessRuleValidationException("It is not possible to delete an active introduction.");
 
-            this._repo.Remove(introduction);
-            await this._unitOfWork.CommitAsync();
+            _repo.Remove(introduction);
+            await _unitOfWork.CommitAsync();
 
             return new IntroductionDto(introduction.Id.AsGuid(), introduction.MissionId, introduction.decisionStatus,
                 introduction.MessageToTargetUser, introduction.MessageToIntermediate,
@@ -103,55 +104,51 @@ namespace DDDNetCore.Domain.Introductions
             await checkUserIdAsync(dto.Requester);
             await checkUserIdAsync(dto.Enabler);
             await checkUserIdAsync(dto.TargetUser);
-            
+
             var responseString = await BuildRequest(dto.Enabler, dto.TargetUser).GetStringAsync();
-            
+
             if (ParseRequest(responseString).Count == 0)
             {
                 throw new BusinessRuleValidationException(
                     "Users might not be connected. Check friendships between them.");
             }
-            else
-            {
-                var intro = new Introduction(dto.MessageToTargetUser, dto.MessageToIntermediate, dto.MissionId,
-                    dto.Requester, dto.Enabler, dto.TargetUser);
 
-                await this._repo.AddAsync(intro);
-                await this._unitOfWork.CommitAsync();
+            var intro = new Introduction(dto.MessageToTargetUser, dto.MessageToIntermediate, dto.MissionId,
+                dto.Requester, dto.Enabler, dto.TargetUser);
 
-                return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
-                    intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
-                    intro.Requester, intro.Enabler, intro.TargetUser);
-            }
+            await _repo.AddAsync(intro);
+            await _unitOfWork.CommitAsync();
+
+            return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+                intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
+                intro.Requester, intro.Enabler, intro.TargetUser);
         }
-        
+
         public async Task<IntroductionDto> AddDisconectedEnablerAsync(CreatingIntroductionDto dto)
         {
             await checkUserIdAsync(dto.Requester);
             await checkUserIdAsync(dto.Enabler);
             await checkUserIdAsync(dto.TargetUser);
-            
+
             var responseString = await BuildRequest(dto.Enabler, dto.TargetUser).GetStringAsync();
-            
+
             if (ParseRequest(responseString).Count == 0)
             {
                 throw new BusinessRuleValidationException(
                     "Users might not be connected. Check friendships between them.");
             }
-            else
-            {
-                var newIntermediateDescription = new Description("[Repassed]" + dto.MessageToIntermediate.text);
-                var newTargetDescription = new Description("[Repassed]" + dto.MessageToTargetUser.text);
-                var intro = new Introduction(newTargetDescription, newIntermediateDescription, dto.MissionId,
-                    new UserId(dto.Requester.Value), new UserId(dto.Enabler.Value), new UserId(dto.TargetUser.Value));
 
-                await _repo.AddAsync(intro);
-                //await _unitOfWork.CommitAsync();
+            var newIntermediateDescription = new Description("[Repassed]" + dto.MessageToIntermediate.text);
+            var newTargetDescription = new Description("[Repassed]" + dto.MessageToTargetUser.text);
+            var intro = new Introduction(newTargetDescription, newIntermediateDescription, dto.MissionId,
+                new UserId(dto.Requester.Value), new UserId(dto.Enabler.Value), new UserId(dto.TargetUser.Value));
 
-                return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
-                    intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
-                    intro.Requester, intro.Enabler, intro.TargetUser);
-            }
+            await _repo.AddAsync(intro);
+            //await _unitOfWork.CommitAsync();
+
+            return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+                intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
+                intro.Requester, intro.Enabler, intro.TargetUser);
         }
 
         public async Task<IntroductionDto> UpdateAsync(IntroductionDto dto)
@@ -159,7 +156,7 @@ namespace DDDNetCore.Domain.Introductions
             await checkUserIdAsync(dto.Requester);
             await checkUserIdAsync(dto.Enabler);
             await checkUserIdAsync(dto.TargetUser);
-            var intro = await this._repo.GetByIdAsync(new IntroductionId(dto.Id));
+            var intro = await _repo.GetByIdAsync(new IntroductionId(dto.Id));
 
             if (intro == null)
             {
@@ -174,7 +171,7 @@ namespace DDDNetCore.Domain.Introductions
             intro.ChangeEnabler(dto.Enabler);
             intro.ChangeTargetUser(dto.TargetUser);
 
-            await this._unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
 
             return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
                 intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
@@ -190,7 +187,7 @@ namespace DDDNetCore.Domain.Introductions
         {
             var list = await _repo.getPendentIntroductions(id);
 
-            var listDto = list.ConvertAll<IntroductionDto>(intro =>
+            var listDto = list.ConvertAll(intro =>
                 new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus, intro.MessageToTargetUser,
                     intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser, intro.Requester,
                     intro.Enabler, intro.TargetUser));
@@ -201,56 +198,63 @@ namespace DDDNetCore.Domain.Introductions
         /// <summary>
         /// Changes the introduction state 
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="message"></param>
+        /// <param name="id">The introduction id [Guid]</param>
         /// <returns></returns>
-        /*
-         * In the future the method should verify if enabler has access to the target and sends a friendship request or has
-         * to create another introduction to the next intermediate user
-         */
         public async Task<IntroductionDto> ApproveIntroduction(IntroductionId id)
         {
-            var intro = await this._repo.GetByIdAsync(id);
-
-            if (intro == null)
+            try
             {
-                return null;
-            }
+                var intro = await _repo.GetByIdAsync(id);
+                
+                if (intro == null)
+                {
+                    return null;
+                }
 
-            if (intro.decisionStatus == IntroductionStatus.APPROVAL_ACCEPTED)
+                if (intro.decisionStatus == IntroductionStatus.APPROVAL_ACCEPTED)
+                {
+                    throw new BusinessRuleValidationException(
+                        "The introduction has already been accepted to be proposed to the target user");
+                }
+
+                var enabler = await _repoUser.GetByIdAsync(intro.Enabler);
+                var target = await _repoUser.GetByIdAsync(intro.TargetUser);
+                
+                var responseString = await BuildRequest(enabler.Id, target.Id).GetStringAsync();
+                var introPath = ParseRequest(responseString);
+
+                // If we still didn't reach the target user, we must create a new introduction 
+                // In this new introduction, the requester and target will remain the same but the enabler will the next person in the path to the target
+                // Once the next person is the target, we accept the introduction and create a connection (Friend Request) from the requester to the target, with a message
+                if (!CheckIfTargetIsNext(enabler, target, introPath))
+                {
+                    var newEnabler = await _repoUser.GetByIdAsync(new UserId(introPath[1]));
+                    var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
+                        intro.MissionId, intro.Requester, newEnabler.Id, intro.TargetUser);
+                    await AddDisconectedEnablerAsync(newIntro);
+                }
+                else
+                {
+                    await _connectionService.AddAsync(new CreatingConnectionDto(intro.MessageToTargetUser,
+                        intro.Requester, intro.TargetUser));
+                }
+
+                intro.approveIntermediate();
+                
+                await _unitOfWork.CommitAsync();
+                
+                return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+                    intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
+                    intro.Requester, intro.Enabler, intro.TargetUser);
+            }
+            catch (SqlException exception)
             {
-                throw new BusinessRuleValidationException(
-                    "The introduction has already been accepted to be proposed to the target user");
+                throw new Exception(
+                    "The introduction either does not exist or there was an error with the database \n" +
+                    exception.Message);
             }
-
-            var enabler = await _repoUser.GetByIdAsync(intro.Enabler);
-            var target = await _repoUser.GetByIdAsync(intro.TargetUser);
-
-
-            var responseString = await BuildRequest(enabler.Id, target.Id).GetStringAsync();
-
-            var introPath = ParseRequest(responseString);
-
-            if (!CheckIfTargetIsNext(enabler, target, introPath))
-            {
-                var newEnabler = await _repoUser.GetByIdAsync(new UserId(introPath[1]));
-                var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
-                    intro.MissionId, intro.Requester, newEnabler.Id, intro.TargetUser);
-                await AddDisconectedEnablerAsync(newIntro);
-            }
-            intro.approveIntermediate();
-
-            //intro.changeIntermediateToTargetUserDescription(message);
-
-            await _unitOfWork.CommitAsync();
-
-
-            return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
-                intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
-                intro.Requester, intro.Enabler, intro.TargetUser);
         }
-        
-        
+
 
         /// <summary>
         /// Makes a http_get request to the prolog server in order to know the shortest path from the enabler to the target
@@ -277,25 +281,25 @@ namespace DDDNetCore.Domain.Introductions
 
         private bool CheckIfTargetIsNext(User enabler, User target, List<string> path)
         {
-            return (path[path.IndexOf(enabler.Id.Value)+1].Equals(target.Id.Value));
+            return (path[path.IndexOf(enabler.Id.Value) + 1].Equals(target.Id.Value));
         }
 
         public async Task<IntroductionDto> ReproveIntroduction(IntroductionId id)
         {
-            var intro = await this._repo.GetByIdAsync(id);
+            var intro = await _repo.GetByIdAsync(id);
 
             if (intro == null)
             {
                 return null;
             }
 
-            var mission = await this._repoMission.GetByIdAsync(intro.MissionId);
+            var mission = await _repoMission.GetByIdAsync(intro.MissionId);
 
             intro.declineIntermediate();
 
             mission.UnsucessMissionStatus();
 
-            await this._unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
 
             return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
                 intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
@@ -304,9 +308,9 @@ namespace DDDNetCore.Domain.Introductions
 
         public async Task<List<IntroductionDto>> GetPendentIntroductionsOnlyIntermediate(UserId id)
         {
-            var list = await this._repo.getPendentIntroductionsOnlyIntermediate(id);
+            var list = await _repo.getPendentIntroductionsOnlyIntermediate(id);
 
-            List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro =>
+            List<IntroductionDto> listDto = list.ConvertAll(intro =>
                 new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus, intro.MessageToTargetUser,
                     intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser, intro.Requester,
                     intro.Enabler, intro.TargetUser));
@@ -316,9 +320,9 @@ namespace DDDNetCore.Domain.Introductions
 
         public async Task<List<IntroductionDto>> GetPendentIntroductionsOnlyTargetUser(UserId id)
         {
-            var list = await this._repo.getPendentIntroductionsOnlyTargetUser(id);
+            var list = await _repo.getPendentIntroductionsOnlyTargetUser(id);
 
-            List<IntroductionDto> listDto = list.ConvertAll<IntroductionDto>(intro =>
+            List<IntroductionDto> listDto = list.ConvertAll(intro =>
                 new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus, intro.MessageToTargetUser,
                     intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser, intro.Requester,
                     intro.Enabler, intro.TargetUser));
