@@ -16,52 +16,27 @@ getUsers(User,0,L):-!,
 
 getUsers(User, Level, Result):-
     Level1 is Level-1,  
-    no(Orig,User,_),                   
+    %no(Orig,User,_),                   
 	directConnections(Orig,L),  
     append([Orig],L,LX),            
-	moreConnections(L,Level1, Result).
+	moreFriends(LX, Result, Level1).
 
+directConnections(Origem,L):-
+findall(X,(ligacao(Origem,X,_,_);ligacao(X,Origem,_,_)),L).
 
-    %%retorna as ligações diretas do User
-    directConnections(User,L):-
-        findall(X,(ligacao(User,X,_,_);ligacao(X,User,_,_)),L).
+moreFriends(L2,X,0):-reverse(L2,X),!.
 
-    
-    moreConnections([], []):-!.
-    
-    %moreConnections(L, Result):- 
-    
-    moreConnections([H|L], Result):- 
-        directConnections(H, L1), 
-        union(L1, L2, Result),
-        joinLists(L, Result, L3),
-        apaga(H, L3, L4),
-        moreConnections(L4, Result).    %%ver como passar só a head do result
+moreFriends(L,Tamanho,N):-
+	friendsoffriends(L,L2),
+	N1 is N-1,
+	moreFriends(L2,Tamanho,N1),!.
 
+friendsoffriends([],[]):-!.
 
-    apaga(_,[],[]).
-    apaga(X,[X|L],L1):-!,apaga(X,L,L1).
-    apaga(X,[Y|L],[Y|L1]):- apaga(X,L,L1).
-
-
-    removeFirst([],[]):-!.
-    removeFirst([H|T],L):-joinLists(T,L,L).
-
-    
-    %%retorna os users até n níveis
-    %%moreConnections(L2,X,0):-length(L2,X),!.
-
-    %%moreConnections(L,Tamanho,N):-
-	%%    friendsOfFriends(L,L2),
-	%%    N1 is N-1,
-	%%    moreConnections(L2,Tamanho,N1),!.
-
-    friendsOfFriends([],[]):-!.
-
-    friendsOfFriends([H|T],LR):-
-	    directConnections(H,L),
-	    friendsOfFriends(T,L2),joinLists(L,L2,LR).
-
+friendsoffriends([H|T],LR):-
+	directConnections(H,L),
+	friendsoffriends(T,L2),union(L,L2,LR).
+  
 
 
 %%pesquisa de users para sugerir com base nas tags - FALTA POR OS NIVEIS
