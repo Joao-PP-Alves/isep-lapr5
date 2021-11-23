@@ -20,3 +20,7 @@ tag('family',[]).
 
 tag('WP', ['smartphone', 'phone']).
 tag('Android', ['dummyphone', 'phone']).
+
+tag('isep', ['ISEP', 'Isep']).
+tag('ISEP', ['isep', 'Isep']).
+tag('Isep', ['isep', 'ISEP']).

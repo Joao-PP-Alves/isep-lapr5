@@ -19,7 +19,7 @@ no(43,ernesto,[natureza,teatro,carros,porto]).
 no(44,isaura,[natureza,moda,tecnologia,cinema]).
 no(200,sara,[natureza,moda,musica,sw,coimbra]).
 
-no(51,rodolfo,[natureza,musica,sw]).
+no(51,rodolfo,[natureza,musica,sw]). 
 no(61,rita,[moda,tecnologia,cinema]).
 
 

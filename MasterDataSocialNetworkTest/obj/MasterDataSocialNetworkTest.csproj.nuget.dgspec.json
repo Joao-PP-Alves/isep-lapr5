@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj": {}
+    "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj": {}
   },
   "projects": {
-    "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj": {
+    "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+        "projectUniqueName": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
         "projectName": "MasterDataSocialNetworkTest",
-        "projectPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
-        "packagesPath": "C:\\Users\\José Cruz\\.nuget\\packages\\",
-        "outputPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
+        "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+        "packagesPath": "C:\\Users\\Davide\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\José Cruz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Davide\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -26,8 +26,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
-                "projectPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
+              "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
+                "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
               }
             }
           }
@@ -78,21 +78,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
+    "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj",
+        "projectUniqueName": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj",
         "projectName": "DDDNetCore",
-        "projectPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj",
-        "packagesPath": "C:\\Users\\José Cruz\\.nuget\\packages\\",
-        "outputPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\obj\\",
+        "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj",
+        "packagesPath": "C:\\Users\\Davide\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\José Cruz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Davide\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -116,6 +116,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Flurl.Http": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
             "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
               "target": "Package",
               "version": "[5.0.11, )"
@@ -193,7 +197,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }
