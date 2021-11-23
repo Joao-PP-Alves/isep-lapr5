@@ -1,4 +1,4 @@
-import axios from'axios';
+import axios from 'axios';
 import get from 'lodash/get';
 
 //import {}
@@ -16,7 +16,7 @@ export const loadUsers = () => async (dispatch, getState) => {
 
     try{
         //ver como é aqui, adaptar para o nosso código
-        cont res = await axios({
+        const res = await axios({
             method: 'get',
            // url:
            headers: {Authorization: get(state, 'auth.profile.result.token')},
@@ -33,4 +33,3 @@ export const loadUsers = () => async (dispatch, getState) => {
         });
     }
     };
-}

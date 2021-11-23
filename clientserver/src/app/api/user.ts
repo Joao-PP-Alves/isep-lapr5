@@ -3,7 +3,7 @@
  * fazer pedidos GET e POST
  */
 
-import { ErrorMessage } from "formik";
+//import { ErrorMessage } from "formik";
 
 export async function user(endpoint: RequestInfo, {body, ...customConfig} = {}): Promise<any> {
     const headers = {'Content-Type': 'application/json'}
