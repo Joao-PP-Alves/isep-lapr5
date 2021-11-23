@@ -1,13 +1,21 @@
-findAllConnectionsByTag(Tag, List):-tag(Tag, ListTag1), 
-	append([Tag], ListTag1, ListTag),
-	findAllConnectionsByTag_helper(ListTag, ListTemp),
-	append(ListTemp, List).
+%receber X
 
-findAllConnectionsByTag_helper([],[]).
+%verificar se o nr de tags do user é > ou = que X
 
-findAllConnectionsByTag_helper([Head|Tail], [DefList|List]):-findall((UserA,UserB),(connects(UserA,UserB,_,ListTags),hasTag(ListTags, Head)), DefList),
-	findAllConnectionsByTag_helper(Tail, List).
+%se false, permitir alteracao do X com mensagem sugestiva
 
-hasTag([Tag|_], Tag).
+%se true, combinacoes de X elementos de tags
 
-hasTag([_|List], Tag):-hasTag(List, Tag).
+todas_combinacoes(X,LTags,LcombXTags):-findall(L,xCombinacoesTags(X,LTags,L),LcombXTags).
+
+xCombinacoesTags(0,_,[]):-!.
+xCombinacoesTags(X,[Tag|L],[Tag|T]):-X1 is X-1,xCombinacoesTags(X1,L,T).
+xCombinacoesTags(X,[_|L],T):-xCombinacoesTags(X,L,T).
+
+%isolar users e suas tags
+
+%traçar as combinacoes com as listas de tags dos users
+
+%se false, apresentar mensagem de erro sugestiva
+
+%se true, devolver lista de users por ordem de match

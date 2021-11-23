@@ -19,7 +19,7 @@ no(43,ernesto,[natureza,teatro,carros,porto]).
 no(44,isaura,[natureza,moda,tecnologia,cinema]).
 no(200,sara,[natureza,moda,musica,sw,coimbra]).
 
-no(51,rodolfo,[natureza,musica,sw]).
+no(51,rodolfo,[natureza,musica,sw]). 
 no(61,rita,[moda,tecnologia,cinema]).
 
 
@@ -83,5 +83,4 @@ ligacao(44,200,-1,-3).
 ligacao(1,51,6,2).
 ligacao(51,61,7,3).
 ligacao(61,200,2,4).
-
 
