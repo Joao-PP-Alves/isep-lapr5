@@ -10,6 +10,8 @@ sugestConnections(User,TagsList, Connections, Level, Sugestions):-
 
 
 %%retorna uma lista com os users que se encontram até n níveis
+
+%%MAIS OU MENOS ACABADO; VER COMO RETORNAR A LISTA COMPLETA COM TODOS OS USERS
 getUsers(User,0,L):-!,
 	no(_,User,_),
 	L is 1.
@@ -31,6 +33,7 @@ moreFriends(L,Tamanho,N):-
 	N1 is N-1,
 	moreFriends(L2,Tamanho,N1),!.
 
+
 friendsoffriends([],[]):-!.
 
 friendsoffriends([H|T],LR):-
@@ -39,17 +42,19 @@ friendsoffriends([H|T],LR):-
   
 
 
-%%pesquisa de users para sugerir com base nas tags - FALTA POR OS NIVEIS
-findAllSugestionsByTag([],[],[]).                                               %%caso base
+%%pesquisa de users para sugerir com base nas tags 
+findAllSugestionsByTag(L,[],_):-!.
 
-findAllSugestionsByTag([Head|Tail], [DefList|List]):-
-        findall((UserA,UserB),(connects(UserA,UserB,_,ListTags),
-        hasTag(ListTags, Head)), DefList),
-	    findAllSugestionsByTag(Tail, List).
+filterSugestionsByTag(L,[U|T],R):-
+    checkTag(L,U), filterSugestionsByTag(L, T, [U|R]), filterSugestionsByTag(L, T, R);
 
-hasTag([Tag|_], Tag).
+%%este método retorna true ou false, dependendo se o user possui a tag ou não
+checkTag(TagsList, User):-
+    no(User,_,ListTags),
+    (hasTag(TagsList, ListTags)).
 
-hasTag([_|List], Tag):-hasTag(List, Tag).
+hasTag(TagsList, []):-false.
+hasTag(TagsList, [H|T]):-member(H,TagsList),!;hasTag(TagsList,T).
 
 
 

@@ -24,9 +24,9 @@ no(61,rita,[moda,tecnologia,cinema]).
 
 
 ligacao(1,11,10,8).
-%ligacao(1,12,2,6).
-%ligacao(1,13,-3,-2).
-%ligacao(1,14,1,-5).
+ligacao(1,12,2,6).
+ligacao(1,13,-3,-2).
+ligacao(1,14,1,-5).
 ligacao(11,21,5,7).
 ligacao(11,22,2,-4).
 ligacao(11,23,-2,8).
