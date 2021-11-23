@@ -40,6 +40,27 @@
         }
       },
       "coverlet.collector/3.0.2": {},
+      "Flurl/3.0.2": {
+        "runtime": {
+          "lib/netstandard2.0/Flurl.dll": {
+            "assemblyVersion": "3.0.2.0",
+            "fileVersion": "3.0.2.0"
+          }
+        }
+      },
+      "Flurl.Http/3.2.0": {
+        "dependencies": {
+          "Flurl": "3.0.2",
+          "Newtonsoft.Json": "12.0.3",
+          "System.Text.Encoding.CodePages": "4.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Flurl.Http.dll": {
+            "assemblyVersion": "3.2.0.0",
+            "fileVersion": "3.2.0.0"
+          }
+        }
+      },
       "Humanizer.Core/2.2.0": {
         "dependencies": {
           "NETStandard.Library": "1.6.1"
@@ -2298,6 +2319,7 @@
       },
       "DDDNetCore/1.0.0": {
         "dependencies": {
+          "Flurl.Http": "3.2.0",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "5.0.11",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "5.0.11",
           "Microsoft.EntityFrameworkCore": "5.0.11",
@@ -2334,6 +2356,20 @@
       "sha512": "sha512-iBvPAIDaI7j/iMx/DzCGCJ3rdiOmel9VINEfaTiBv/NKIGHOP4X3hqc6Q1wgMtArEshlhXexQknP17SK4vXb1w==",
       "path": "coverlet.collector/3.0.2",
       "hashPath": "coverlet.collector.3.0.2.nupkg.sha512"
+    },
+    "Flurl/3.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1/6mqdzGCTdAekbWkVZBTylCV+8g3JUSTXRBngRVR274S+RsAYNRF79GbDoDsPfMKu8VPc9HkQWdBEAncK1PQQ==",
+      "path": "flurl/3.0.2",
+      "hashPath": "flurl.3.0.2.nupkg.sha512"
+    },
+    "Flurl.Http/3.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5S8YiJm5CyRFO418GG9PDrsgmGEaZJtZLUqk3xqBKrfx7W9eKtOSpeji/GwAL+tSgNTALKBPvBKTaT4S83Oo+w==",
+      "path": "flurl.http/3.2.0",
+      "hashPath": "flurl.http.3.2.0.nupkg.sha512"
     },
     "Humanizer.Core/2.2.0": {
       "type": "package",

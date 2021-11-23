@@ -217,16 +217,13 @@ namespace DDDNetCore.Domain.Introductions
                         "The introduction has already been accepted to be proposed to the target user");
                 }
 
-                var enabler = await _repoUser.GetByIdAsync(intro.Enabler);
-                var target = await _repoUser.GetByIdAsync(intro.TargetUser);
-                
-                var responseString = await BuildRequest(enabler.Id, target.Id).GetStringAsync();
+                var responseString = await BuildRequest(intro.Enabler, intro.TargetUser).GetStringAsync();
                 var introPath = ParseRequest(responseString);
 
                 // If we still didn't reach the target user, we must create a new introduction 
                 // In this new introduction, the requester and target will remain the same but the enabler will the next person in the path to the target
                 // Once the next person is the target, we accept the introduction and create a connection (Friend Request) from the requester to the target, with a message
-                if (!CheckIfTargetIsNext(enabler, target, introPath))
+                if (!CheckIfTargetIsNext(intro.Enabler, intro.TargetUser, introPath))
                 {
                     var newEnabler = await _repoUser.GetByIdAsync(new UserId(introPath[1]));
                     var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
@@ -279,9 +276,9 @@ namespace DDDNetCore.Domain.Introductions
             return list;
         }
 
-        private bool CheckIfTargetIsNext(User enabler, User target, List<string> path)
+        private bool CheckIfTargetIsNext(UserId enabler, UserId target, List<string> path)
         {
-            return (path[path.IndexOf(enabler.Id.Value) + 1].Equals(target.Id.Value));
+            return (path[path.IndexOf(enabler.Value) + 1].Equals(target.Value));
         }
 
         public async Task<IntroductionDto> ReproveIntroduction(IntroductionId id)

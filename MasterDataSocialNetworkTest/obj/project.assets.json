@@ -29,6 +29,29 @@
           "build/netstandard1.0/coverlet.collector.targets": {}
         }
       },
+      "Flurl/3.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Flurl.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Flurl.dll": {}
+        }
+      },
+      "Flurl.Http/3.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Flurl": "3.0.2",
+          "Newtonsoft.Json": "12.0.2",
+          "System.Text.Encoding.CodePages": "4.5.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/Flurl.Http.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Flurl.Http.dll": {}
+        }
+      },
       "Humanizer.Core/2.2.0": {
         "type": "package",
         "dependencies": {
@@ -3263,6 +3286,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
+          "Flurl.Http": "3.2.0",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "5.0.11",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "5.0.11",
           "Microsoft.EntityFrameworkCore": "5.0.11",
@@ -3361,6 +3385,48 @@
         "coverlet-icon.png",
         "coverlet.collector.3.0.2.nupkg.sha512",
         "coverlet.collector.nuspec"
+      ]
+    },
+    "Flurl/3.0.2": {
+      "sha512": "1/6mqdzGCTdAekbWkVZBTylCV+8g3JUSTXRBngRVR274S+RsAYNRF79GbDoDsPfMKu8VPc9HkQWdBEAncK1PQQ==",
+      "type": "package",
+      "path": "flurl/3.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "flurl.3.0.2.nupkg.sha512",
+        "flurl.nuspec",
+        "icon.png",
+        "lib/net461/Flurl.dll",
+        "lib/net461/Flurl.pdb",
+        "lib/net461/Flurl.xml",
+        "lib/net472/Flurl.dll",
+        "lib/net472/Flurl.pdb",
+        "lib/net472/Flurl.xml",
+        "lib/netstandard2.0/Flurl.dll",
+        "lib/netstandard2.0/Flurl.pdb",
+        "lib/netstandard2.0/Flurl.xml"
+      ]
+    },
+    "Flurl.Http/3.2.0": {
+      "sha512": "5S8YiJm5CyRFO418GG9PDrsgmGEaZJtZLUqk3xqBKrfx7W9eKtOSpeji/GwAL+tSgNTALKBPvBKTaT4S83Oo+w==",
+      "type": "package",
+      "path": "flurl.http/3.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "flurl.http.3.2.0.nupkg.sha512",
+        "flurl.http.nuspec",
+        "icon.png",
+        "lib/net461/Flurl.Http.dll",
+        "lib/net461/Flurl.Http.pdb",
+        "lib/net461/Flurl.xml",
+        "lib/net472/Flurl.Http.dll",
+        "lib/net472/Flurl.Http.pdb",
+        "lib/net472/Flurl.xml",
+        "lib/netstandard2.0/Flurl.Http.dll",
+        "lib/netstandard2.0/Flurl.Http.pdb",
+        "lib/netstandard2.0/Flurl.xml"
       ]
     },
     "Humanizer.Core/2.2.0": {
@@ -10563,19 +10629,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\José Cruz\\.nuget\\packages\\": {}
+    "C:\\Users\\Davide\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+      "projectUniqueName": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
       "projectName": "MasterDataSocialNetworkTest",
-      "projectPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
-      "packagesPath": "C:\\Users\\José Cruz\\.nuget\\packages\\",
-      "outputPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
+      "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+      "packagesPath": "C:\\Users\\Davide\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\José Cruz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Davide\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -10587,8 +10653,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
-              "projectPath": "C:\\ARQSI\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
+            "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
+              "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
             }
           }
         }
@@ -10639,7 +10705,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }
