@@ -22,6 +22,13 @@ xCombinacoesTags(X,[_|L],T):-xCombinacoesTags(X,L,T).
 
 %traçar as combinacoes com as listas de tags dos users
 
+listarTodosUsers([],[]).
+listarTodosUsers(U,LT):-findall(no(U,_,LT)).
+
+intersecaoListas([],_,[]). 
+intersecaoListas([X|L1],L2,[X|Result]):-member(X,L2),!,intersecaoListas(L1,L2,Result).
+intersecaoListas([_|L1],L2,Result):-intersecaoListas(L1,L2,Result).
+
 %se false, apresentar mensagem de erro sugestiva
 
 %se true, devolver lista de users por ordem de match
