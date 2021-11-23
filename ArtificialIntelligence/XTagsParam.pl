@@ -2,6 +2,12 @@
 
 %verificar se o nr de tags do user é > ou = que X
 
+qntdTags([],0).
+qntdTags([_|T],N):-qntdTags(T,N1),(N is N1 + 1).
+
+maiorOuIgual(0,0).
+maiorOuIgual(S,X):-S>=X.
+
 %se false, permitir alteracao do X com mensagem sugestiva
 
 %se true, combinacoes de X elementos de tags
