@@ -6,6 +6,7 @@ using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Shared;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -79,6 +80,37 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<List<User>> GetByName(string name){
             return await ((DbSet<User>)base.getContext()).Where(x => name.Equals(x.Name.text)).ToListAsync();
+        }
+
+        public async Task<List<User>> GetByTags(List<Tag> list){
+            List<User> listUsers = new List<User>();
+            var listPossibleUsers = GetUsersWithTheirTags().Result;
+            foreach (var item in list)
+            {
+                var listAux = new List<User>();
+               
+                foreach (var itemThis in listPossibleUsers)
+                {
+                    foreach (var itemTag in itemThis.tags)
+                    {
+                        if (itemTag.name.Equals(item.name)){
+                            listAux.Add(itemThis);
+                        }
+                    }
+                }
+                //= await ((DbSet<User>)base.getContext()).Where(x => x.tags.Contains(item)).ToListAsync();
+                if (listUsers.Count > 0){
+                    foreach (var item2 in listAux)
+                    {
+                        if (!listUsers.Contains(item2)){
+                            listUsers.Add(item2);
+                        }
+                    }
+                } else {
+                    listUsers.AddRange(listAux);
+                }
+            }
+            return listUsers;
         }
 
         public async Task<int> NewFriendship(FriendshipDto dto)

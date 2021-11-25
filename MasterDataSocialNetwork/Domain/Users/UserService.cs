@@ -174,6 +174,35 @@ namespace DDDNetCore.Domain.Users
             return listDto;
          }
 
+        public async Task<List<UserDto>> GetByTags(string tags){
+            string[] listStrings = tags.Split("&");
+            List<Tag> listTags = new List<Tag>();
+            try {
+                foreach (string item in listStrings)
+                {
+                    Tag tagConfirmation = new Tag(item);
+                    listTags.Add(tagConfirmation);
+                }
+            } catch (BusinessRuleValidationException b){
+                throw b;
+            }
+            var list = await this._repo.GetByTags(listTags);
+
+            if (list == null) {
+                 return null;
+            }
+
+            foreach (var user in list)
+            {
+                user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
+            }
+            List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags, user.emotionalState,
+                    user.EmotionTime));
+            
+            return listDto;
+        }
+
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
             var user = new User(dto.name, dto.email, dto.friendsList, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState,
