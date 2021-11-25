@@ -65,6 +65,40 @@ namespace DDDNetCore.Controllers{
             }
         }
 
+        [HttpPut("accept/{id}")]
+        public async Task<ActionResult<ConnectionDto>> Accept(Guid id){
+            try{
+                var intro = await _service.Accept(id);
+
+             if (intro == null)
+                {
+                    return NotFound();
+                }
+                return Ok(intro);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+
+        [HttpPut("decline/{id}")]
+        public async Task<ActionResult<ConnectionDto>> Decline(Guid id){
+            try{
+                var intro = await _service.Decline(id);
+
+             if (intro == null)
+                {
+                    return NotFound();
+                }
+                return Ok(intro);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+
         // PUT: api/Connections/5
         [HttpPut("{id}")]
         public async Task<ActionResult<ConnectionDto>> Update(Guid id, ConnectionDto dto)

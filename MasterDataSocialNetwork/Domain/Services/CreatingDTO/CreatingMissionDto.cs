@@ -1,18 +1,18 @@
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Users;
 
 namespace DDDNetCore.Domain.Services.CreatingDTO
 {
     public class CreatingMissionDto
     {
-        public MissionId Id {get; set;}
         public DificultyDegree dificultyDegree {get; set;}
+        public UserId requester {get;set;}
 
-        public Status status {get; set;}
-        public CreatingMissionDto(MissionId Id, DificultyDegree dificultyDegree, Status status){
-            this.Id = Id;
+        public CreatingMissionDto(DificultyDegree dificultyDegree,UserId requester){
             this.dificultyDegree = dificultyDegree;
-            this.status = status;
+            this.requester = requester;
+
         }
 
     }

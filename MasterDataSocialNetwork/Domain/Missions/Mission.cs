@@ -1,5 +1,6 @@
 using System;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Users;
 
 namespace DDDNetCore.Domain.Missions
 {
@@ -7,6 +8,8 @@ namespace DDDNetCore.Domain.Missions
     {
         //[Required]
         public DificultyDegree dificultyDegree { get; private set; }
+
+        public UserId requester { get; private set; }
 
         //[Required]
         public Status status { get; private set; }
@@ -18,11 +21,12 @@ namespace DDDNetCore.Domain.Missions
             this.Active = true;
         }
 
-        public Mission(DificultyDegree dificultyDegree, Status status)
+        public Mission(UserId requester,DificultyDegree dificultyDegree)
         {
             this.Id = new MissionId(Guid.NewGuid());
+            this.requester = requester;
             this.dificultyDegree = dificultyDegree;
-            this.status = status;
+            this.status = Status.IN_PROGRESS;
             this.Active = true;
         }
 
@@ -36,14 +40,24 @@ namespace DDDNetCore.Domain.Missions
         }
 
         public void UnsucessMissionStatus(){
-            this.status = Status.INACTIVE;
+            if(this.status != Status.IN_PROGRESS){
+                throw new BusinessRuleValidationException("Cannot complete unsucessfully a mission that isn't in progress.");
+            }
+            this.status = Status.UNSUCCESS;
+        }
+
+        public void SucessMissionStatus(){
+            if(this.status != Status.IN_PROGRESS){
+                throw new BusinessRuleValidationException("Cannot complete sucessfully a mission that isn't in progress.");
+            }
+            this.status = Status.SUCCESS;
         }
 
         public void deactivate()
         {
             if (this.Active == false)
             {
-                throw new Exception("The FriendShip is already inactive");
+                throw new Exception("The Mission is already inactive");
             }
             else
             {

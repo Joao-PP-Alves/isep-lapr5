@@ -17,6 +17,8 @@ namespace DDDNetCore.Domain.Users
             if (name != null)
             {
                 this.name = name;
+            }else{
+                throw new BusinessRuleValidationException("Tag cannot be null.");
             }
         }
 
@@ -33,7 +35,10 @@ namespace DDDNetCore.Domain.Users
             else
                 return base.Equals((Tag)obj) && name == tag.name;
         }
-        
-        
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

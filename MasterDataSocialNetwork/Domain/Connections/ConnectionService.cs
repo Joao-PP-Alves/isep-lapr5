@@ -5,7 +5,8 @@ using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Connections;
-
+using System;
+using DDDNetCore.Domain.Missions;
 
 namespace DDDNetCore.Domain.Connections
 {
@@ -15,10 +16,19 @@ namespace DDDNetCore.Domain.Connections
         private readonly IConnectionRepository _repo;
         private readonly IUserRepository _repoUser;
 
-        public ConnectionService(IUnitOfWork unitOfWork, IConnectionRepository repo, IUserRepository repoUser){
+        private readonly IUserService userService;
+
+        private readonly IFriendshipService friendshipService;
+
+        private readonly IMissionService missionService;
+
+        public ConnectionService(IUnitOfWork unitOfWork, IConnectionRepository repo, IUserRepository repoUser,IUserService userService,IFriendshipService friendshipService, IMissionService missionService){
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._repoUser = repoUser;
+            this.userService = userService;
+            this.friendshipService = friendshipService;
+            this.missionService = missionService;
         }
 
         public async Task<List<ConnectionDto>> GetPendentConnections(UserId id){
@@ -86,17 +96,64 @@ namespace DDDNetCore.Domain.Connections
             if (user == null)
                 throw new BusinessRuleValidationException("Invalid User Id");
         }
+
+        public async Task checkConnectionIdAsync(ConnectionId connectionId){
+            var connection = await this._repo.GetByIdAsync(connectionId);
+            if(connection == null){
+                throw new BusinessRuleValidationException("Invalid Connection Id");
+            }
+        }
         
         public async Task<ConnectionDto> AddAsync(CreatingConnectionDto dto)
         {
+            // checks if the users id are valid
             await checkUserIdAsync(dto.requester);
             await checkUserIdAsync(dto.targetUser);
+            // checks if the users are already friends
+            await userService.checkIfTwoUsersAreFriends(dto.requester,dto.targetUser);
+            
             var intro = new Connection(dto.requester,dto.targetUser,dto.description);
 
             await this._repo.AddAsync(intro);
             await this._unitOfWork.CommitAsync();
 
             return new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision);
+
+        }
+
+        public async Task<ConnectionDto> Accept(Guid connectionId){
+            await checkConnectionIdAsync(new ConnectionId(connectionId));
+
+            var connection = await this._repo.GetByIdAsync(new ConnectionId(connectionId));
+
+            await friendshipService.createFriends(connection.requester,connection.targetUser);
+
+            connection.acceptConnection();
+
+            if(connection.missionId != null){
+                await missionService.SuccessAsync(connection.missionId);
+            }
+
+            await _unitOfWork.CommitAsync();
+
+            return new ConnectionDto(connection.Id.AsGuid(),connection.requester,connection.targetUser,connection.description,connection.decision);
+
+        }
+
+        public async Task<ConnectionDto> Decline(Guid connectionId){
+            await checkConnectionIdAsync(new ConnectionId(connectionId));
+
+            var connection = await this._repo.GetByIdAsync(new ConnectionId(connectionId));
+
+            connection.declineConnection();
+
+            if(connection.missionId != null){
+                await missionService.UnsuccessAsync(connection.missionId);
+            }
+
+            await _unitOfWork.CommitAsync();
+
+            return new ConnectionDto(connection.Id.AsGuid(),connection.requester,connection.targetUser,connection.description,connection.decision);
 
         }
 

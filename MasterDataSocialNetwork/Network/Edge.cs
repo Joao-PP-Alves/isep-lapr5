@@ -116,5 +116,10 @@ namespace DDDNetCore.Network
         
                 return newEdge;
             }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
         }
+    }
     }

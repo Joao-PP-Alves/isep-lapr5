@@ -5,7 +5,9 @@ namespace DDDNetCore.Domain.Missions
 {
     public enum Status
      {
-        INACTIVE=0,
-        ACTIVE=1
+        IN_PROGRESS=0,
+        SUCCESS=1,
+        UNSUCCESS=2
+
      }
 }
