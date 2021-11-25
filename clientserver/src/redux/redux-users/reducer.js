@@ -30,7 +30,17 @@ export default (state = initialState, action = {}) => {
                 error: action.payload,
                 shouldFetch: true,
             };
-            default:
-                return state;
+        case actionTypes.CHANGE_PROFILE:
+            return{
+                ...state,
+                //TODO
+            }
+        case actionTypes.CHANGE_EMOTIONAL_STATE:
+            return{    
+                ...state,
+                //TODO
+            }
+        default:
+            return state;
     }
 };

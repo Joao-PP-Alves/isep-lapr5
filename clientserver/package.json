@@ -14,7 +14,9 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "react-scripts": "^4.0.3",
-    "redux": "^4.1.2"
+    "redux": "^4.1.2",
+    "redux-thunk": "^2.4.0",
+    "thunk": "^0.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.177",
-    "@types/react-dom": "^17.0.11"
+    "@types/react-dom": "^17.0.11",
+    "redux-devtools-extension": "^2.13.9"
   }
 }
