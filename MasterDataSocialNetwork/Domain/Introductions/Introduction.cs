@@ -53,10 +53,16 @@ namespace DDDNetCore.Domain.Introductions
         }
 
         public void AcceptedIntroduction(){
+            if(this.decisionStatus != IntroductionStatus.PENDING_APPROVAL){
+                throw new BusinessRuleValidationException("You cannot approve an introduction that is not pending.");
+            }
             this.decisionStatus = IntroductionStatus.ACCEPTED;
         }
 
         public void DeclinedIntroduction(){
+            if(this.decisionStatus != IntroductionStatus.PENDING_APPROVAL){
+                throw new BusinessRuleValidationException("You cannot approve an introduction that is not pending.");
+            }
             this.decisionStatus = IntroductionStatus.DECLINED;
         }
 
@@ -77,10 +83,16 @@ namespace DDDNetCore.Domain.Introductions
         }
 
         public void approveIntermediate(){
+            if(this.decisionStatus != IntroductionStatus.PENDING_APPROVAL){
+                throw new BusinessRuleValidationException("You cannot approve an introduction that is not pending.");
+            }
             this.decisionStatus = IntroductionStatus.APPROVAL_ACCEPTED;
         }
 
         public void declineIntermediate(){
+            if(this.decisionStatus != IntroductionStatus.PENDING_APPROVAL){
+                throw new BusinessRuleValidationException("You cannot approve an introduction that is not pending.");
+            }
             this.decisionStatus = IntroductionStatus.APPROVAL_DECLINED;
         }
 

@@ -80,6 +80,8 @@ namespace DDDNetCore
 
             services.AddTransient<IIntroductionRepository,IntroductionRepository>();
             services.AddTransient<IIntroductionService,IntroductionService>();
+
+            services.AddTransient<IFriendshipService,FriendshipService>();
         }
     }
 }

@@ -25,5 +25,7 @@ namespace DDDNetCore.Domain.Users{
         public Task<List<UserDto>> GetPossibleIntroductionTargets(UserId myId, UserId friendId);
         public Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level);
         Task<FriendshipDto> NewFriendship(CreatingFriendshipDto dto);
+
+        Task checkIfTwoUsersAreFriends(UserId user1,UserId user2);
     }
 }

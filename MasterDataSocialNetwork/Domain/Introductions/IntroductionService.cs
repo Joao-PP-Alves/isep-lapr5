@@ -211,12 +211,6 @@ namespace DDDNetCore.Domain.Introductions
                     return null;
                 }
 
-                if (intro.decisionStatus == IntroductionStatus.APPROVAL_ACCEPTED)
-                {
-                    throw new BusinessRuleValidationException(
-                        "The introduction has already been accepted to be proposed to the target user");
-                }
-
                 var responseString = await BuildRequest(intro.Enabler, intro.TargetUser).GetStringAsync();
                 var introPath = ParseRequest(responseString);
 
@@ -229,14 +223,14 @@ namespace DDDNetCore.Domain.Introductions
                     var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
                         intro.MissionId, intro.Requester, newEnabler.Id, intro.TargetUser);
                     await AddDisconectedEnablerAsync(newIntro);
+                    intro.approveIntermediate();
                 }
                 else
                 {
                     await _connectionService.AddAsync(new CreatingConnectionDto(intro.MessageToTargetUser,
                         intro.Requester, intro.TargetUser));
+                    intro.AcceptedIntroduction();
                 }
-
-                intro.approveIntermediate();
                 
                 await _unitOfWork.CommitAsync();
                 

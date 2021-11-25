@@ -4,6 +4,7 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
+using System;
 
 namespace DDDNetCore.Domain.Connections
 {
@@ -24,5 +25,11 @@ namespace DDDNetCore.Domain.Connections
         Task<ConnectionDto> AddAsync(CreatingConnectionDto dto);
 
         Task<ConnectionDto> UpdateAsync(ConnectionDto dto);
+
+        Task checkConnectionIdAsync(ConnectionId connectionId);
+
+        Task<ConnectionDto> Accept(Guid connectionId);
+
+        Task<ConnectionDto> Decline(Guid connectionId);
     }
 }

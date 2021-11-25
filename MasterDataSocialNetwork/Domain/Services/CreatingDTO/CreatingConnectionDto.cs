@@ -12,15 +12,12 @@ namespace DDDNetCore.Domain.Services.CreatingDTO
         public UserId targetUser {get; set; } 
         public Description description {get; set; }
 
-        public Decision decision {get; set; }
-
 
         public CreatingConnectionDto(Description description, UserId requester, UserId targetUser)
         {
             this.description = description;
             this.requester = requester;
             this.targetUser = targetUser;
-            this.decision = Decision.PENDING;
         }
     }
 }
