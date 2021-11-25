@@ -8,7 +8,8 @@ sugestConnections(User, Level, Sugestions):-
         getUsers(User, Level, UsersList), 
                                                                                         %%retorna uma lista com os users que se encontram até n níveis
             %%aqui ver como se passa lista
-        filterSugestionsByTag(TagsList, UsersList, Sugestions).   
+        filterSugestionsByTag(TagsList, UsersList, List),
+        possiblePath(User,List,List,Sugestions).   
 
 
 
@@ -63,23 +64,12 @@ hasTag(TagsList, [H|T]):-member(H,TagsList),!;hasTag(TagsList,T).
 
 
 
-%%pesquisa de users para sugerir com base nas conexões em comum
+%%verifica se é possível chegar aos nodes passando somente por nodes que tenham tags em comum
+possiblePath(User,[],_,_).
 
-filterByConnections(L,U,R):- filterByConnections(L,U,[],R).
-
-filterByConnections(L,[],R1,R1).
-filterByConnections(L,[U|T],R,R1):-
-    checkConnection(L,U), (filterByConnections(L,T,[U|R],R1),!;filterByConnections(L,T,R,R1)).
-
-%%este método retorna true ou false, dependendo se o user possui uma connection em comum ou não
-checkConnection(ConnectionsList, User):-
-    directConnections(User,L),
-    (hasConnection(ConnectionsList,L)).
-
-hasConnection(ConnectionsList, []):-false.
-hasConnection(ConnectionsList,[H|T]):-member(H,ConnectionsList),!;hasConnection(ConnectionsList,T).
-
-
+possiblePath(User,[H|T],L,Result):-
+    dfs(User,H,Cam), union(Cam,T,Temp), length(Temp,V1),length(L,V2),
+    (V1==V2), (possiblePath(User,T, L, [H|Result]),!; possiblePath(User,T,L,Result)).
 
 %%junta 2 listas e remove elementos repetidos
 joinLists([],L,L).

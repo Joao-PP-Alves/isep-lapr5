@@ -30,10 +30,16 @@ namespace DDDNetCore.Domain.Connections{
         }
 
         public void acceptConnection(){
+            if(this.decision != Decision.PENDING){
+                throw new BusinessRuleValidationException("You cannot accept connections that are not pending.");
+            }
             this.decision = Decision.ACCEPTED;
         }
 
         public void declineConnection(){
+            if(this.decision != Decision.PENDING){
+                throw new BusinessRuleValidationException("You cannot decline connections that are not pending.");
+            }
             this.decision = Decision.DECLINED;
         }
 

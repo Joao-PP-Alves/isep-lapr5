@@ -315,7 +315,7 @@ namespace DDDNetCore.Network
          * @param the other graph to test for equality
          * @return true if both objects represent the same graph
          */
-        public bool Equals(Object otherObj)
+        public override bool Equals(Object otherObj)
         {
 
             if (this == otherObj)

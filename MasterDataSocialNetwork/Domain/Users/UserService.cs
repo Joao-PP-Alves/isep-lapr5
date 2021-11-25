@@ -6,6 +6,7 @@ using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using System.Linq;
 using DDDNetCore.Network;
+using DDDNetCore.Domain.Connections;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -354,6 +355,12 @@ namespace DDDNetCore.Domain.Users
             var user = await this._repo.GetByIdAsync(userId);
             if (user == null)
                 throw new BusinessRuleValidationException("Invalid User Id.");
+        }
+
+        public async Task checkIfTwoUsersAreFriends(UserId user1,UserId user2){
+            if(_repo.checkIfFriends(user1,user2)){
+                throw new BusinessRuleValidationException("Users are already friends.");
+            }
         }
     }
 }

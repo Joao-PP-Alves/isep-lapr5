@@ -1,6 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import { Provider } from 'react-redux';
+import { Global } from '@emotion/core';
+import { BrowserRouter, Route } from 'react-router-dom';
+import configureStore from './redux/configureStore';
+import globalStyles from 'theme/styles';
 import './App.css';
 
 function App() {
