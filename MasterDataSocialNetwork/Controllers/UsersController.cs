@@ -140,8 +140,8 @@ namespace DDDNetCore.Controllers
             }
         }
 
-        // PUT: api/Users/5/EmotionalStateUpdate
-        [HttpPut("{id}/EmotionalStateUpdate")]
+        // PUT: api/Users/5/EmotionalState
+        [HttpPut("{id}/EmotionalState")]
         public async Task<ActionResult<UserDto>> UpdateEmotionalState(Guid id, UserDto dto)
         {
             if (id != dto.Id)

@@ -6,7 +6,6 @@ namespace DDDNetCore.Domain.Services.CreatingDTO
 {
     public class CreatingIntroductionDto
     {
-        public Decision Decision {get;set;}
         public Description MessageToIntermediate{get;set;}
         public Description MessageToTargetUser {get;set;}
         public Description MessageFromIntermediateToTargetUser {get;set;}
@@ -22,7 +21,6 @@ namespace DDDNetCore.Domain.Services.CreatingDTO
             this.Enabler = enabler;
             this.TargetUser = targetUser;
             this.MissionId = missionId;
-            this.Decision = Decision.PENDING;
         }
 
     }
