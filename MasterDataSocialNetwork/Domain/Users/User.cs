@@ -224,5 +224,10 @@ namespace DDDNetCore.Domain.Users
 
             return true;
         }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
