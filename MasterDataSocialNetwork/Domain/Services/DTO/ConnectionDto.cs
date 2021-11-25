@@ -2,6 +2,7 @@ using DDDNetCore.Domain.Users;
 using System;
 using System.Security.Cryptography;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Missions;
 
 namespace DDDNetCore.Domain.Services.DTO{
 
@@ -14,6 +15,8 @@ namespace DDDNetCore.Domain.Services.DTO{
 
         public Description description {get; set;}
 
+        public MissionId missionId {get; set;}
+
         public Decision decision {get; set;}
 
         public ConnectionDto(Guid id, UserId requester, UserId targetUser, Description description, Decision decision){
@@ -22,6 +25,15 @@ namespace DDDNetCore.Domain.Services.DTO{
             this.targetUser = targetUser;
             this.description = description;
             this.decision = decision;
+        }
+
+        public ConnectionDto(Guid id, UserId requester, UserId targetUser, Description description, Decision decision,MissionId missionId){
+            this.id = id;
+            this.requester = requester;
+            this.targetUser = targetUser;
+            this.description = description;
+            this.decision = decision;
+            this.missionId = missionId;
         }
 
     }

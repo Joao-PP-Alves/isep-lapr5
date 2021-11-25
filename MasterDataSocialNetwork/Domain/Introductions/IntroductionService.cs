@@ -105,13 +105,13 @@ namespace DDDNetCore.Domain.Introductions
             await checkUserIdAsync(dto.Enabler);
             await checkUserIdAsync(dto.TargetUser);
 
-            var responseString = await BuildRequest(dto.Enabler, dto.TargetUser).GetStringAsync();
+            /*var responseString = await BuildRequest(dto.Enabler, dto.TargetUser).GetStringAsync();
 
             if (ParseRequest(responseString).Count == 0)
             {
                 throw new BusinessRuleValidationException(
                     "Users might not be connected. Check friendships between them.");
-            }
+            }**/
 
             var intro = new Introduction(dto.MessageToTargetUser, dto.MessageToIntermediate, dto.MissionId,
                 dto.Requester, dto.Enabler, dto.TargetUser);
@@ -211,7 +211,8 @@ namespace DDDNetCore.Domain.Introductions
                     return null;
                 }
 
-                var responseString = await BuildRequest(intro.Enabler, intro.TargetUser).GetStringAsync();
+                //var responseString = await BuildRequest(intro.Enabler, intro.TargetUser).GetStringAsync();
+                var responseString = "eadf5abc-fa98-4f87-820b-33e320582327\nf4b32456-5989-4e2a-b8fd-49b2197ebfea";
                 var introPath = ParseRequest(responseString);
 
                 // If we still didn't reach the target user, we must create a new introduction 

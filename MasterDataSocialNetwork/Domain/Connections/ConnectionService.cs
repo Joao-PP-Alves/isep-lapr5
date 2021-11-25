@@ -35,7 +35,7 @@ namespace DDDNetCore.Domain.Connections
             var list = await this._repo.getPendentConnections(id);
 
             List<ConnectionDto> listDto = list.ConvertAll<ConnectionDto>(intro =>
-                new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision));
+                new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision,intro.missionId));
         
             return listDto;
         }
@@ -45,7 +45,7 @@ namespace DDDNetCore.Domain.Connections
             var list = await this._repo.GetAllAsync();
             
             List<ConnectionDto> listDto = list.ConvertAll<ConnectionDto>(intro => 
-                new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision));
+                new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision,intro.missionId));
 
             return listDto;
         }
@@ -57,7 +57,7 @@ namespace DDDNetCore.Domain.Connections
             if(intro == null)
                 return null;
 
-            return new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision);
+            return new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision,intro.missionId);
         }
 
         public async Task<ConnectionDto> InactivateAsync(ConnectionId id)
@@ -112,12 +112,12 @@ namespace DDDNetCore.Domain.Connections
             // checks if the users are already friends
             await userService.checkIfTwoUsersAreFriends(dto.requester,dto.targetUser);
             
-            var intro = new Connection(dto.requester,dto.targetUser,dto.description);
+            var intro = new Connection(dto.requester,dto.targetUser,dto.description,dto.missionId);
 
             await this._repo.AddAsync(intro);
             await this._unitOfWork.CommitAsync();
 
-            return new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision);
+            return new ConnectionDto(intro.Id.AsGuid(),intro.requester,intro.targetUser,intro.description,intro.decision,intro.missionId);
 
         }
 
