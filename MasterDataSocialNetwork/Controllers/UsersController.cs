@@ -43,6 +43,13 @@ namespace DDDNetCore.Controllers
             return await _service.GetByName(name);
         }
 
+        //GET: api/users/ByTags/tag1.tag2.tag3
+        [HttpGet("ByTags/{tags}")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetByTags(string tags)
+        {
+            return await _service.GetByTags(tags);
+        }
+
         //GET: api/Users
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetGetById(Guid id)

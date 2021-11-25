@@ -15,6 +15,7 @@ namespace DDDNetCore.Domain.Users{
         public Task<UserDto> GetByIdAsync(UserId id);
         public Task<List<UserDto>> GetByEmail(string email);
         public Task<List<UserDto>> GetByName(string name);
+        public Task<List<UserDto>> GetByTags(string tags);
         public Task<UserDto> AddAsync(CreatingUserDto dto);
         public Task<UserDto> UpdateProfileAsync(UserDto dto);
         public Task<UserDto> InactivateAsync(UserId id);

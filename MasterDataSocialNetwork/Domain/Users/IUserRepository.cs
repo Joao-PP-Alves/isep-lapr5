@@ -16,6 +16,8 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<List<User>> GetByName(string name);
 
+        public Task<List<User>> GetByTags(List<Tag> list);
+
         public Task<int> NewFriendship(FriendshipDto friendshipDto);
 
         public List<UserId> ReturnFriendsSuggestionList(UserId userId);

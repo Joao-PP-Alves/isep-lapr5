@@ -222,7 +222,7 @@ namespace DDDNetCore.Domain.Users
                 return true;
             }
 
-            return true;
+            return false;
         }
 
         public override int GetHashCode()
