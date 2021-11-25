@@ -1,9 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Global } from '@emotion/core';
 import { BrowserRouter, Route } from 'react-router-dom';
 import configureStore from './redux/configureStore';
-import globalStyles from 'theme/styles';
+//import globalStyles from 'theme/styles';
 import './App.css';
 
 function App() {
@@ -11,10 +10,11 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
+        <User />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
+
         <span>
           <span>Learn </span>
           <a
