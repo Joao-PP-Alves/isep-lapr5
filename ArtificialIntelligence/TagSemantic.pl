@@ -1,9 +1,3 @@
-% Tag Semantics 
-%
-%
-% tag('C#', ['CSharp', 'CS']).
-% C# is related to CSharp and CS.
-
 tag('C#', ['CSharp', 'CS']).
 tag('CSharp', ['C#', 'CS']).
 tag('CS', ['CSharp', 'C#']).
