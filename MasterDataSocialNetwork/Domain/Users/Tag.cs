@@ -17,6 +17,8 @@ namespace DDDNetCore.Domain.Users
             if (name != null)
             {
                 this.name = name;
+            }else{
+                throw new BusinessRuleValidationException("Tag cannot be null.");
             }
         }
 

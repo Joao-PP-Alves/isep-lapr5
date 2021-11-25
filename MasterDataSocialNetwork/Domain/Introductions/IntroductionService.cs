@@ -228,8 +228,9 @@ namespace DDDNetCore.Domain.Introductions
                 else
                 {
                     await _connectionService.AddAsync(new CreatingConnectionDto(intro.MessageToTargetUser,
-                        intro.Requester, intro.TargetUser));
+                        intro.Requester, intro.TargetUser,intro.MissionId));
                     intro.AcceptedIntroduction();
+                    
                 }
                 
                 await _unitOfWork.CommitAsync();

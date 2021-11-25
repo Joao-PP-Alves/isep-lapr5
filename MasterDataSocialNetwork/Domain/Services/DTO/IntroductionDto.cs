@@ -18,7 +18,6 @@ namespace DDDNetCore.Domain.Services.DTO
         public UserId TargetUser {get;set;}
         public UserId Requester {get;set;}
         public UserId Enabler {get;set;}
-        public ConnectionId ConnectionId {get;set;}
 
         public IntroductionDto(Guid Id, MissionId missionId, IntroductionStatus decision,Description messageToIntermediateUser, Description messageToTargetUser, Description messageFromIntermediateToTargetUser,UserId Requester, UserId Enabler, UserId TargetUser){
             this.Id = Id;

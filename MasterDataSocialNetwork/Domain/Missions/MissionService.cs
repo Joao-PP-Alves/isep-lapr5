@@ -21,7 +21,7 @@ namespace DDDNetCore.Domain.Missions {
         {
             var list = await this._repo.GetAllAsync();
             
-            List<MissionDto> listDto = list.ConvertAll<MissionDto>(m => new MissionDto(m.Id, m.dificultyDegree, m.status));
+            List<MissionDto> listDto = list.ConvertAll<MissionDto>(m => new MissionDto(m.Id, m.dificultyDegree, m.status,m.requester));
 
             return listDto;
         }
@@ -33,18 +33,18 @@ namespace DDDNetCore.Domain.Missions {
             if(mission == null)
                 return null;
 
-            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status);
+            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status, mission.requester);
         }
 
         public async Task<MissionDto> AddAsync(CreatingMissionDto dto)
         {
-            var mission = new Mission(dto.dificultyDegree, dto.status);
+            var mission = new Mission(dto.requester,dto.dificultyDegree);
 
             await this._repo.AddAsync(mission);
 
             await this._unitOfWork.CommitAsync();
 
-            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status);
+            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status, mission.requester);
         }
 
         public async Task<MissionDto> UpdateAsync(MissionDto dto)
@@ -59,7 +59,7 @@ namespace DDDNetCore.Domain.Missions {
 
             await this._unitOfWork.CommitAsync();
 
-            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status);
+            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status,mission.requester);
         }
 
         public async Task<MissionDto> InactivateAsync(MissionId id)
@@ -73,7 +73,7 @@ namespace DDDNetCore.Domain.Missions {
             
             await this._unitOfWork.CommitAsync();
 
-            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status);
+            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status,mission.requester);
         }
 
         public async Task<MissionDto> DeleteAsync(MissionId id)
@@ -89,7 +89,37 @@ namespace DDDNetCore.Domain.Missions {
             this._repo.Remove(mission);
             await this._unitOfWork.CommitAsync();
 
-            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status);
+            return new MissionDto(mission.Id, mission.dificultyDegree, mission.status,mission.requester);
+        }
+
+        public async Task<MissionDto> SuccessAsync(MissionId id){
+            var mission = await this._repo.GetByIdAsync(id); 
+
+            if (mission == null){
+                return null;   
+            }
+
+            mission.SucessMissionStatus();
+
+            await this._unitOfWork.CommitAsync();
+
+            return new MissionDto(mission.Id,mission.dificultyDegree,mission.status,mission.requester);
+
+        }
+
+        public async Task<MissionDto> UnsuccessAsync(MissionId id){
+            var mission = await this._repo.GetByIdAsync(id); 
+
+            if (mission == null){
+                return null;   
+            }
+
+            mission.UnsucessMissionStatus();
+
+            await this._unitOfWork.CommitAsync();
+
+            return new MissionDto(mission.Id,mission.dificultyDegree,mission.status,mission.requester);
+
         }
     }
 }

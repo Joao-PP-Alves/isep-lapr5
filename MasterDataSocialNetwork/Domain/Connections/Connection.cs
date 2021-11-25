@@ -1,6 +1,7 @@
 using DDDNetCore.Domain.Users;
 using System;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Missions;
 
 namespace DDDNetCore.Domain.Connections{
 
@@ -14,6 +15,9 @@ namespace DDDNetCore.Domain.Connections{
 
         public Decision decision { get; private set; }
 
+        // in case the connection is created in order to finish the mission
+        public MissionId missionId { get; private set;}
+
         public bool active{get; private set; }
 
         private Connection(){
@@ -25,6 +29,16 @@ namespace DDDNetCore.Domain.Connections{
             this.requester = requester;
             this.targetUser = targetUser;
             this.description = description;
+            this.decision = Decision.PENDING;
+            this.active = true;
+        }
+
+        public Connection(UserId requester, UserId targetUser, Description description, MissionId missionId){
+            this.Id = new ConnectionId(Guid.NewGuid());
+            this.requester = requester;
+            this.targetUser = targetUser;
+            this.description = description;
+            this.missionId = missionId;
             this.decision = Decision.PENDING;
             this.active = true;
         }

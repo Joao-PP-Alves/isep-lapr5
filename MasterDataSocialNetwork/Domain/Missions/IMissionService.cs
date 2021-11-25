@@ -17,5 +17,9 @@ namespace DDDNetCore.Domain.Missions
         public Task<MissionDto> InactivateAsync(MissionId id);
         public Task<MissionDto> DeleteAsync(MissionId id);
 
+        Task<MissionDto> SuccessAsync(MissionId id);
+
+        Task<MissionDto> UnsuccessAsync(MissionId id);
+
     }
 }

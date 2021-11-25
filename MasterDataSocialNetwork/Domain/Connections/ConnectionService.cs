@@ -6,6 +6,7 @@ using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Connections;
 using System;
+using DDDNetCore.Domain.Missions;
 
 namespace DDDNetCore.Domain.Connections
 {
@@ -19,12 +20,15 @@ namespace DDDNetCore.Domain.Connections
 
         private readonly IFriendshipService friendshipService;
 
-        public ConnectionService(IUnitOfWork unitOfWork, IConnectionRepository repo, IUserRepository repoUser,IUserService userService,IFriendshipService friendshipService){
+        private readonly IMissionService missionService;
+
+        public ConnectionService(IUnitOfWork unitOfWork, IConnectionRepository repo, IUserRepository repoUser,IUserService userService,IFriendshipService friendshipService, IMissionService missionService){
             this._unitOfWork = unitOfWork;
             this._repo = repo;
             this._repoUser = repoUser;
             this.userService = userService;
             this.friendshipService = friendshipService;
+            this.missionService = missionService;
         }
 
         public async Task<List<ConnectionDto>> GetPendentConnections(UserId id){
@@ -126,6 +130,10 @@ namespace DDDNetCore.Domain.Connections
 
             connection.acceptConnection();
 
+            if(connection.missionId != null){
+                await missionService.SuccessAsync(connection.missionId);
+            }
+
             await _unitOfWork.CommitAsync();
 
             return new ConnectionDto(connection.Id.AsGuid(),connection.requester,connection.targetUser,connection.description,connection.decision);
@@ -138,6 +146,10 @@ namespace DDDNetCore.Domain.Connections
             var connection = await this._repo.GetByIdAsync(new ConnectionId(connectionId));
 
             connection.declineConnection();
+
+            if(connection.missionId != null){
+                await missionService.UnsuccessAsync(connection.missionId);
+            }
 
             await _unitOfWork.CommitAsync();
 
