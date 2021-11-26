@@ -12,7 +12,7 @@ function User(){
 
     const fetchUsers = async () => {
         const data = await fetch('https://localhost:5001/api/Users');
-        const data = await data.json();
+        const users = await data.json();
         console.log(users);
         setUsers(users);
     }
