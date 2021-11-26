@@ -1,3 +1,5 @@
+:- module(caminho_mais_seguro_1ligacao, [dfsLength_safest_oneWay/5,
+											plan_safestlig_oneWay/5]).
 
 :-dynamic melhor_sol_safest_oneWay/2.
 

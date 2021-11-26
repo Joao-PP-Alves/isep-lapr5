@@ -1,3 +1,4 @@
+
 retornarUsersComXTagsEmComum(Param,ListaTags,ListaCombTags,ListaUserTags,ListaUsers,Result):-
     length(ListaTags,Q),                                                                    
     Param =< Q,                                                                             

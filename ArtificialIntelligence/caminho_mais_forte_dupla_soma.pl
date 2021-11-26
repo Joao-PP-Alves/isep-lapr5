@@ -1,6 +1,8 @@
-%Determinar o caminho mais forte (maximiza o somatório das forças de
-% ligação) para determinado utilizador
-%Considerando a soma das duas forças em cada ramo da travessia (do nó A para o B e do
+:- module(caminho_mais_forte_dupla_soma, [dfsLengthDouble/4,
+											plan_maxlig2/4]).
+%Determinar o caminho mais forte (maximiza o somatï¿½rio das forï¿½as de
+% ligaï¿½ï¿½o) para determinado utilizador
+%Considerando a soma das duas forï¿½as em cada ramo da travessia (do nï¿½ A para o B e do
 %B para o A)
 
 :-dynamic melhor_sol_maxlig2/2.
@@ -9,7 +11,7 @@ dfsLengthDouble(Orig,Dest,Cam,Len):-dfs2LengthDouble(Orig,Dest,[Orig],Cam,Len).
 
 dfs2LengthDouble(Dest,Dest,LA,Cam,0):-!,reverse(LA,Cam).
 dfs2LengthDouble(Act,Dest,LA,Cam,Len):-no(NAct,Act,_),
-		(ligacao(NAct,NX,Len1,Len3);ligacao(NX,NAct,Len3,Len1)),
+		ligacao(NAct,NX,Len1),ligacao(NX,NAct,Len3),
 		no(NX,X,_),
 		\+ member(X,LA),
 		dfs2LengthDouble(X,Dest,[X|LA],Cam,Len2),
@@ -24,7 +26,7 @@ plan_maxlig2(Orig,Dest,LCaminho_maxlig,LCaminho_length):-
 		write('Tempo de geracao da solucao:'),write(T),nl.
 
 
-melhor_caminho_maxlig2(Orig,Dest):- asserta(melhor_sol_maxlig2(_,0)),
+melhor_caminho_maxlig2(Orig,Dest):- asserta(melhor_sol_maxlig2(_,-9999)),
 		dfsLengthDouble(Orig,Dest,LCaminho,Len),
 		atualiza_melhor_maxlig2(LCaminho,Len),
 		fail.
