@@ -6,10 +6,13 @@
 dfsLength(Orig,Dest,Cam,Len):-dfs2Length(Orig,Dest,[Orig],Cam,Len).
 
 dfs2Length(Dest,Dest,LA,Cam,0):-!,reverse(LA,Cam).
-dfs2Length(Act,Dest,LA,Cam,Len):-no(NAct,Act,_),(ligacao(NAct,NX,Len1,_);ligacao(NX,NAct,_,Len1)),
-    no(NX,X,_),\+ member(X,LA),dfs2Length(X,Dest,[X|LA],Cam,Len2),
-    Len is Len2 + Len1.
-
+dfs2Length(Act,Dest,LA,Cam,Len):-no(NAct,Act,_),
+		(ligacao(NAct,NX,Len1)),
+		no(NX,X,_),
+		\+ member(X,LA),
+		dfs2Length(X,Dest,[X|LA],Cam,Len2),
+		Len is Len2 + Len1.
+		
 
 plan_maxlig(Orig,Dest,LCaminho_maxlig,LCaminho_length):-
 		get_time(Ti),
@@ -19,7 +22,8 @@ plan_maxlig(Orig,Dest,LCaminho_maxlig,LCaminho_length):-
 		T is Tf-Ti,
 		write('Tempo de geracao da solucao:'),write(T),nl.
 
-melhor_caminho_maxlig(Orig,Dest):- asserta(melhor_sol_maxlig(_,0)),
+
+melhor_caminho_maxlig(Orig,Dest):- asserta(melhor_sol_maxlig(_,-9999)),
 		dfsLength(Orig,Dest,LCaminho,Len),
 		atualiza_melhor_maxlig(LCaminho,Len),
 		fail.
