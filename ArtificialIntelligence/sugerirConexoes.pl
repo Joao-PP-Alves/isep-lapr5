@@ -1,17 +1,19 @@
 %%sugere amigos com base nas tags em comum e nas conexões em comum, tendo em conta n níveis
 
 %%DEPOIS MUDAR ISTO PARA FAZER SÓ A PARTIR DO USER E NÃO COM TAGSLIST E CONNECTIONS
-sugestConnections(User, Level, Sugestions):-
+suggestConnections(User, Level, Sugestions):-
         no(User,_,ListTags),
-        %tag(ListTags, TagResult),                                                       %%vai verificar a semântica das TagsList
-        %append([ListTags], TagResult, TagsList),                                        %%adiciona os sinónimos das tags encontrados a uma lista para poder pesquisar todas as tags relacionadas
+        verifySemantic(ListTags,TagResult),                                       
         getUsers(User, Level, UsersList), 
-                                                                                        %%retorna uma lista com os users que se encontram até n níveis
             %%aqui ver como se passa lista
-        filterSugestionsByTag(TagsList, UsersList, List),
+        filterSugestionsByTag(TagResult, UsersList, List),
         possiblePath(User,List,List,Sugestions).   
 
+%verificar a semantica das tags do user
 
+verifySemantic(L,L2):-verifySemantic(L,[],L2).
+verifySemantic([],L,L):-!.
+verifySemantic([H|T],L,L2):-tag(H,Lista),verifySemantic(T,[[H|Lista]|L],L2),!;verifySemantic(T,[H|L],L2).
 
 %%retorna uma lista com os users que se encontram até n níveis
 
@@ -52,9 +54,6 @@ filterSugestionsByTag(L,[],R1,R1).
 filterSugestionsByTag(L,[U|T],R,R1):-
     checkTag(L,U), (filterSugestionsByTag(L, T, [U|R],R1),!; filterSugestionsByTag(L, T, R, R1)).
 
-
-%%este método retorna true ou false, dependendo se o user possui a tag ou não
-
 checkTag(TagsList, User):-
     no(User,_,ListTags),
     (hasTag(TagsList, ListTags)).
@@ -62,9 +61,7 @@ checkTag(TagsList, User):-
 hasTag(TagsList, []):-false.
 hasTag(TagsList, [H|T]):-member(H,TagsList),!;hasTag(TagsList,T).
 
-
-
-%%verifica se é possível chegar aos nodes passando somente por nodes que tenham tags em comum
+%verifica se é possível chegar aos nodes passando somente por nodes que tenham tags em comum
 possiblePath(User,[],_,_).
 
 possiblePath(User,[H|T],L,Result):-

@@ -1,3 +1,4 @@
+
 :-dynamic melhor_sol_minlig/2.
 
 all_dfs(Nome1,Nome2,LCam):-get_time(T1),
