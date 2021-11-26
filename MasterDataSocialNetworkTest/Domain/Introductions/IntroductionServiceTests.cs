@@ -36,6 +36,12 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
 
         public ConnectionService connectionService;
 
+        public UserService userService;
+
+        public FriendshipService friendshipService;
+
+        public MissionService missionService;
+
         public HttpTest httpTest;
 
         [TestInitialize]
@@ -46,7 +52,10 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
             repoUsers = new Mock<IUserRepository>();
             repoMissions = new Mock<IMissionRepository>();
             repoConnections = new Mock<IConnectionRepository>();
-            connectionService = new ConnectionService(unitOfWork.Object, repoConnections.Object, repoUsers.Object);
+            userService = new UserService(unitOfWork.Object, repoUsers.Object);
+            friendshipService = new FriendshipService(unitOfWork.Object, repoUsers.Object);
+            missionService = new MissionService(unitOfWork.Object, repoMissions.Object);
+            connectionService = new ConnectionService(unitOfWork.Object, repoConnections.Object, repoUsers.Object, userService, friendshipService, missionService);
             service = new IntroductionService(unitOfWork.Object, repo.Object, repoUsers.Object, repoMissions.Object,
                 connectionService);
         }
@@ -152,7 +161,7 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
             Introduction intro = new Introduction(new Description(""), new Description(""), new MissionId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new UserId("e3a9a97d-8f77-4fc3-8bb5-339942b8a77c"), new UserId("fbc61980-9643-4134-8441-344e9e5ba0b0"), new UserId("d126ffe1-54b4-4438-9de3-8b3beb64c351"));
             repo.Setup(p => p.GetByIdAsync(null)).ReturnsAsync(intro);
             Task<IntroductionDto> task = service.GetByIdAsync(intro.Id);
-            Mission mission = new Mission(null, Status.ACTIVE);
+            Mission mission = new Mission(new UserId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new DificultyDegree(Level.level2));
             //repoUsers.Setup(u => u.GetByIdAsync(intro.Enabler)).ReturnsAsync(intro.Enabler)
             repoMissions.Setup(p => p.GetByIdAsync(mission.Id)).ReturnsAsync(mission);
             var connection = new Connection(intro.Requester, intro.TargetUser, intro.MessageToTargetUser);
@@ -164,8 +173,8 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
             using var http_test = new HttpTest();
             http_test.RespondWith("e3a9a97d-8f77-4fc3-8bb5-339942b8a77c\nfbc61980-9643-4134-8441-344e9e5ba0b0\nd126ffe1-54b4-4438-9de3-8b3beb64c351", 200);
             Task<IntroductionDto> task2 = service.ApproveIntroduction(null);
-            Assert.AreEqual(IntroductionStatus.APPROVAL_ACCEPTED, task2.Result.decisionStatus);
-            Assert.AreEqual(Status.ACTIVE, mission.status);
+            Assert.AreEqual(IntroductionStatus.ACCEPTED, task2.Result.decisionStatus);
+            //Assert.AreEqual(Status.ACTIVE, mission.status);
         }
 
         public void ReproveIntroductionTest()
@@ -173,11 +182,11 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
             Introduction intro = new Introduction(null, null, null, null, null, null);
             repo.Setup(p => p.GetByIdAsync(intro.Id)).ReturnsAsync(intro);
             Task<IntroductionDto> task = service.GetByIdAsync(intro.Id);
-            Mission mission = new Mission(null, Status.ACTIVE);
+            Mission mission = new Mission(new UserId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new DificultyDegree(Level.level2));
             repoMissions.Setup(p => p.GetByIdAsync(mission.Id)).ReturnsAsync(mission);
             Task<IntroductionDto> task2 = service.ReproveIntroduction(intro.Id);
             Assert.AreEqual(IntroductionStatus.APPROVAL_DECLINED, task2.Result.decisionStatus);
-            Assert.AreEqual(Status.INACTIVE, mission.status);
+            //Assert.AreEqual(Status.INACTIVE, mission.status);
         }
     }
 }

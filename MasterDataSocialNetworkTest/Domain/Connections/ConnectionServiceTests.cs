@@ -11,34 +11,56 @@ using Moq;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
+using DDDNetCore.Domain.Missions;
 
-namespace MasterDataSocialNetworkTest.Domain.Connections{
+namespace MasterDataSocialNetworkTest.Domain.Connections
+{
     [TestClass]
-    public class ConnectionServiceTests{
-        
+    public class ConnectionServiceTests
+    {
+
         public TestContext TestContext { get; set; }
 
         private static TestContext _testContext;
 
+        public Mock<IUnitOfWork> unitOfWork;
+        
+        public Mock<IUserRepository> repoUsers;
+        public Mock<IMissionRepository> repoMissions;
+
+        public Mock<IConnectionRepository> repoConnections;
+
+        public ConnectionService service;
+
+        public UserService userService;
+
+        public FriendshipService friendshipService;
+
+        public MissionService missionService;
+
         [TestInitialize]
         public void setup()
         {
-            
+            unitOfWork = new Mock<IUnitOfWork>();
+            repoUsers = new Mock<IUserRepository>();
+            repoMissions = new Mock<IMissionRepository>();
+            repoConnections = new Mock<IConnectionRepository>();
+            userService = new UserService(unitOfWork.Object, repoUsers.Object);
+            friendshipService = new FriendshipService(unitOfWork.Object, repoUsers.Object);
+            missionService = new MissionService(unitOfWork.Object, repoMissions.Object);
+            service = new ConnectionService(unitOfWork.Object, repoConnections.Object, repoUsers.Object, userService, friendshipService, missionService);
         }
 
         [TestCleanup]
         public void clean()
         {
-            
+
         }
 
         [TestMethod]
-        public void CreateConnectionTest(){
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var repo = new Mock<IConnectionRepository>();
-            var repoUsers = new Mock<IUserRepository>();
-            ConnectionService service = new ConnectionService(unitOfWork.Object,repo.Object,repoUsers.Object);
-
+        public void CreateConnectionTest()
+        {
+            
             //users
             User user1 = new User();
             User user2 = new User();
@@ -46,24 +68,19 @@ namespace MasterDataSocialNetworkTest.Domain.Connections{
             repoUsers.Setup(p => p.GetByIdAsync(user1.Id)).ReturnsAsync(user1);
             repoUsers.Setup(p => p.GetByIdAsync(user2.Id)).ReturnsAsync(user2);
 
-            CreatingConnectionDto creatingDto = new CreatingConnectionDto(null,user1.Id,user2.Id);
+            CreatingConnectionDto creatingDto = new CreatingConnectionDto(null, user1.Id, user2.Id);
 
             Task<ConnectionDto> task = service.AddAsync(creatingDto);
 
-            Assert.AreEqual(creatingDto.requester,task.Result.requester);
-            Assert.AreEqual(creatingDto.targetUser,task.Result.targetUser);
+            Assert.AreEqual(creatingDto.requester, task.Result.requester);
+            Assert.AreEqual(creatingDto.targetUser, task.Result.targetUser);
 
         }
 
         [TestMethod]
-        public void CheckUserIdTest(){
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var repo = new Mock<IConnectionRepository>();
-            var repoUsers = new Mock<IUserRepository>();
-            ConnectionService service = new ConnectionService(unitOfWork.Object,repo.Object,repoUsers.Object);
-
-            User user1 = new User();
-
+        public void CheckUserIdTest()
+        {
+            var user1 = new User();
             repoUsers.Setup(p => p.GetByIdAsync(user1.Id)).ReturnsAsync(user1);
 
             Task task = service.checkUserIdAsync(user1.Id);
@@ -71,78 +88,57 @@ namespace MasterDataSocialNetworkTest.Domain.Connections{
         }
 
         [TestMethod]
-        public void GetByIdTest(){
+        public void GetByIdTest()
+        {
 
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var repo = new Mock<IConnectionRepository>();
-            var repoUsers = new Mock<IUserRepository>();
-            ConnectionService service = new ConnectionService(unitOfWork.Object,repo.Object,repoUsers.Object);
+            Connection connection = new Connection(null, null, null);
 
-            Connection connection = new Connection(null,null,null);
-
-            repo.Setup(p => p.GetByIdAsync(connection.Id)).ReturnsAsync(connection);
+            repoConnections.Setup(p => p.GetByIdAsync(connection.Id)).ReturnsAsync(connection);
 
             Task<ConnectionDto> task = service.GetByIdAsync(connection.Id);
 
-            Assert.AreEqual(connection.Id,new ConnectionId(task.Result.id));
+            Assert.AreEqual(connection.Id, new ConnectionId(task.Result.id));
 
         }
 
         [TestMethod]
-        public void GetAllTest(){
+        public void GetAllTest()
+        {
 
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var repo = new Mock<IConnectionRepository>();
-            var repoUsers = new Mock<IUserRepository>();
-            ConnectionService service = new ConnectionService(unitOfWork.Object,repo.Object,repoUsers.Object);
+            Connection connection = new Connection(new UserId("74edaf3b-7b2b-4764-9b1d-5ce99a364224"), new UserId("8265eee9-8ff3-4366-9076-432a34590ced"), null);
 
-            Connection connection = new Connection(null,null,null);
-
-            Connection connection2 = new Connection(null,null,null);
+            Connection connection2 = new Connection(new UserId("a489d5d2-9e1d-4b73-9276-1cd45ae8253f"), new UserId("5795e73c-decb-4b1b-98de-2d659a250cad"), null);
 
             List<Connection> list = new List<Connection>();
-            
+
             list.Add(connection);
-            
+
             list.Add(connection2);
 
-            repo.Setup(p => p.GetAllAsync()).ReturnsAsync(list);
+            repoConnections.Setup(p => p.GetAllAsync()).ReturnsAsync(list);
 
-            Task<List<ConnectionDto>> task = service.GetAllAsync();
-
-            var bothLists = task.Result.Zip(list, (n, w) => new
-            {
-                connection1 = n,
-                connection2 = w
-            });
+            var connections =  service.GetAllAsync().Result;
             
-            foreach (var con in bothLists){
-                Assert.AreEqual(con.connection1.id,con.connection2.Id.AsGuid());
-            }
-
+            Assert.AreEqual(connections[0].requester,connection.requester);
+            Assert.AreEqual(connections[1].requester,connection2.requester);
         }
 
         [TestMethod]
-        public void GetPendentsTest(){
-
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var repo = new Mock<IConnectionRepository>();
-            var repoUsers = new Mock<IUserRepository>();
-            ConnectionService service = new ConnectionService(unitOfWork.Object,repo.Object,repoUsers.Object);
-
+        public void GetPendentsTest()
+        {
             User user = new User();
 
-            Connection connection = new Connection(null,user.Id,null);
+            Connection connection = new Connection(null, user.Id, null);
 
-            Connection connection2 = new Connection(null,user.Id,null);
+            Connection connection2 = new Connection(null, user.Id, null);
 
             List<Connection> list = new List<Connection>();
-            
+
             list.Add(connection);
-            
+
             list.Add(connection2);
 
-            repo.Setup(p => p.getPendentConnections(user.Id)).ReturnsAsync(list);
+            repoConnections.Setup(p => p.getPendentConnections(user.Id)).ReturnsAsync(list);
 
             Task<List<ConnectionDto>> task = service.GetPendentConnections(user.Id);
 
@@ -151,9 +147,10 @@ namespace MasterDataSocialNetworkTest.Domain.Connections{
                 connection1 = n,
                 connection2 = w
             });
-            
-            foreach (var con in bothLists){
-                Assert.AreEqual(con.connection1.id,con.connection2.Id.AsGuid());
+
+            foreach (var con in bothLists)
+            {
+                Assert.AreEqual(con.connection1.id, con.connection2.Id.AsGuid());
             }
 
         }

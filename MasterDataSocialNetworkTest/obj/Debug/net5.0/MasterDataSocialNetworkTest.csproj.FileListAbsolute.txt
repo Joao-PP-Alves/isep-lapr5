@@ -734,3 +734,8 @@ C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialN
 C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\DDDNetCore.pdb
 C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\obj\Debug\net5.0\MasterDataSocialNetworkTest.csproj.CopyComplete
 C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\obj\Debug\net5.0\MasterDataSocialNetworkTest.genruntimeconfig.cache
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\web.config
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\appsettings.Development.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\appsettings.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\DDDNetCore.deps.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\DDDNetCore.runtimeconfig.json

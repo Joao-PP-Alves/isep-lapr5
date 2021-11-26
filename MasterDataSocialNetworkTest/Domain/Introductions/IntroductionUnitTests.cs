@@ -23,7 +23,7 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions{
             userT = new User(new Name("Joao"), new Email("email@gmail.com"),new Password(), new PhoneNumber("911197791"), list , new EmotionalState(Emotion.anger), new EmotionTime(DateTime.UtcNow));
             userR = new User(new Name("Joao2"), new Email("email2@gmail.com"),new Password(), new PhoneNumber("921197791"), list , new EmotionalState(Emotion.anger), new EmotionTime(DateTime.UtcNow));
             userE = new User(new Name("Joao3"), new Email("email3@gmail.com"),new Password(), new PhoneNumber("931197791"), list , new EmotionalState(Emotion.anger), new EmotionTime(DateTime.UtcNow));
-            mission = new Mission(new DificultyDegree(Level.level3),Status.ACTIVE);
+            mission = new Mission(new UserId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new DificultyDegree(Level.level3));
             introduction = new Introduction(new Description("mes1"),new Description("mes2"),mission.Id,userR.Id,userE.Id,userT.Id);
         }
         [TestCleanup]

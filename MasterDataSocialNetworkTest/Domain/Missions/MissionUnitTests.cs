@@ -7,13 +7,16 @@ using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Users;
 using System.Collections.Generic;
 
-namespace MasterDataSocialNetworkTest.Domain.Missions{
+namespace MasterDataSocialNetworkTest.Domain.Missions
+{
     [TestClass]
-    public class MissionUnitTests{
+    public class MissionUnitTests
+    {
 
         [TestMethod]
-        public void ChangeDificultyDegreeTest(){
-            Mission mission = new Mission(new DificultyDegree(Level.level2), Status.ACTIVE);
+        public void ChangeDificultyDegreeTest()
+        {
+            Mission mission = new Mission(new UserId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new DificultyDegree(Level.level2));
             mission.ChangeDificultyDegree(new DificultyDegree(Level.level4));
             Assert.AreEqual(Level.level4, mission.dificultyDegree.level);
         }
@@ -22,8 +25,9 @@ namespace MasterDataSocialNetworkTest.Domain.Missions{
         [TestMethod]
         [ExpectedException(typeof(BusinessRuleValidationException),
             "It is not possible to make changes to an inactive product.")]
-        public void ChangeDificultyDegreeTestFail(){
-            Mission mission = new Mission(new DificultyDegree(Level.level2), Status.ACTIVE);
+        public void ChangeDificultyDegreeTestFail()
+        {
+            Mission mission = new Mission(new UserId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new DificultyDegree(Level.level2));
             mission.deactivate();
             mission.ChangeDificultyDegree(new DificultyDegree(Level.level4));
         }
@@ -55,35 +59,30 @@ namespace MasterDataSocialNetworkTest.Domain.Missions{
 
 
 
-
-
-        
-
-
         [TestMethod]
-        public void Test2(){}
+        public void Test2() { }
         [TestMethod]
-        public void Test3(){}
+        public void Test3() { }
         [TestMethod]
-        public void Test4(){}
+        public void Test4() { }
         [TestMethod]
-        public void Test5(){}
+        public void Test5() { }
         [TestMethod]
-        public void Test6(){}
+        public void Test6() { }
         [TestMethod]
-        public void Test7(){}
+        public void Test7() { }
         [TestMethod]
-        public void Test8(){}
+        public void Test8() { }
         [TestMethod]
-        public void Test9(){}
+        public void Test9() { }
         [TestMethod]
-        public void Test0(){}
+        public void Test0() { }
         [TestMethod]
-        public void Test11(){}
+        public void Test11() { }
         [TestMethod]
-        public void Test12(){}
+        public void Test12() { }
         [TestMethod]
-        public void Test13(){}
+        public void Test13() { }
 
     }
 }

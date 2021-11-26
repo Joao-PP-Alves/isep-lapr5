@@ -211,8 +211,8 @@ namespace DDDNetCore.Domain.Introductions
                     return null;
                 }
 
-                //var responseString = await BuildRequest(intro.Enabler, intro.TargetUser).GetStringAsync();
-                var responseString = "eadf5abc-fa98-4f87-820b-33e320582327\nf4b32456-5989-4e2a-b8fd-49b2197ebfea";
+                var responseString = await BuildRequest(intro.Enabler, intro.TargetUser).GetStringAsync();
+                //var responseString = "eadf5abc-fa98-4f87-820b-33e320582327\nf4b32456-5989-4e2a-b8fd-49b2197ebfea";
                 var introPath = ParseRequest(responseString);
 
                 // If we still didn't reach the target user, we must create a new introduction 
@@ -257,7 +257,7 @@ namespace DDDNetCore.Domain.Introductions
         /// <returns></returns>
         private string BuildRequest(UserId enabler, UserId target)
         {
-            var address = new StringBuilder("http://vs651.dei.isep.ipp.pt:8888/shortpath?");
+            var address = new StringBuilder("http://localhost:3000/shortpath?");
             address.Append("orig=").Append(enabler.Value);
             address.Append('&');
 
