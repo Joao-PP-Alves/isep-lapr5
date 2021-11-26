@@ -1,3 +1,5 @@
+:- module(caminho_mais_seguro_2ligacoes, [dfsLength_safest_twoWays/5,
+											plan_safestlig_twoWays/5]).
 
 :-dynamic melhor_sol_safest_twoWays/2.
 

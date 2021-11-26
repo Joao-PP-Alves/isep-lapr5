@@ -12,7 +12,7 @@
 
 :- compile('Caminho_Mais_Forte.pl').
 
-:- compile('sugerirConexoes.pl').
+:- compile('SugerirConexoes.pl').
 
 :- compile('XTagsParam.pl').
 

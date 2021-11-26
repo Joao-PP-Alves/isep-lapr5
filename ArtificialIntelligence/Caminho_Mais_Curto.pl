@@ -1,3 +1,7 @@
+:- module(caminho_mais_curto, [one_dfs/3,
+								dfs/3,
+								all_dfs/3]).
+
 :-dynamic melhor_sol_minlig/2.
 
 all_dfs(Nome1,Nome2,LCam):-get_time(T1),
@@ -8,10 +12,12 @@ all_dfs(Nome1,Nome2,LCam):-get_time(T1),
     T is T2-T1,write(T),write(' segundos'),nl,
     write('Lista de Caminhos possiveis: '),write(LCam),nl,nl.
 
+one_dfs(Orig, Dest, Cam) :- dfs(Orig, Dest, Cam), !.
+
 dfs(Orig,Dest,Cam):-dfs2(Orig,Dest,[Orig],Cam).
 
 dfs2(Dest,Dest,LA,Cam):-!,reverse(LA,Cam).
-dfs2(Act,Dest,LA,Cam):-no(NAct,Act,_),(ligacao(NAct,NX,_,_);ligacao(NX,NAct,_,_)),
+dfs2(Act,Dest,LA,Cam):-no(NAct,Act,_),(ligacao(NAct,NX,_);ligacao(NX,NAct,_)),
     no(NX,X,_),\+ member(X,LA),dfs2(X,Dest,[X|LA],Cam).
 
 
