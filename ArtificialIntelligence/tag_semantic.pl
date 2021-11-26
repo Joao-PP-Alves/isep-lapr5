@@ -1,3 +1,5 @@
+:- module(tag_semantic, [tag/2]).
+
 tag('C#', ['CSharp', 'CS']).
 tag('CSharp', ['C#', 'CS']).
 tag('CS', ['CSharp', 'C#']).

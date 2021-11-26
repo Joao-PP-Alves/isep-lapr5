@@ -1,6 +1,8 @@
-%Determinar o caminho mais forte (maximiza o somatório das forças de
-% ligação) para determinado utilizador
-%Considerando a soma das duas forças em cada ramo da travessia (do nó A para o B e do
+:- module(caminho_mais_forte_dupla_soma, [dfsLengthDouble/4,
+											plan_maxlig2/4]).
+%Determinar o caminho mais forte (maximiza o somatï¿½rio das forï¿½as de
+% ligaï¿½ï¿½o) para determinado utilizador
+%Considerando a soma das duas forï¿½as em cada ramo da travessia (do nï¿½ A para o B e do
 %B para o A)
 
 :-dynamic melhor_sol_maxlig2/2.

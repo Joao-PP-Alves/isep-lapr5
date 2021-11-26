@@ -1,3 +1,5 @@
+:- module(tamanho_da_rede, [calcula_tamanho/3]).
+
 % Tamanho da rede.
 calcula_tamanho(Origem,0,Tamanho):-!,
 	no(_,Origem,_),

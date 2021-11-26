@@ -1,3 +1,14 @@
+:- module(sugerir_conexoes, [suggestConnections/3,
+                                    verifySemantic/2, 
+                                    getUsers/3,
+                                    directConnections/2, 
+                                    moreFriends/3, 
+                                    friendsoffriends/2,
+                                    filterSugestionsByTag/3]).
+
+
+
+
 %%sugere amigos com base nas tags em comum e nas conexões em comum, tendo em conta n níveis
 
 %%DEPOIS MUDAR ISTO PARA FAZER SÓ A PARTIR DO USER E NÃO COM TAGSLIST E CONNECTIONS
