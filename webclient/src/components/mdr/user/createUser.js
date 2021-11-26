@@ -1,55 +1,59 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react"; //hooks
 import "../../../App.css";
-import { isValidEmail, isValidPhone } from "../../../validation";
+//import { isValidEmail, isValidPhone } from "../../utils/validation";
+import { useForm } from "react-hooks-form";
+import config from "../../../config";
+//mport User from "../user/user";
 
 function CreateUser({show, onClose}) {
     const {register, handleSubmit, errors} = useForm();
 
-    const [allUsersTypes, setAllUserTypes] = useState([]);
-    const [userTypes, setAllUserTypes] = useState([]);
+    const [user, setUsers] = useState([]);
+    const [emailUser, setEmails]=useState([]);
     
+
     useEffect(() => {
-        fetchAllUserTypes();
+        fetchUsers();
         
     }, []);
 
-    const fetchAllUserTypes = async() => {
-        const data = await fetch(config.apiURL + "/usertype");
-        const allUserTypes = await data.json();
-        setAllUserTypes(
-            allUserTypes.map((userTypes) => ({
-                label: userType.code,
-                value: userType.code,
+    const fetchUsers = async() => {
+        const data = await fetch(config.apiURL + "/users");
+        const users = await data.json();
+        setUsers(
+            users.map((users) => ({
+                label: users.code,
+                value: users.code,
             }))
         );
     };
 
     //exemplo para ver se funciona, depois ver melhor isto
-    const fetchEmail = async() => {
+   /* const fetchEmail = async() => {
         const data = await fetch("https://localhost:5001/api/Users")
         const users = await data.json();
         const emailUsers = users.map((d) => {
-            return d.email.number;
+            return d.emailUser.email;
         });
         setEmails(emailUsers);
-    };
+    };*/
 
     const onSubmit = (data) => {
         console.log(JSON.stringify(data));
         console.log(
-            JSOM.stringify({
+            JSON.stringify({
                 ...data,
-                types: userTypes.map((dt) => dt.value),
+                types: user.map((dt) => dt.value),
             })
         );
-        delete data.userTypes;
+        delete data.users;
         fetch("https://localhost:5000/api/Users", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             // We convert the React state to JSON and send it as the POST body
             body: JSON.stringify({
                 ...data,
-                types: userTypes.map((dt) => dt.value),
+                types: user.map((dt) => dt.value),
             }),
         })
         .then((response) => {
@@ -59,7 +63,7 @@ function CreateUser({show, onClose}) {
                 console.log(
                     JSON.stringify({
                         ...data,
-                        types: userTypes.map((dt) => dt.value),
+                        types: user.map((dt) => dt.value),
                     })
                 );
                 return error.toString();
@@ -73,19 +77,11 @@ function CreateUser({show, onClose}) {
     };
 
     return(
-        <>
-        <Modal
-          size="lg"
-          show={show}
-          onHide={onClose}
-          backdrop="static"
-          keyboard={false}
-        >
           <form onSubmit={handleSubmit(onSubmit)} className="form">
-            <Modal.Header closeButton>
-              <Modal.Title>Create New User</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+           
+              <div>Create New User</div>
+            <div>
+            <div>
               <div className="divCreate">
                 <div>
                   <h3>Email</h3>
@@ -107,7 +103,7 @@ function CreateUser({show, onClose}) {
                     name="email"
                     ref={register({
                       required: true,
-                      validate: isValidEmail(value),  //validates the email
+                      //validate: isValidEmail(email),  //validates the email
                     })}
                     placeholder="Email of the new User"
                   />
@@ -123,7 +119,7 @@ function CreateUser({show, onClose}) {
                     maxlength="9"
                     ref={register({
                        required: true, 
-                       validate: isValidPhone(value), //validates phone number
+                       //validate: isValidPhone(value), //validates phone number
                     })}
                     placeholder="Phone number of the new user"
                   ></input>
@@ -154,13 +150,12 @@ function CreateUser({show, onClose}) {
                   {errors.license && "Emotional state is required."}
                 </div>
                 </div>
-            </Modal.Body>
-            <Modal.Footer>
+            </div>
+            <div>
               <input className="userSubmitButton" type="submit" />
-            </Modal.Footer>
+            </div>
+            </div>
           </form>
-        </Modal>
-      </>
     );
   }
   export default CreateUser;
