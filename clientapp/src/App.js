@@ -1,9 +1,13 @@
 //import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { 
+  BrowserRouter as Router, 
+  Route,
+  Switch, 
+  Redirect
+} from 'react-router-dom';
 import React from 'react';
 //import { Switch } from "react-router";
-import { Redirect } from 'react-router';
 import User from "./components/mdr/user/user";
 import CreateUser from './components/mdr/user/createUser';
 import UseAuth from "./hooks/UserAuth";
@@ -22,9 +26,20 @@ function App() {
       </Router>
       <Routes/>
   </UserController>*/
-  <div className = "App">
+  /*<div className = "App">
     <SignUp />
-  </div>
+  </div>*/
+
+  <>
+  <Router>
+    <Switch>
+      <Route exact path="/" component={SignUp} />
+      <Route path="/login" component={LogIn}/>
+      <Redirect to="/"/>
+    </Switch>
+  </Router>
+  </>
+
   );
 }
 

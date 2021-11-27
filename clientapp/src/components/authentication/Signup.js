@@ -14,6 +14,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { FormCheck } from 'react-bootstrap';
 import { useState } from 'react';
+import PrivacyPolicy from './privacyPolicy';
+import LogIn from './Login';
 
 function Copyright(props) {
   return (
@@ -154,12 +156,22 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Login.
+                  {LogIn}
                 </Link>
-              </Grid>
+              </Grid> 
+            <Grid item>
+                <Link href="/termsConditions" variant="body2">
+                  Terms and conditions.
+                </Link>
+            </Grid> 
+            <Grid item>
+              <Link href="/privacyPolicy" variant="body2">
+                {PrivacyPolicy}
+                Privacy Policy.
+              </Link>
             </Grid>
           </Box>
         </Box>
