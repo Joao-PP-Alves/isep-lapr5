@@ -16,6 +16,12 @@ import { FormCheck } from 'react-bootstrap';
 import { useState } from 'react';
 import PrivacyPolicy from './privacyPolicy';
 import LogIn from './Login';
+import { 
+  BrowserRouter as Router, 
+  Route,
+  Switch, 
+  Redirect
+} from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -48,8 +54,12 @@ export default function SignUp() {
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
     console.log({
+      firstName: data.get('firstName'),
+      lastName: data.get('lastName'),
+      birthDate: data.get('birthDate'),
+      phoneNumber: data.get('phoneNumber'),
       email: data.get('email'),
-     password: data.get('password'),
+      password: data.get('password'),
     });
   };
 
@@ -140,10 +150,8 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <FormCheck
-                  required
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I agree with the terms and conditions."
-                  feedback="You must agree before submitting."
                   feedbackType="invalid"
                 />
               </Grid>

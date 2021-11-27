@@ -15,6 +15,8 @@ import { UserContext, UserController } from './context/UserController';
 import UserList from './components/mdr/user/UserList';
 import LogIn from './components/authentication/Login';
 import SignUp from './components/authentication/Signup';
+import TermsAndConditions from './components/authentication/termsAndConditions';
+import PrivacyPolicy from './components/authentication/privacyPolicy';
 //import { Navbar } from 'react-bootstrap';
 
 
@@ -35,6 +37,8 @@ function App() {
     <Switch>
       <Route exact path="/" component={SignUp} />
       <Route path="/login" component={LogIn}/>
+      <Route path="/termsConditions" component={TermsAndConditions}/>
+      <Route path="/privacyPolicy" component={PrivacyPolicy}/>
       <Redirect to="/"/>
     </Switch>
   </Router>
