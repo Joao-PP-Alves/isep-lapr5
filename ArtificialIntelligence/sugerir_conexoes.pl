@@ -40,7 +40,7 @@ getUsers(User, Level, Result):-
 	moreFriends(LX, Result, Level1).
 
 directConnections(Origem,L):-
-findall(X,(ligacao(Origem,X,_,_);ligacao(X,Origem,_,_)),L).
+findall(X,ligacao(Origem,X,_),L).
 
 moreFriends(L2,X,0):-reverse(L2,X),!.
 

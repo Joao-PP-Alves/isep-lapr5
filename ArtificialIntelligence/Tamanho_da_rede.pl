@@ -13,7 +13,7 @@ calcula_tamanho(Origem,N,Tamanho):-
 	mais_amigos(LX,Tamanho,N1).
 
 amigos_proximos(Origem,L):-
-findall(X,(ligacao(Origem,X,_,_);ligacao(X,Origem,_,_)),L).
+findall(X,ligacao(Origem,X,_),L).
 
 mais_amigos(L2,X,0):-length(L2,X),!.
 
