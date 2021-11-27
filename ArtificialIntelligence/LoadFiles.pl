@@ -3,17 +3,17 @@
 %
 
 % loads tag Semantics definitions
-:- compile('TagSemantic.pl').
+:- compile('tag_semantic.pl').
 
 % loads knowledge base
-:- compile('Rede.pl').
+:- compile('rede.pl').
 
-:- compile('Caminho_Mais_Curto.pl').
+:- compile('caminho_mais_curto.pl').
 
-:- compile('Caminho_Mais_Forte.pl').
+:- compile('caminho_mais_forte.pl').
 
-:- compile('SugerirConexoes.pl').
+:- compile('sugerir_conexoes.pl').
 
-:- compile('XTagsParam.pl').
+:- compile('xtags_param.pl').
 
-:-compile("Tamanho_da_rede.pl").
+:-compile("tamanho_da_rede.pl").
