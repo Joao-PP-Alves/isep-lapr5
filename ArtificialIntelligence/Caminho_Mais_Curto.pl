@@ -1,6 +1,7 @@
 :- module(caminho_mais_curto, [one_dfs/3,
 								dfs/3,
-								all_dfs/3]).
+								all_dfs/3,
+								plan_minlig/3]).
 
 :-dynamic melhor_sol_minlig/2.
 

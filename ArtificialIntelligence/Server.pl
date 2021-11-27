@@ -86,7 +86,7 @@ parse_users([H|Data], [H.get(email)|Lids]) :-
     parse_tags(H.get(tags), Tags),
     \+no(Id,Address,Tags)
     -> assertz(no(Id,Address,Tags)), 
-    adicionar_friendships(H.get(friendsList)),
+    adicionar_friendships(H.get(friendsList),Id),
     parse_users(Data,Lids);
     parse_users(Data,Lids).
 
@@ -96,20 +96,21 @@ parse_tags([H|Data], [H.get(name)|Lids]) :-
     TagName = H.get(name),
     parse_tags(Data, Lids).
 
-adicionar_friendships(Friendships) :- parse_friendships(Friendships).
+adicionar_friendships(Friendships,Id) :- parse_friendships(Friendships,Id).
 
-parse_friendships([]).
-parse_friendships([H|Data]) :- (
+parse_friendships([],_).
+parse_friendships([H|Data],Id) :- (
     Strength = H.get(connection_strength),
     Friend = H.get(friend),
-    Requester = H.get(requester),
+    %Requester = H.get(requester),
     \+ atom(Strength),
     Strength_value = Strength.get(value),
+	number_codes(Strength_number,Strength_value),
     Friend_value = Friend.get(value),
-    Requester_value = Requester.get(value),
-    \+ligacao(Requester_value, Friend_value, Strength_value)
-    -> assertz(ligacao(Requester_value, Friend_value, Strength_value)),
-    parse_friendships(Data)) ; parse_friendships(Data).
+    Requester_value = Id,
+    \+ligacao(Requester_value, Friend_value, Strength_number)
+    -> assertz(ligacao(Requester_value, Friend_value, Strength_number)),
+    parse_friendships(Data,Id)) ; parse_friendships(Data,Id).
 
 
 % CRIA A BASE DE CONHECIMENTO COM VÁRIOS DADOS
@@ -136,7 +137,7 @@ shortestPath(Request) :-
     atom_string(Dest, Dest_str),
 
     format('Content-type: text/plain~n~n'),
-    one_dfs(Orig_str, Dest_str, Cam),
+    plan_minlig(Orig_str, Dest_str, Cam),
     createJSONArray(Cam, JSON_Array),
     Reply = caminho_json(JSON_Array),
     prolog_to_json(Reply, X),
