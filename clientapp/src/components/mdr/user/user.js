@@ -2,12 +2,13 @@ import React, {useState, useEffect} from 'react';
 import '../../../App.css';
 import CreateUser from '../user/createUser';
 import { Link } from 'react-router-dom';
+import axios from "axios";
 
 function User(){
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        fetchUsers();
+        fetchAllUsers();
     },[]);
 
     const fetchUsers = async () => {
@@ -18,6 +19,16 @@ function User(){
     }
 
     const [show, setShow] = useState(false);
+
+    const fetchAllUsers = () => {
+        axios.get("http://localhost:5001/api/Users").then(function (response){
+            alert(JSON.stringify(response.message));
+        }).catch(function(error){ alert(error.message)
+        console.log('fetchAllUsers',error);}).finally(function(){
+            alert('Finally called');
+        })
+        setUsers(users);
+      };
 
     return (
         <div data-testid = "userDivID" className = "w3-container">

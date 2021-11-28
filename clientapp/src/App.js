@@ -1,5 +1,6 @@
 //import logo from './logo.svg';
 import './App.css';
+import axios from "axios";
 import { 
   BrowserRouter as Router, 
   Route,
@@ -17,10 +18,12 @@ import LogIn from './components/authentication/Login';
 import SignUp from './components/authentication/Signup';
 import TermsAndConditions from './components/authentication/termsAndConditions';
 import PrivacyPolicy from './components/authentication/privacyPolicy';
+import Users from './components/mdr/user/user'
 //import { Navbar } from 'react-bootstrap';
 
 
 function App() {
+
   return(
   /*<UserController>
       <Router>
@@ -31,7 +34,6 @@ function App() {
   /*<div className = "App">
     <SignUp />
   </div>*/
-
   <>
   <Router>
     <Switch>
@@ -39,6 +41,7 @@ function App() {
       <Route path="/login" component={LogIn}/>
       <Route path="/termsConditions" component={TermsAndConditions}/>
       <Route path="/privacyPolicy" component={PrivacyPolicy}/>
+      <Route path="/users" component={Users}/>
       <Redirect to="/"/>
     </Switch>
   </Router>
