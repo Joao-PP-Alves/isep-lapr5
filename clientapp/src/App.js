@@ -13,12 +13,10 @@ import CreateUser from './components/mdr/user/createUser';
 import UseAuth from "./hooks/UserAuth";
 import { UserContext, UserController } from './context/UserController';
 import UserList from './components/mdr/user/UserList';
-import LogIn from './components/authenticathentication/privacyPolicy';
 import LogIn from './components/pages/Login';
 import SignUp from './components/pages/Signup';
 import TermsAndConditions from './components/pages/termsAndConditions';
 import PrivacyPolicy from './components/pages/privacyPolicy';
-import DashboardApp from './components/pages/Dashboard';
 import Users from './components/mdr/user/user'
 import ListPendentConnections from './components/mdr/connections/ListPendentConnections';
 //import { Navbar } from 'react-bootstrap';
@@ -40,8 +38,7 @@ function App() {
   <Router>
     <Switch>
 
-      <Route exact path="/" component={DashboardApp}/>
-      <Route path="/signup" component={SignUp} />
+      <Route exact path="/" component={SignUp} />
       <Route path="/login" component={LogIn}/>
       <Route path="/termsConditions" component={TermsAndConditions}/>
       <Route path="/privacyPolicy" component={PrivacyPolicy}/>
