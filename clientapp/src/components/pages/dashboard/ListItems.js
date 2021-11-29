@@ -3,12 +3,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
+import DashboardCustomizeTwoToneIcon from '@mui/icons-material/DashboardCustomizeTwoTone';
+import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
+import PeopleAltTwoToneIcon from '@mui/icons-material/PeopleAltTwoTone';
+import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
 import LayersIcon from '@mui/icons-material/Layers';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import GroupAddTwoToneIcon from '@mui/icons-material/GroupAddTwoTone';
 import DashBoard from '../dashboard/Dashboard';
 import Button from '@mui/material/Button';
 
@@ -27,11 +27,15 @@ export const mainListItems = (
         id="dashboardButton" 
         onClick={event => window.location.href='/dashBoard'}
         size="small"
+        font="Montserrat"
         >
       <ListItemIcon>
-        <DashboardIcon />
+        <DashboardCustomizeTwoToneIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+      <ListItemText 
+      primary="Dashboard" 
+      primaryTypographyProps={{fontSize: '12px'}}
+      />
       </Button>
     </ListItem>
     <ListItem>
@@ -41,9 +45,12 @@ export const mainListItems = (
         size="small"
         >
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <ManageAccountsTwoToneIcon />
       </ListItemIcon>
-      <ListItemText primary="Edit profile" /> 
+      <ListItemText 
+        primary="Edit profile" 
+        primaryTypographyProps={{fontSize: '12px'}}
+        /> 
       </Button>
     </ListItem>
     <ListItem>
@@ -53,9 +60,12 @@ export const mainListItems = (
         size="small"
         >
       <ListItemIcon>
-        <PeopleIcon />
+        <PeopleAltTwoToneIcon />
       </ListItemIcon>
-      <ListItemText primary="Friends" />
+      <ListItemText 
+        primary="Friends" 
+        primaryTypographyProps={{fontSize: '12px'}}
+        />
       </Button>
     </ListItem>
     <ListItem>
@@ -65,9 +75,12 @@ export const mainListItems = (
         size="small"
         >
       <ListItemIcon>
-        <BarChartIcon />
+        <GroupAddTwoToneIcon />
       </ListItemIcon>
-      <ListItemText primary="Pending Connections" />
+      <ListItemText 
+        primary="Pending Connections" 
+        primaryTypographyProps={{fontSize: '12px'}}
+        />
       </Button>
     </ListItem>
     <ListItem>
@@ -77,9 +90,12 @@ export const mainListItems = (
         size="small"
         >
       <ListItemIcon>
-        <AssignmentIcon />
+        <ConnectWithoutContactRoundedIcon />
       </ListItemIcon>
-      <ListItemText primary="Pending Introductions" />
+      <ListItemText 
+        primary="Pending Introductions" 
+        primaryTypographyProps={{fontSize: '12px'}}
+        />
       </Button>
     </ListItem>
   </div>

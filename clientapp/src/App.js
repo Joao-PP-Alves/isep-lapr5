@@ -17,11 +17,16 @@ import LogIn from './components/pages/Login';
 import SignUp from './components/pages/Signup';
 import TermsAndConditions from './components/pages/termsAndConditions';
 import PrivacyPolicy from './components/pages/privacyPolicy';
+
 import Users from './components/mdr/user/user';
 import LandingPage from './components/landing_page/LandingPage';
-import ListPendentConnections from './components/mdr/connections/ListPendentConnections';
+
+import ListPendentConnections from './components/pages/connections/ListPendentConnections';
 import Dashboard from './components/pages/dashboard/Dashboard';
-import EditProfile from './components/pages/dashboard/EditProfile';
+
+import EditProfile from './components/pages/editProfile/EditProfile';
+import ListFriends from './components/pages/friends/ListFriends';
+import ListPendentIntroductions from './components/pages/introductions/ListPendentIntroductions';
 //import { Navbar } from 'react-bootstrap';
 
 
@@ -37,9 +42,11 @@ function App() {
   /*<div className = "App">
     <SignUp />
   </div>*/
+
    <>
   <Router>
     <Switch>
+
 
       <Route exact path="/" component={LandingPage} />
       <Route path ="/signup" component={SignUp}/>
@@ -50,9 +57,12 @@ function App() {
       <Route path="/connections/pendent" component={ListPendentConnections}/>
       <Route path="/dashboard" component={Dashboard}/>
       <Route path="/editProfile" component={EditProfile}/>
+      <Route path="/introductions/pendent" component={ListPendentIntroductions}/>
+      <Route path="/friends" component={ListFriends}/>
       <Redirect to="/"/>
     </Switch>
   </Router>
+
   </> 
   );
 }
