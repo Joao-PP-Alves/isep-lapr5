@@ -30,6 +30,7 @@ function Copyright(props) {
   );
 }
 
+
 const theme = createTheme();
 
  function LogIn() {
@@ -39,7 +40,7 @@ const theme = createTheme();
   const [makingRequest, setMakingRequest] = useState(false);
   const[showSignUp, setSignUp] = useState(false);
   const [loginError, setLoginError] = useState("");
-  const {handleLogin} = userAuth();
+  //const {handleLogin} = userAuth();
   const history = useHistory();
 
   const handleSubmit = (data) => {
@@ -65,7 +66,7 @@ const theme = createTheme();
       }).then((data) => {
         if(data) {
           console.log(data);
-          handleLogin(data);
+          //handleLogin(data);
           history.replace("/");
         } else {
           setMakingRequest(false);

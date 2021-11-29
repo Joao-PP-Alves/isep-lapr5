@@ -15,6 +15,7 @@ import { FormCheck } from 'react-bootstrap';
 import { useState } from 'react';
 import PrivacyPolicy from './privacyPolicy';
 import LogIn from './Login';
+import { useForm} from "react-hook-form";
 
 
 function Copyright(props) {
@@ -37,6 +38,7 @@ const theme = createTheme();
 export default function SignUp() {
     const[validated, setValidated] = useState(false);
     const [checked, setChecked] = React.useState([true, false]);
+    const [makingRequest, setMakingRequest] = useState(false);
 
     /*const handleSubmit = (event) => {
         const from = event.currentTarget;
@@ -57,7 +59,23 @@ export default function SignUp() {
 
     //const error = currentTarget.checked===false ;
 
+  const onSubmit = (data) => {
+    setMakingRequest(true);
+    fetch({
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data),
+    }).then((response) => {
+      console.log(response.status);
+      if(!response.ok) {
+        setLoginError("")
+      }
+    })
+  }
+
   const handleSubmit = (event) => {
+   
+   
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
@@ -93,7 +111,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Register new account
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <form component="form" validate onSubmit={handleSubmit(onsubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -171,6 +189,7 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={handleSubmit}
             >
               Sign Up
             </Button>
@@ -191,8 +210,8 @@ export default function SignUp() {
                 Privacy Policy.
               </Link>
             </Grid>
+            </form>
           </Box>
-        </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
