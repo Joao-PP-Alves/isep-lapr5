@@ -17,9 +17,13 @@ import LogIn from './components/pages/Login';
 import SignUp from './components/pages/Signup';
 import TermsAndConditions from './components/pages/termsAndConditions';
 import PrivacyPolicy from './components/pages/privacyPolicy';
-import Users from './components/mdr/user/user'
+
+import Users from './components/mdr/user/user';
+import LandingPage from './components/landing_page/LandingPage';
+
 import ListPendentConnections from './components/pages/connections/ListPendentConnections';
 import Dashboard from './components/pages/dashboard/Dashboard';
+
 import EditProfile from './components/pages/editProfile/EditProfile';
 import ListFriends from './components/pages/friends/ListFriends';
 import ListPendentIntroductions from './components/pages/introductions/ListPendentIntroductions';
@@ -38,11 +42,14 @@ function App() {
   /*<div className = "App">
     <SignUp />
   </div>*/
-  <>
+
+   <>
   <Router>
     <Switch>
 
-      <Route exact path="/" component={SignUp} />
+
+      <Route exact path="/" component={LandingPage} />
+      <Route path ="/signup" component={SignUp}/>
       <Route path="/login" component={LogIn}/>
       <Route path="/termsConditions" component={TermsAndConditions}/>
       <Route path="/privacyPolicy" component={PrivacyPolicy}/>
@@ -55,8 +62,8 @@ function App() {
       <Redirect to="/"/>
     </Switch>
   </Router>
-  </>
 
+  </> 
   );
 }
 

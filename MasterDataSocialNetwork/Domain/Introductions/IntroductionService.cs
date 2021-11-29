@@ -129,8 +129,11 @@ namespace DDDNetCore.Domain.Introductions
             await checkUserIdAsync(dto.Requester);
             await checkUserIdAsync(dto.Enabler);
             await checkUserIdAsync(dto.TargetUser);
+            
+            var emailEnabler = _repoUser.GetByIdAsync(dto.Enabler).Result.Email.EmailAddress;
+            var emailTarget = _repoUser.GetByIdAsync(dto.TargetUser).Result.Email.EmailAddress;
 
-            var responseString = await BuildRequest(dto.Enabler, dto.TargetUser).GetStringAsync();
+            var responseString = await BuildRequest(emailEnabler, emailTarget).GetStringAsync();
 
             if (ParseRequest(responseString).Count == 0)
             {
@@ -211,19 +214,26 @@ namespace DDDNetCore.Domain.Introductions
                     return null;
                 }
 
-                var responseString = await BuildRequest(intro.Enabler, intro.TargetUser).GetStringAsync();
+                var emailEnabler = _repoUser.GetByIdAsync(intro.Enabler).Result.Email.EmailAddress;
+                var emailTarget = _repoUser.GetByIdAsync(intro.TargetUser).Result.Email.EmailAddress;
+
+                var responseString = await BuildRequest(emailEnabler, emailTarget).GetStringAsync();
                 //var responseString = "eadf5abc-fa98-4f87-820b-33e320582327\nf4b32456-5989-4e2a-b8fd-49b2197ebfea";
                 var introPath = ParseRequest(responseString);
 
                 // If we still didn't reach the target user, we must create a new introduction 
                 // In this new introduction, the requester and target will remain the same but the enabler will the next person in the path to the target
                 // Once the next person is the target, we accept the introduction and create a connection (Friend Request) from the requester to the target, with a message
-                if (!CheckIfTargetIsNext(intro.Enabler, intro.TargetUser, introPath))
+                if (!CheckIfTargetIsNext(emailEnabler, emailTarget, introPath))
                 {
-                    var newEnabler = await _repoUser.GetByIdAsync(new UserId(introPath[1]));
-                    var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
-                        intro.MissionId, intro.Requester, newEnabler.Id, intro.TargetUser);
-                    await AddDisconectedEnablerAsync(newIntro);
+                    var newEnabler = _repoUser.GetByEmail(introPath[1]).Result.FirstOrDefault();
+                    if (newEnabler != null)
+                    {
+                        var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
+                            intro.MissionId, intro.Requester, newEnabler.Id, intro.TargetUser);
+                        await AddDisconectedEnablerAsync(newIntro);
+                    }
+
                     intro.approveIntermediate();
                 }
                 else
@@ -255,26 +265,54 @@ namespace DDDNetCore.Domain.Introductions
         /// <param name="enabler"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        private string BuildRequest(UserId enabler, UserId target)
+        private string BuildRequest(String enabler, String target)
         {
             var address = new StringBuilder("http://localhost:3000/shortpath?");
-            address.Append("orig=").Append(enabler.Value);
+            address.Append("orig=").Append(enabler);
             address.Append('&');
 
-            address.Append("dest=").Append(target.Value);
+            address.Append("dest=").Append(target);
 
             return address.ToString();
         }
 
         private List<string> ParseRequest(string raw)
         {
-            var list = raw.Trim().Split('\n').ToList();
-            return list;
+            List<string> matched = new List<string>();
+
+            //"Tempo de geracao da solucao:0.0\r\nContent-type: application/json\r\n\r\n{\r\n  
+            //\"path\": [ {\"email\":\"ritAmaral@email.com\"},  {\"email\":\"abeClemente@email.com\"} ]\r\n}"
+
+        int indexStart = 0;
+        int indexEnd = 0;
+        string start = "{\"email\":\"";
+        string end = "\"}";
+
+        bool exit = false;
+        while (!exit)
+        {
+            indexStart = raw.IndexOf(start);
+
+            if (indexStart != -1)
+            {
+                indexEnd = indexStart + raw.Substring(indexStart).IndexOf(end);
+
+                matched.Add(raw.Substring(indexStart + start.Length, indexEnd - indexStart - start.Length));
+
+                raw = raw.Substring(indexEnd + end.Length);
+            }
+            else
+            {
+                exit = true;
+            }
         }
 
-        private bool CheckIfTargetIsNext(UserId enabler, UserId target, List<string> path)
+        return matched;
+        }
+
+        private bool CheckIfTargetIsNext(String enabler, String target, List<string> path)
         {
-            return (path[path.IndexOf(enabler.Value) + 1].Equals(target.Value));
+            return (path[path.IndexOf(enabler) + 1].Equals(target));
         }
 
         public async Task<IntroductionDto> ReproveIntroduction(IntroductionId id)
