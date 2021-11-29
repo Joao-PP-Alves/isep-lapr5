@@ -17,10 +17,9 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems} from './ListItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
+import { mainListItems} from '../dashboard/ListItems';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 function Copyright(props) {
   return (
@@ -80,9 +79,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     },
   }),
 );
+
 const mdTheme = createTheme();
 
-function DashboardContent() {
+function EditProfileContent() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -117,7 +117,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Edit Profile
             </Typography>
             <IconButton color="inherit">
               
@@ -153,25 +153,13 @@ function DashboardContent() {
                 : theme.palette.grey[900],
             flexGrow: 1,
             height: '100vh',
+            width: '100vh',
             overflow: 'auto',
           }}
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
+            
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
@@ -179,19 +167,121 @@ function DashboardContent() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 600,
+                    width: 1150,
                   }}
                 >
-                  <Deposits />
-                </Paper>
+
+<Typography component="h1" variant="h5">
+            Register new account
+          </Typography>
+          <Box component="form"  sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required={true}
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                />
               </Grid>
-              {/* Recent Orders */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                    required
+                    fullWidth
+                    id="birthDate"
+                    label="Birth Date"
+                    name="birthDate"
+                    type="date"
+                    autocomplete="birth-date"
+                />                  
+              </Grid>    
+              <Grid item xs={12} sm ={6}>
+                <TextField
+                    required
+                    fullWidth
+                    id="phoneNumber"
+                    label="Phone number"
+                    name="phoneNumber"
+                    autoComplete="phone-number"
+                />
+              </Grid>  
               <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+            <Button
+              type="save"
+              width="500"
+              variant="contained"
+              sx={{ 
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 2,
+                    width: 500,
+                    my: 5
+              }}
+              xs = {12}
+            >
+              Save Changes
+            </Button>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+              <Button
+              type="save"
+              width="500"
+              variant="contained"
+              sx={{ 
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 2,
+                    width: 500,
+                    my: 5
+              }}
+              xs = {12}
+            >
+              Discard
+              </Button>
+              </Grid>
+          </Box>                  
                 </Paper>
               </Grid>
-            </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
@@ -200,6 +290,6 @@ function DashboardContent() {
   );
 }
 
-export default function Dashboard() {
-  return <DashboardContent />;
+export default function EditProfile() {
+  return <EditProfileContent />;
 }
