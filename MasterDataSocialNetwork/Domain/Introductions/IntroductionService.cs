@@ -129,11 +129,8 @@ namespace DDDNetCore.Domain.Introductions
             await checkUserIdAsync(dto.Requester);
             await checkUserIdAsync(dto.Enabler);
             await checkUserIdAsync(dto.TargetUser);
-            
-            var emailEnabler = _repoUser.GetByIdAsync(dto.Enabler).Result.Email.EmailAddress;
-            var emailTarget = _repoUser.GetByIdAsync(dto.TargetUser).Result.Email.EmailAddress;
 
-            var responseString = await BuildRequest(emailEnabler, emailTarget).GetStringAsync();
+            var responseString = await BuildRequest(dto.Enabler, dto.TargetUser).GetStringAsync();
 
             if (ParseRequest(responseString).Count == 0)
             {
@@ -214,10 +211,7 @@ namespace DDDNetCore.Domain.Introductions
                     return null;
                 }
 
-                var emailEnabler = _repoUser.GetByIdAsync(intro.Enabler).Result.Email.EmailAddress;
-                var emailTarget = _repoUser.GetByIdAsync(intro.TargetUser).Result.Email.EmailAddress;
-
-                var responseString = await BuildRequest(emailEnabler, emailTarget).GetStringAsync();
+                var responseString = await BuildRequest(intro.Enabler, intro.TargetUser).GetStringAsync();
                 //var responseString = "eadf5abc-fa98-4f87-820b-33e320582327\nf4b32456-5989-4e2a-b8fd-49b2197ebfea";
                 var introPath = ParseRequest(responseString);
 
@@ -226,14 +220,10 @@ namespace DDDNetCore.Domain.Introductions
                 // Once the next person is the target, we accept the introduction and create a connection (Friend Request) from the requester to the target, with a message
                 if (!CheckIfTargetIsNext(emailEnabler, emailTarget, introPath))
                 {
-                    var newEnabler = _repoUser.GetByEmail(introPath[1]).Result.FirstOrDefault();
-                    if (newEnabler != null)
-                    {
-                        var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
-                            intro.MissionId, intro.Requester, newEnabler.Id, intro.TargetUser);
-                        await AddDisconectedEnablerAsync(newIntro);
-                    }
-
+                    var newEnabler = await _repoUser.GetByIdAsync(new UserId(introPath[1]));
+                    var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
+                        intro.MissionId, intro.Requester, newEnabler.Id, intro.TargetUser);
+                    await AddDisconectedEnablerAsync(newIntro);
                     intro.approveIntermediate();
                 }
                 else
@@ -265,13 +255,13 @@ namespace DDDNetCore.Domain.Introductions
         /// <param name="enabler"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        private string BuildRequest(String enabler, String target)
+        private string BuildRequest(UserId enabler, UserId target)
         {
             var address = new StringBuilder("http://localhost:3000/shortpath?");
-            address.Append("orig=").Append(enabler);
+            address.Append("orig=").Append(enabler.Value);
             address.Append('&');
 
-            address.Append("dest=").Append(target);
+            address.Append("dest=").Append(target.Value);
 
             return address.ToString();
         }
