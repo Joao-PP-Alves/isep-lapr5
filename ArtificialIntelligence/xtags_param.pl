@@ -1,3 +1,4 @@
+:- module(xtags_param, [retornarUsersComXTagsEmComum/6]).
 
 retornarUsersComXTagsEmComum(Param,ListaTags,ListaCombTags,ListaUserTags,ListaUsers,Result):-
     length(ListaTags,Q),                                                                    
