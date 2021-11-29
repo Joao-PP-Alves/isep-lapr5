@@ -12,7 +12,6 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import DashBoard from '../dashboard/Dashboard';
 import Button from '@mui/material/Button';
 
-
 function toDashboard(event){
   <DashBoard/>
 }
@@ -24,44 +23,64 @@ function toEdit(event){
 export const mainListItems = (
   <div>
     <ListItem>
-       <Button id="dashboardButton" onClick={event => window.location.href='/dashBoard'}>
+      <Button 
+        id="dashboardButton" 
+        onClick={event => window.location.href='/dashBoard'}
+        size="small"
+        >
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
       </Button>
     </ListItem>
-    <Button id="editProfileButton" onClick={event => window.location.href='/editProfile'}>
     <ListItem>
+      <Button 
+        id="editButton" 
+        onClick={event => window.location.href='/editProfile'}
+        size="small"
+        >
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="Edit profile" />  
+      <ListItemText primary="Edit profile" /> 
+      </Button>
     </ListItem>
-    </Button>
-    <Button id="friendsButton" onClick={event => window.location.href='/friends'}>
-    <ListItem button>
+    <ListItem>
+      <Button 
+        id="friendsButton" 
+        onClick={event => window.location.href='/friends'}
+        size="small"
+        >
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="Friends" />
+      </Button>
     </ListItem>
-    </Button>
-    <Button id = "connectionsButton" onClick={event => window.location.href='/connections/pendent'}>
-    <ListItem button>
+    <ListItem>
+      <Button 
+        id="connectionsButton" 
+        onClick={event => window.location.href='/connections/pendent'}
+        size="small"
+        >
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
       <ListItemText primary="Pending Connections" />
+      </Button>
     </ListItem>
-    </Button>
-    <Button id="introductions" onClick={event => window.location.href='/introductions'}>
-    <ListItem button>
+    <ListItem>
+      <Button 
+        id="introductionsButton" 
+        onClick={event => window.location.href='/introductions/pendent'}
+        size="small"
+        >
       <ListItemIcon>
-        <LayersIcon />
+        <AssignmentIcon />
       </ListItemIcon>
       <ListItemText primary="Pending Introductions" />
+      </Button>
     </ListItem>
-    </Button>
   </div>
 );
