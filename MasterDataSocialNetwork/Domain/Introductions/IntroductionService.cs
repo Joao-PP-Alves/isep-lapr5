@@ -224,7 +224,7 @@ namespace DDDNetCore.Domain.Introductions
                 // If we still didn't reach the target user, we must create a new introduction 
                 // In this new introduction, the requester and target will remain the same but the enabler will the next person in the path to the target
                 // Once the next person is the target, we accept the introduction and create a connection (Friend Request) from the requester to the target, with a message
-                if (!CheckIfTargetIsNext(intro.Enabler, intro.TargetUser, introPath))
+                if (!CheckIfTargetIsNext(emailEnabler, emailTarget, introPath))
                 {
                     var newEnabler = _repoUser.GetByEmail(introPath[1]).Result.FirstOrDefault();
                     if (newEnabler != null)
@@ -278,13 +278,41 @@ namespace DDDNetCore.Domain.Introductions
 
         private List<string> ParseRequest(string raw)
         {
-            var list = raw.Trim().Split('\n').ToList();
-            return list;
+            List<string> matched = new List<string>();
+
+            //"Tempo de geracao da solucao:0.0\r\nContent-type: application/json\r\n\r\n{\r\n  
+            //\"path\": [ {\"email\":\"ritAmaral@email.com\"},  {\"email\":\"abeClemente@email.com\"} ]\r\n}"
+
+        int indexStart = 0;
+        int indexEnd = 0;
+        string start = "{\"email\":\"";
+        string end = "\"}";
+
+        bool exit = false;
+        while (!exit)
+        {
+            indexStart = raw.IndexOf(start);
+
+            if (indexStart != -1)
+            {
+                indexEnd = indexStart + raw.Substring(indexStart).IndexOf(end);
+
+                matched.Add(raw.Substring(indexStart + start.Length, indexEnd - indexStart - start.Length));
+
+                raw = raw.Substring(indexEnd + end.Length);
+            }
+            else
+            {
+                exit = true;
+            }
         }
 
-        private bool CheckIfTargetIsNext(UserId enabler, UserId target, List<string> path)
+        return matched;
+        }
+
+        private bool CheckIfTargetIsNext(String enabler, String target, List<string> path)
         {
-            return (path[path.IndexOf(enabler.Value) + 1].Equals(target.Value));
+            return (path[path.IndexOf(enabler) + 1].Equals(target));
         }
 
         public async Task<IntroductionDto> ReproveIntroduction(IntroductionId id)
