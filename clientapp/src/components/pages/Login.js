@@ -12,6 +12,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Modal from 'react-modal';
+import  {useState } from 'react';
+import userAuth from "../../hooks/UserAuth";
+import {useHistory} from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -28,16 +32,56 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function LogIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
+ function LogIn() {
+  const [show, setShow] = React.useState(false);
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+  const [makingRequest, setMakingRequest] = useState(false);
+  const[showSignUp, setSignUp] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const {handleLogin} = userAuth();
+  const history = useHistory();
+
+  const handleSubmit = (data) => {
+    setMakingRequest(true);
+      fetch(
+        showSignUp
+          ? "https://localhost:5001/api/Users"
+          : "https://localhost:5001/api/Users/login",
+          {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            //convert react to json and send post method's body
+            body: JSON.stringify(data),
+          }
+      ).then((response) => {
+        console.log(response.status);
+        if(!response.ok) {
+          setLoginError("Wrong credentials! Try again.");
+          setMakingRequest(false);
+          return null;
+        }
+        return response.json();
+      }).then((data) => {
+        if(data) {
+          console.log(data);
+          handleLogin(data);
+          history.replace("/");
+        } else {
+          setMakingRequest(false);
+        }
+      });
+    };
+    
+    
+    /*event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
-  };
+  };*/
 
   return (
     <ThemeProvider theme={theme}>
@@ -92,9 +136,24 @@ export default function LogIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+                <Link href="#" variant="b2">
+                  Forgot your password?
+                 </Link> 
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
               </Grid>
               <Grid item>
                 <Link href="/signup" variant="body2">
@@ -109,3 +168,5 @@ export default function LogIn() {
     </ThemeProvider>
   );
 }
+
+export default LogIn;

@@ -1,9 +1,10 @@
 namespace DDDNetCore.Domain.Users{
     public enum Emotion {
-        sadness,
-        happiness,
-        anger,
+        tristeza,
+        felicidade,
+        raiva,
         stress,
-        fear
+        medo,
+        esperança
     }
 }

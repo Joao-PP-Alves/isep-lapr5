@@ -18,5 +18,31 @@ export function UserController({children}){
         localStorage.removeItem(AUTH_KEY);
     }
 
-   // useEffect(() => )
+    useEffect(() => {
+        const userToken = localStorage.getItem(AUTH_KEY);
+
+        if(!userToken){
+            setTempLoggedIn(false);
+            return undefined;
+        }
+        fetch(`https://localhost:5001/api/Users/${userToken}`)
+        .then((response) => {
+            return response.json();
+        }).then((user) => {
+            setUser(user);
+        });
+    }, []);
+
+    return (
+        <UserContext.Provider
+            value={{
+                user, 
+                tempLoggedIn,
+                handleLogin,
+                handleLogout,
+            }}
+        >
+            {children}
+        </UserContext.Provider>
+    );
 }

@@ -47,13 +47,16 @@ namespace DDDNetCore.Infrastructure.Users
             var possibleFriends = GetUsersWithTheirTags().Result;
             foreach (User u in possibleFriends)
             {
-                foreach (Tag ut in tag)
+                if (u.Id != userId)
                 {
-                    foreach (Tag usertag in u.tags)
+                    foreach (Tag ut in tag)
                     {
-                        if (ut.name.Equals(usertag.name) && !(friendsList.Contains(u.Id)))
+                        foreach (Tag usertag in u.tags)
                         {
-                            friendsList.Add(u.Id);
+                            if (ut.name.Equals(usertag.name) && !(friendsList.Contains(u.Id)))
+                            {
+                                friendsList.Add(u.Id);
+                            }
                         }
                     }
                 }

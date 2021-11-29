@@ -3,7 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
@@ -16,12 +15,7 @@ import { FormCheck } from 'react-bootstrap';
 import { useState } from 'react';
 import PrivacyPolicy from './privacyPolicy';
 import LogIn from './Login';
-import { 
-  BrowserRouter as Router, 
-  Route,
-  Switch, 
-  Redirect
-} from 'react-router-dom';
+
 
 function Copyright(props) {
   return (
@@ -36,11 +30,14 @@ function Copyright(props) {
   );
 }
 
+//const error =
+
 const theme = createTheme();
 
 export default function SignUp() {
     const[validated, setValidated] = useState(false);
-    
+    const [checked, setChecked] = React.useState([true, false]);
+
     /*const handleSubmit = (event) => {
         const from = event.currentTarget;
         if(form.checkValidity()===false) {
@@ -49,6 +46,17 @@ export default function SignUp() {
         }
         setValidated(true);
     };*/
+
+
+
+    const handleChange = (event) =>{
+      setChecked(
+        [event.currentTarget.checked, checked]
+        );
+    };
+
+    //const error = currentTarget.checked===false ;
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -61,6 +69,8 @@ export default function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
     });
+    
+      
   };
 
   return (
@@ -89,7 +99,7 @@ export default function SignUp() {
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
-                  required
+                  required={true}
                   fullWidth
                   id="firstName"
                   label="First Name"
@@ -150,7 +160,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <FormCheck
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  control={<Checkbox checked={checked} onChange={handleChange} color="primary" />}
                   label="I agree with the terms and conditions."
                   feedbackType="invalid"
                 />
