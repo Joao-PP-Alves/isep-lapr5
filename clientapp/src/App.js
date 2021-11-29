@@ -19,6 +19,8 @@ import TermsAndConditions from './components/pages/termsAndConditions';
 import PrivacyPolicy from './components/pages/privacyPolicy';
 import Users from './components/mdr/user/user'
 import ListPendentConnections from './components/mdr/connections/ListPendentConnections';
+import Dashboard from './components/pages/dashboard/Dashboard';
+import EditProfile from './components/pages/dashboard/EditProfile';
 //import { Navbar } from 'react-bootstrap';
 
 
@@ -44,6 +46,8 @@ function App() {
       <Route path="/privacyPolicy" component={PrivacyPolicy}/>
       <Route path="/users" component={Users}/>
       <Route path="/connections/pendent" component={ListPendentConnections}/>
+      <Route path="/dashboard" component={Dashboard}/>
+      <Route path="/editProfile" component={EditProfile}/>
       <Redirect to="/"/>
     </Switch>
   </Router>

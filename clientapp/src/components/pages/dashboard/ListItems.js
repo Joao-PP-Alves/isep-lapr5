@@ -9,62 +9,59 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import DashBoard from '../dashboard/Dashboard';
+import Button from '@mui/material/Button';
+
+
+function toDashboard(event){
+  <DashBoard/>
+}
+
+function toEdit(event){
+  let path =`/editProfile`;
+}
 
 export const mainListItems = (
   <div>
-    <ListItem button>
+    <ListItem>
+       <Button id="dashboardButton" onClick={event => window.location.href='/dashBoard'}>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
+      </Button>
     </ListItem>
-    <ListItem button>
+    <Button id="editProfileButton" onClick={event => window.location.href='/editProfile'}>
+    <ListItem>
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <ListItemText primary="Edit profile" />  
     </ListItem>
+    </Button>
+    <Button id="friendsButton" onClick={event => window.location.href='/friends'}>
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="Friends" />
     </ListItem>
+    </Button>
+    <Button id = "connectionsButton" onClick={event => window.location.href='/connections/pendent'}>
     <ListItem button>
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
-      <ListItemText primary="Reports" />
+      <ListItemText primary="Pending Connections" />
     </ListItem>
+    </Button>
+    <Button id="introductions" onClick={event => window.location.href='/introductions'}>
     <ListItem button>
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="Pending Introductions" />
     </ListItem>
-  </div>
-);
-
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItem>
+    </Button>
   </div>
 );
