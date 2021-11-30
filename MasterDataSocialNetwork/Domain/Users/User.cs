@@ -71,7 +71,19 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        
+        public User(Name name, Email email,  Password password, PhoneNumber phoneNumber, List<Tag> tags)
+        {
+            this.Id = new UserId(Guid.NewGuid());
+            this.Name = name;
+            this.Email = email;
+            this.friendsList = new List<Friendship>();
+            this.Password = password;
+            this.PhoneNumber = phoneNumber;
+            this.tags = tags;
+            this.emotionalState = new EmotionalState(Emotion.esperança);
+            this.EmotionTime = new EmotionTime(DateTime.Now);
+            this.Active = true;
+        }
 
 
         public void ChangeName(Name name)

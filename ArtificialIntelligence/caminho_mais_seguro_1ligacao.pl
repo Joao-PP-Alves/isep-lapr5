@@ -8,7 +8,7 @@ dfsLength_safest_oneWay(Orig,Dest,Min,Cam,Len):-dfs2Length_safest_oneWay(Orig,De
 dfs2Length_safest_oneWay(Dest,Dest,_,LA,Cam,0):-!,reverse(LA,Cam).
 dfs2Length_safest_oneWay(Act,Dest,Min,LA,Cam,Len):-
 	no(NAct,Act,_),
-	(ligacao(NAct,NX,Len1);ligacao(NX,NAct,Len1)),
+	ligacao(NAct,NX,Len1),
 	Len1 > Min,
     no(NX,X,_),
 	\+ member(X,LA),

@@ -175,9 +175,7 @@ function Landing() {
                                     fontfamily: "Merriweather Sans",
                                 }}
                             >
-                                Some text to describe our social network Some
-                                text to describe our social network Some text to
-                                describe our social network
+                                Join over 512324 users all around the world in this new way of connecting people
                             </Typography>
 
                             <Container>

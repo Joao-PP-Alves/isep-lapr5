@@ -15,7 +15,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
          public void setup(){
             var list  = new List<Tag>();
             list.Add(new Tag("tag1"));
-            user = new User(new Name("Joao"), new Email("email@gmail.com"),new Password(), new PhoneNumber("911197791"), list , new EmotionalState(Emotion.anger), new EmotionTime(DateTime.UtcNow));
+            user = new User(new Name("Joao"), new Email("email@gmail.com"),new Password(), new PhoneNumber("911197791"), list );
 
         }
 
@@ -95,7 +95,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
 
         public void testChangeEmotionalStateNull(){
             user.ChangeEmotionalState(null);
-            Assert.AreEqual(Emotion.anger,user.emotionalState.emotion);
+            Assert.AreEqual(Emotion.esperança,user.emotionalState.emotion);
         }
 
         // [TestMethod]
