@@ -10,10 +10,10 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
-import logo from "../../img/reactjs-icon.svg";
+import logo from "../../../img/reactjs-icon.svg";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
-import network from "../../img/network.gif";
+import network from "../../../img/network.gif";
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,

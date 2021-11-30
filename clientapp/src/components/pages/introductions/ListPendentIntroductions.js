@@ -25,8 +25,8 @@ import { withStyles } from '@mui/styles';
 import clsx from 'clsx';
 import Links from "../../Links";
 import { useState, useEffect } from 'react';
-
-
+import Button from '@mui/material/Button';
+import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 
 function Copyright(props) {
   return (
@@ -253,8 +253,9 @@ function EditProfileContent() {
   const fetchPendentIntroductions= async () => {
 
     const data = await fetch(
-      Links.MDR_URL() + "/api/introductions/pendent/6257be06-d34d-4aad-a5dd-88f617da91f9"
-    );
+			//mudar o id para uma parâmetro passado!
+			"https://21s5dd20socialgame.azurewebsites.net/api/Introductions"
+		);
     const vsList = await data.json();
     console.log(vsList);
     setSearchedVS(vsList);
@@ -286,108 +287,128 @@ function EditProfileContent() {
   //TODO ia aqui!
 
   return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Pendent Introductions
-            </Typography>
-            <IconButton color="inherit">
-              
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List>{mainListItems}</List>
-          <Divider />
-        </Drawer>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-              <Paper style={{ height: 700, width: '100%' }}>
-        <VirtualizedTable
-          rowCount={rows.length}
-          rowGetter={({ index }) => rows[index]}
-          columns={[
-            {
-              width: 400,
-              label: 'ID',
-              dataKey: 'id',
-            },
-            {
-              width: 400,
-              label: 'Requester ID',
-              dataKey: 'requester'
-            },
-            {
-              width: 700,
-              label: 'Description   ',
-              dataKey: 'description'
-            }
-          ]}
-        />
-      </Paper>
-              </Grid>
-            <Copyright sx={{ pt: 4 }} />
-          </Container>
-        </Box>
-      </Box>
-    </ThemeProvider>
-  );
+		<ThemeProvider theme={mdTheme}>
+			<Box sx={{ display: "flex" }}>
+				<CssBaseline />
+				<AppBar position="absolute" open={open}>
+					<Toolbar
+						sx={{
+							pr: "24px", // keep right padding when drawer closed
+						}}
+					>
+						<IconButton
+							edge="start"
+							color="inherit"
+							aria-label="open drawer"
+							onClick={toggleDrawer}
+							sx={{
+								marginRight: "36px",
+								...(open && { display: "none" }),
+							}}
+						>
+							<MenuIcon />
+						</IconButton>
+						<Typography
+							component="h1"
+							variant="h6"
+							color="inherit"
+							noWrap
+							sx={{ flexGrow: 1 }}
+						>
+							Pendent Introductions
+						</Typography>
+						<IconButton color="inherit">
+							<Badge badgeContent={4} color="secondary">
+								<AccountCircleTwoToneIcon />
+							</Badge>
+						</IconButton>
+						<Button
+							href="/"
+							variant="outlined"
+							sx={{
+								mr: 5,
+								my: 1,
+								mx: 1.5,
+								color: "#f2f1f0",
+								fontWeight: "bold",
+								fontfamily: "Merriweather Sans",
+							}}
+						>
+							Logout
+						</Button>
+					</Toolbar>
+				</AppBar>
+				<Drawer variant="permanent" open={open}>
+					<Toolbar
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "flex-end",
+							px: [1],
+						}}
+					>
+						<IconButton onClick={toggleDrawer}>
+							<ChevronLeftIcon />
+						</IconButton>
+					</Toolbar>
+					<Divider />
+					<List>{mainListItems}</List>
+					<Divider />
+				</Drawer>
+				<Box
+					component="main"
+					sx={{
+						backgroundColor: (theme) =>
+							theme.palette.mode === "light"
+								? theme.palette.grey[100]
+								: theme.palette.grey[900],
+						flexGrow: 1,
+						height: "100vh",
+						overflow: "auto",
+					}}
+				>
+					<Toolbar />
+					<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+						{/* Recent Deposits */}
+						<Grid item xs={12} md={4} lg={3}>
+							<Paper
+								sx={{
+									p: 2,
+									display: "flex",
+									flexDirection: "column",
+									height: 600,
+									width: 1150,
+								}}
+							>
+								<VirtualizedTable
+									rowCount={rows.length}
+									rowGetter={({ index }) => rows[index]}
+									columns={[
+										{
+											width: 400,
+											label: "ID",
+											dataKey: "id",
+										},
+										{
+											width: 400,
+											label: "Requester ID",
+											dataKey: "requester",
+										},
+										{
+											width: 700,
+											label: "Description   ",
+											dataKey: "description",
+										},
+									]}
+								/>
+							</Paper>
+						</Grid>
+						<Copyright sx={{ pt: 4 }} />
+					</Container>
+				</Box>
+			</Box>
+		</ThemeProvider>
+	);
 }
 
 export default function EditProfile() {
