@@ -234,7 +234,14 @@ const styles = (theme) => ({
   const VirtualizedTable = withStyles(styles, { defaultTheme })(MuiVirtualizedTable);
   
 
-function EditProfileContent() {
+function ListPendentConnectionsContent() {
+
+  //get logged user
+  const userId = localStorage.getItem('loggedInUser');
+
+  console.log(userId);  
+
+
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -253,7 +260,7 @@ function EditProfileContent() {
   const fetchPendentConnections= async () => {
 
     const data = await fetch(
-      Links.MDR_URL() + "/api/connections/pendent/6257be06-d34d-4aad-a5dd-88f617da91f9"
+      Links.MDR_URL() + "/api/connections/pendent/" + userId
     );
     const vsList = await data.json();
     console.log(vsList);
@@ -396,6 +403,6 @@ function EditProfileContent() {
   );
 }
 
-export default function EditProfile() {
-  return <EditProfileContent />;
+export default function ListPendentConnections() {
+  return <ListPendentConnectionsContent />;
 }
