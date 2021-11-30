@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDDNetCore.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class BirthDateMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,7 +34,6 @@ namespace DDDNetCore.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     decisionStatus = table.Column<int>(type: "int", nullable: false),
-                    MissionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MessageToIntermediate_text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MessageToTargetUser_text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MessageFromIntermediateToTargetUser_text = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -55,6 +54,7 @@ namespace DDDNetCore.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     dificultyDegree_level = table.Column<int>(type: "int", nullable: true),
+                    requester = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     status = table.Column<int>(type: "int", nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -76,6 +76,7 @@ namespace DDDNetCore.Migrations
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PhoneNumber_Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     emotionalState_emotion = table.Column<int>(type: "int", nullable: true),
+                    BirthDate_date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EmotionTime_LastEmotionalUpdate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: false)
                 },

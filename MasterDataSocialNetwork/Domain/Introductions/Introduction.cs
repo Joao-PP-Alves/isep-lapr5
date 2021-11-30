@@ -1,21 +1,14 @@
 using System;
-using System.ComponentModel;
-using System.Configuration;
-using System.Dynamic;
-using DDDNetCore.Domain.Connections;
 using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Users;
-using DDDNetCore.Domain.Introductions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Win32;
 
 namespace DDDNetCore.Domain.Introductions
 {
     public class Introduction : Entity<IntroductionId>, IAggregateRoot
     {
         public IntroductionStatus decisionStatus {get; private set;}
-        public MissionId MissionId {get; private set;}
+        //public MissionId MissionId {get; private set;}
         public Description MessageToIntermediate{get;private set;}
         public Description MessageToTargetUser {get;private set;}
         public Description MessageFromIntermediateToTargetUser {get;private set;}
@@ -25,103 +18,126 @@ namespace DDDNetCore.Domain.Introductions
         public bool Active {get; private set;}
 
         private Introduction(){
-            this.Active = true;
+            Active = true;
         }
 
-        public Introduction(Description messageToTargetUser,Description messageToIntermediate,MissionId missionId,UserId Requester, UserId Enabler, UserId TargetUser){
-            this.Id = new IntroductionId(Guid.NewGuid());
-            this.decisionStatus = IntroductionStatus.PENDING_APPROVAL;
-            this.MessageToTargetUser = messageToTargetUser;
-            this.MessageToIntermediate = messageToIntermediate;
+        // public Introduction(Description messageToTargetUser,Description messageToIntermediate,MissionId missionId,UserId Requester, UserId Enabler, UserId TargetUser){
+        //     Id = new IntroductionId(Guid.NewGuid());
+        //     decisionStatus = IntroductionStatus.PENDING_APPROVAL;
+        //     MessageToTargetUser = messageToTargetUser;
+        //     MessageToIntermediate = messageToIntermediate;
+        //     this.TargetUser = TargetUser;
+        //     this.Enabler = Enabler;
+        //     this.Requester = Requester;
+        //     this.MissionId = missionId;
+        //     Active = true;
+        // }
+
+        // public Introduction(Description messageToTargetUser,Description messageToIntermediate,MissionId missionId,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
+        //     this.Id = new IntroductionId(Guid.NewGuid());
+        //     this.decisionStatus = IntroductionStatus.PENDING_APPROVAL;
+        //     this.MessageToTargetUser = messageToTargetUser;
+        //     this.MessageToIntermediate = messageToIntermediate;
+        //     this.TargetUser = TargetUser;
+        //     this.Enabler = Enabler;
+        //     this.Requester = Requester;
+        //     this.MissionId = missionId;
+        //     this.Active = true;
+        // }
+        
+        public Introduction(Description messageToTargetUser,Description messageToIntermediate,UserId Requester, UserId Enabler, UserId TargetUser){
+            Id = new IntroductionId(Guid.NewGuid());
+            decisionStatus = IntroductionStatus.PENDING_APPROVAL;
+            MessageToTargetUser = messageToTargetUser;
+            MessageToIntermediate = messageToIntermediate;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
             this.Requester = Requester;
-            this.MissionId = missionId;
-            this.Active = true;
+            Active = true;
         }
-
-        public Introduction(Description messageToTargetUser,Description messageToIntermediate,MissionId missionId,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
-            this.Id = new IntroductionId(Guid.NewGuid());
-            this.decisionStatus = IntroductionStatus.PENDING_APPROVAL;
-            this.MessageToTargetUser = messageToTargetUser;
-            this.MessageToIntermediate = messageToIntermediate;
+        
+        
+        public Introduction(Description messageToTargetUser,Description messageToIntermediate,Decision decision, UserId Requester, UserId Enabler, UserId TargetUser){
+            Id = new IntroductionId(Guid.NewGuid());
+            decisionStatus = IntroductionStatus.PENDING_APPROVAL;
+            MessageToTargetUser = messageToTargetUser;
+            MessageToIntermediate = messageToIntermediate;
             this.TargetUser = TargetUser;
             this.Enabler = Enabler;
             this.Requester = Requester;
-            this.MissionId = missionId;
-            this.Active = true;
+            Active = true;
         }
 
         public void AcceptedIntroduction(){
-            if(this.decisionStatus != IntroductionStatus.PENDING_APPROVAL){
+            if(decisionStatus != IntroductionStatus.PENDING_APPROVAL){
                 throw new BusinessRuleValidationException("You cannot approve an introduction that is not pending.");
             }
-            this.decisionStatus = IntroductionStatus.ACCEPTED;
+            decisionStatus = IntroductionStatus.ACCEPTED;
         }
 
         public void DeclinedIntroduction(){
-            if(this.decisionStatus != IntroductionStatus.PENDING_APPROVAL){
+            if(decisionStatus != IntroductionStatus.PENDING_APPROVAL){
                 throw new BusinessRuleValidationException("You cannot approve an introduction that is not pending.");
             }
-            this.decisionStatus = IntroductionStatus.DECLINED;
+            decisionStatus = IntroductionStatus.DECLINED;
         }
 
         public void MarkAsInative(){
-            this.Active = false;
+            Active = false;
         }
 
         public void changeMessageToTargetUser(Description message){
-            this.MessageToTargetUser = message;
+            MessageToTargetUser = message;
         }
 
         public void changeMessageToIntermediate(Description message){
-            this.MessageToIntermediate = message;
+            MessageToIntermediate = message;
         }
 
         public void changeIntermediateToTargetUserDescription(Description message){
-            this.MessageFromIntermediateToTargetUser = message;
+            MessageFromIntermediateToTargetUser = message;
         }
 
         public void approveIntermediate(){
-            if(this.decisionStatus != IntroductionStatus.PENDING_APPROVAL){
+            if(decisionStatus != IntroductionStatus.PENDING_APPROVAL){
                 throw new BusinessRuleValidationException("You cannot approve an introduction that is not pending.");
             }
-            this.decisionStatus = IntroductionStatus.APPROVAL_ACCEPTED;
+            decisionStatus = IntroductionStatus.APPROVAL_ACCEPTED;
         }
 
         public void declineIntermediate(){
-            if(this.decisionStatus != IntroductionStatus.PENDING_APPROVAL){
+            if(decisionStatus != IntroductionStatus.PENDING_APPROVAL){
                 throw new BusinessRuleValidationException("You cannot approve an introduction that is not pending.");
             }
-            this.decisionStatus = IntroductionStatus.APPROVAL_DECLINED;
+            decisionStatus = IntroductionStatus.APPROVAL_DECLINED;
         }
 
         public void makeDecision(IntroductionStatus decision){
-            this.decisionStatus = decision;
+            decisionStatus = decision;
         }
 
         public void ChangeTargetUser(UserId userId){
-            if(!this.Active)
+            if(!Active)
                 throw new BusinessRuleValidationException("It is not possible to change the target user to an inactive introduction.");
             if (userId == null)
                 throw new BusinessRuleValidationException("Every Introducion requires a valid target user.");
-            this.TargetUser = userId;    
+            TargetUser = userId;    
         }
 
         public void ChangeRequester(UserId userId){
-            if(!this.Active)
+            if(!Active)
                 throw new BusinessRuleValidationException("It is not possible to change the requester to an inactive introduction.");
             if (userId == null)
                 throw new BusinessRuleValidationException("Every Introducion requires a valid requester.");
-            this.Requester = userId;    
+            Requester = userId;    
         }
 
         public void ChangeEnabler(UserId userId){
-            if(!this.Active)
+            if(!Active)
                 throw new BusinessRuleValidationException("It is not possible to change the enabler to an inactive introduction.");
             if (userId == null)
                 throw new BusinessRuleValidationException("Every Introducion requires a valid enabler.");
-            this.Enabler = userId;    
+            Enabler = userId;    
         }
 
     }

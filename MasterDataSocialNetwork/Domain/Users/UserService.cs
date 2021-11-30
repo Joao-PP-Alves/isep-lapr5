@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
-using System.Linq;
+using DDDNetCore.Domain.Shared;
 using DDDNetCore.Network;
-using DDDNetCore.Domain.Connections;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -21,51 +19,47 @@ namespace DDDNetCore.Domain.Users
             _repo = repo;
         }
 
-        
 
-        public async Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level)
+        public async Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id,
+            Network<UserDto, FriendshipDto> friendsNet, int level)
         {
             friendsNet = new Network<UserDto, FriendshipDto>(false);
-            
+
             // Starts by inserting the central user vertex
-           var current = _repo.GetByIdAsync(id).Result;
-           var dto = await ConvertToDto(current);
-           friendsNet.InsertVertex(dto);
-           List<Friendship> friendships = new List<Friendship>();
+            var current = _repo.GetByIdAsync(id).Result;
+            var dto = await ConvertToDto(current);
+            friendsNet.InsertVertex(dto);
+            List<Friendship> friendships = new List<Friendship>();
 
-           for (int i = 0; i < level; i++)
-           {
-               // Goes trough all users in the network 
-               foreach (var user in friendsNet.Vertices())
-               {
-                   // Gets their friends
-                   //friendships = await 
-                   
-                   
-                   //var friends = user.friendsList;
-                   foreach (var user_friendship in friendships)
-                   {
-                       // Adds each of the friends to the network
-                       current = _repo.GetByIdAsync(id).Result;
-                       friendsNet.InsertVertex(await ConvertToDto(current));
-                       //friendsNet.InsertEdge(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
-                   }
-               }
-           }
+            for (int i = 0; i < level; i++)
+            {
+                // Goes trough all users in the network 
+                foreach (var user in friendsNet.Vertices())
+                {
+                    // Gets their friends
+                    //friendships = await 
 
-           // Recursive call to add friends of friends
-           /*current++;
-           GetMyFriends(id, friendsNet, level, current); */
 
-           return friendsNet;
+                    //var friends = user.friendsList;
+                    foreach (var user_friendship in friendships)
+                    {
+                        // Adds each of the friends to the network
+                        current = _repo.GetByIdAsync(id).Result;
+                        friendsNet.InsertVertex(await ConvertToDto(current));
+                        //friendsNet.InsertEdge(await ConvertToDto(_repo.GetByIdAsync(user_friendship.friend).Result), user, await _serviceFriendships.ConvertToDto(user_friendship), 0);
+                    }
+                }
+            }
+
+            return friendsNet;
         }
 
         public async Task<List<UserDto>> GetPossibleIntroductionTargets(UserId myId, UserId friendId)
         {
-            var myUserProfile = await this.GetByIdAsync(myId);
+            var myUserProfile = await GetByIdAsync(myId);
             // Estas linhas têm de ser corrigidas
-    //        var myFriends = await this.GetMyFriends(myId,new Network<User, Friendship>(false), 1, 0);
-    //        var friendFriends = await this.GetMyFriends(friendId, new Network<User, Friendship>(false), 1, 0);
+            //        var myFriends = await this.GetMyFriends(myId,new Network<User, Friendship>(false), 1, 0);
+            //        var friendFriends = await this.GetMyFriends(friendId, new Network<User, Friendship>(false), 1, 0);
             // var myIds = new List<Guid>();
             // var friendIds = new List<Guid>();
             // foreach (var dto in myFriends)
@@ -100,24 +94,24 @@ namespace DDDNetCore.Domain.Users
 
         public async Task<List<UserDto>> GetAllAsync()
         {
-            var list = await this._repo.GetAllAsync();
+            var list = await _repo.GetAllAsync();
 
             foreach (var notDto in list)
             {
-               notDto.updateEmotionTime(new EmotionTime(notDto.EmotionTime.LastEmotionalUpdate));
+                notDto.updateEmotionTime(new EmotionTime(notDto.EmotionTime.LastEmotionalUpdate));
             }
 
-            List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags, user.emotionalState,
+            var listDto = list.ConvertAll(user =>
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                    user.emotionalState,
                     user.EmotionTime));
-
-
+            
             return listDto;
         }
 
         public async Task<UserDto> GetByIdAsync(UserId id)
         {
-            var user = await this._repo.GetByIdAsync(id);
+            var user = await _repo.GetByIdAsync(id);
 
             if (user == null)
             {
@@ -125,92 +119,116 @@ namespace DDDNetCore.Domain.Users
             }
 
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
-                user.emotionalState , user.EmotionTime);
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                user.emotionalState, user.EmotionTime);
         }
 
-         public async Task<List<UserDto>> GetByEmail(string email){
-            try {
+        public async Task<List<UserDto>> GetByEmail(string email)
+        {
+            try
+            {
                 var emailConfirmation = new Email(email);
-            } catch (BusinessRuleValidationException b){
-                throw b;
             }
-            var list = await this._repo.GetByEmail(email);
+            catch (BusinessRuleValidationException)
+            {
+                throw new Exception("The provided email is invalid");
+            }
 
-            if (list == null) {
-                 return null;
+            var list = await _repo.GetByEmail(email);
+
+            if (list == null)
+            {
+                return null;
             }
 
             foreach (var user in list)
             {
                 user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             }
-            List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList,user.PhoneNumber, user.tags, user.emotionalState,
-                    user.EmotionTime));
-            
-            return listDto;
-         }
 
-         public async Task<List<UserDto>> GetByName(string name){
-             try {
+            List<UserDto> listDto = list.ConvertAll(user =>
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                    user.emotionalState,
+                    user.EmotionTime));
+
+            return listDto;
+        }
+
+        public async Task<List<UserDto>> GetByName(string name)
+        {
+            try
+            {
                 var nameConfirmation = new Name(name);
-            } catch (BusinessRuleValidationException b){
-                throw b;
             }
-            var list = await this._repo.GetByName(name);
+            catch (BusinessRuleValidationException b)
+            {
+                throw new Exception("The provided name is invalid");
+            }
 
-            if (list == null) {
-                 return null;
+            var list = await _repo.GetByName(name);
+
+            if (list == null)
+            {
+                return null;
             }
 
             foreach (var user in list)
             {
                 user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             }
-            List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags, user.emotionalState,
-                    user.EmotionTime));
-            
-            return listDto;
-         }
 
-        public async Task<List<UserDto>> GetByTags(string tags){
+            List<UserDto> listDto = list.ConvertAll(user =>
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                    user.emotionalState,
+                    user.EmotionTime));
+
+            return listDto;
+        }
+
+        public async Task<List<UserDto>> GetByTags(string tags)
+        {
             string[] listStrings = tags.Split("&");
             List<Tag> listTags = new List<Tag>();
-            try {
+            try
+            {
                 foreach (string item in listStrings)
                 {
                     Tag tagConfirmation = new Tag(item);
                     listTags.Add(tagConfirmation);
                 }
-            } catch (BusinessRuleValidationException b){
-                throw b;
             }
-            var list = await this._repo.GetByTags(listTags);
+            catch (BusinessRuleValidationException b)
+            {
+                throw new Exception("One or more tags are invalid!");
+            }
 
-            if (list == null) {
-                 return null;
+            var list = await _repo.GetByTags(listTags);
+
+            if (list == null)
+            {
+                return null;
             }
 
             foreach (var user in list)
             {
                 user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             }
-            List<UserDto> listDto = list.ConvertAll<UserDto>(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags, user.emotionalState,
+
+            List<UserDto> listDto = list.ConvertAll(user =>
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                    user.emotionalState,
                     user.EmotionTime));
-            
+
             return listDto;
         }
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.tags);
-            await this._repo.AddAsync(user);
-            await this._unitOfWork.CommitAsync();
-          user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
+            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, dto.tags);
+            await _repo.AddAsync(user);
+            await _unitOfWork.CommitAsync();
+            user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -219,7 +237,7 @@ namespace DDDNetCore.Domain.Users
         **/
         public async Task<UserDto> UpdateProfileAsync(UserDto dto)
         {
-            var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
+            var user = await _repo.GetByIdAsync(new UserId(dto.Id));
 
             if (user == null)
             {
@@ -234,8 +252,8 @@ namespace DDDNetCore.Domain.Users
             user.updateFriendShips(dto.friendsList);
             user.ChangeEmail(dto.email);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
+            await _unitOfWork.CommitAsync();
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -246,7 +264,7 @@ namespace DDDNetCore.Domain.Users
         /// <returns></returns>
         public async Task<UserDto> InactivateAsync(UserId id)
         {
-            var user = await this._repo.GetByIdAsync(id);
+            var user = await _repo.GetByIdAsync(id);
 
             if (user == null)
                 return null;
@@ -255,7 +273,7 @@ namespace DDDNetCore.Domain.Users
 
             await _unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -266,7 +284,7 @@ namespace DDDNetCore.Domain.Users
         /// <returns></returns>
         public async Task<UserDto> DeleteAsync(UserId id)
         {
-            var user = await this._repo.GetByIdAsync(id);
+            var user = await _repo.GetByIdAsync(id);
 
             if (user == null)
                 return null;
@@ -274,10 +292,10 @@ namespace DDDNetCore.Domain.Users
             // Mark as inactive. An exception may be thrown in the User class
             user.MarkAsInative();
 
-            this._repo.Remove(user);
-            await this._unitOfWork.CommitAsync();
+            _repo.Remove(user);
+            await _unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -288,7 +306,7 @@ namespace DDDNetCore.Domain.Users
         /// <returns></returns>
         public async Task<UserDto> UpdateEmotionalStateAsync(UserDto dto)
         {
-            var user = await this._repo.GetByIdAsync(new UserId(dto.Id));
+            var user = await _repo.GetByIdAsync(new UserId(dto.Id));
 
             if (user == null)
             {
@@ -298,8 +316,8 @@ namespace DDDNetCore.Domain.Users
             //change all field
             user.ChangeEmotionalState(dto.emotionalState);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            await this._unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email,user.friendsList, user.PhoneNumber, user.tags,
+            await _unitOfWork.CommitAsync();
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -310,22 +328,22 @@ namespace DDDNetCore.Domain.Users
         /// <returns></returns>
         public async Task<UserDto> ConvertToDto(User user)
         {
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
         public async Task<List<UserId>> GetFriendsSuggestionForNewUsers(UserId id)
         {
-            var user = await this._repo.GetByIdAsync(id);
+            var user = await _repo.GetByIdAsync(id);
             if (user == null)
             {
                 return null;
             }
 
-            var friends = this._repo.ReturnFriendsSuggestionList(user.Id);
+            var friends = _repo.ReturnFriendsSuggestionList(user.Id);
             return friends;
         }
-        
+
         /// <summary>
         /// Creates a new friendship between two friends
         /// </summary>
@@ -333,31 +351,43 @@ namespace DDDNetCore.Domain.Users
         /// <returns></returns>
         public async Task<FriendshipDto> NewFriendship(CreatingFriendshipDto dto)
         {
+            // Checks if both users exist
             await checkUserIdAsync(dto.friend);
             await checkUserIdAsync(dto.requester);
+
+            // Returns them from the database
             var friend = await (_repo.GetByIdAsync(dto.friend));
             var requester = await _repo.GetByIdAsync(dto.requester);
-            
-            var friendship = new Friendship(friend.Id, requester.Id, dto.connection_strength,dto.relationship_strength,dto.friendshipTag);
-            _repo.NewFriendship(new FriendshipDto(friendship.Id.AsGuid(),dto.connection_strength, dto.relationship_strength, dto.friend, dto.requester, dto.friendshipTag));
 
-            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
+            // Creates a new friendship between them
+            var friendship = new Friendship(friend.Id, requester.Id, dto.connection_strength, dto.relationship_strength,
+                dto.friendshipTag);
+            
+            // Adds the friendship to the databse
+            await _repo.NewFriendship(new FriendshipDto(friendship.Id.AsGuid(), dto.connection_strength,
+                dto.relationship_strength, dto.friend, dto.requester, dto.friendshipTag));
+
+            // Returns a dto
+            return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength,
+                friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
         }
-        
+
         /// <summary>
         /// Checks if a user exists
         /// </summary>
         /// <param name="userId"></param>
-        /// <exception cref="BusinessRuleValidationException"></exception>
+        /// <exception cref="Exception"></exception>
         private async Task checkUserIdAsync(UserId userId)
         {
-            var user = await this._repo.GetByIdAsync(userId);
+            var user = await _repo.GetByIdAsync(userId);
             if (user == null)
-                throw new BusinessRuleValidationException("Invalid User Id.");
+                throw new Exception("The provided user does not exist");
         }
 
-        public async Task checkIfTwoUsersAreFriends(UserId user1,UserId user2){
-            if(_repo.checkIfFriends(user1,user2)){
+        public async Task checkIfTwoUsersAreFriends(UserId user1, UserId user2)
+        {
+            if (_repo.checkIfFriends(user1, user2))
+            {
                 throw new BusinessRuleValidationException("Users are already friends.");
             }
         }

@@ -42,7 +42,7 @@ namespace DDDNetCore.Controllers{
             return mission;
         }
 
-        // POST: api/Introductions
+        // POST: api/Missions
        [HttpPost]
         public async Task<ActionResult<MissionDto>> Create(CreatingMissionDto dto)
         {

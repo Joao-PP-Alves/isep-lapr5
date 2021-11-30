@@ -14,6 +14,7 @@ namespace DDDNetCore.Infrastructure.Users{
             builder.OwnsOne(b => b.Email);
             builder.OwnsOne(b => b.Password);
             builder.OwnsOne(b => b.EmotionTime);
+            builder.OwnsOne(b => b.BirthDate);
             builder.OwnsMany(b => b.tags);
             builder.HasMany(b => b.friendsList).WithOne()
                 .HasForeignKey(f => f.requester);

@@ -8,7 +8,9 @@ namespace DDDNetCore.Domain.Missions{
         [JsonConstructor]
         public MissionId(Guid value) : base(value){}
 
-        public MissionId(String value) : base(value){
+        public MissionId(String value) : base(value)
+        {
+            
         }
 
         override

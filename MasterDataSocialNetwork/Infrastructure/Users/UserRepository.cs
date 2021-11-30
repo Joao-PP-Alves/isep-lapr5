@@ -120,7 +120,7 @@ namespace DDDNetCore.Infrastructure.Users
         { 
             //var friend  = GetByIdAsync(new UserId(dto.friend.AsGuid())).Result;
             var requester = GetByIdAsync(new UserId(dto.requester.AsString())).Result;
-            var friend = _context.Users.Include(f => f.friendsList).FirstOrDefault(u => u.Id == dto.friend);
+            var friend = _context.Users.Include(f => f.friendsList).Include(b=>b.BirthDate).FirstOrDefault(u => u.Id == dto.friend);
             if (friend == null || requester == null)
             {
                 throw new Exception("Invalid User Id.");
@@ -138,13 +138,13 @@ namespace DDDNetCore.Infrastructure.Users
 
         public new async Task<List<User>> GetAllAsync()
         {
-            return _context.Users.Include(f => f.friendsList).ToList();
+            return _context.Users.Include(b=>b.BirthDate).Include(f => f.friendsList).ToList();
             
         }
 
         public Task<User> GetByIdAsync(UserId id)
         {
-            return _context.Users.Include(f => f.friendsList).Where(user => user.Id == id).FirstOrDefaultAsync();
+            return _context.Users.Include(f => f.friendsList).Include(b=>b.BirthDate).Where(user => user.Id == id).FirstOrDefaultAsync();
         }
     }
 }

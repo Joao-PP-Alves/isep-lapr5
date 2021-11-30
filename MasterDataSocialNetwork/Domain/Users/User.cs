@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Shared;
-using System.Configuration;
-using System.Text.RegularExpressions;
-using DDDNetCore.Domain.Services.DTO;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -30,6 +26,8 @@ namespace DDDNetCore.Domain.Users
         public List<Tag> tags { get; set; }
 
         public EmotionalState emotionalState { get; set; }
+        
+        public LifeDate BirthDate { get; set; }
 
         public List<Friendship> friendsList { get; set; }
         public EmotionTime EmotionTime {get; private set;} 
@@ -40,67 +38,70 @@ namespace DDDNetCore.Domain.Users
 
         public User()
         {
-            this.Active = true;
+            Active = true;
         }
 
-        public User(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
+        public User(Name name, Email email, Password password, PhoneNumber phoneNumber, LifeDate birthDate, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
         {
-            this.Id = new UserId(Guid.NewGuid());
-            this.Name = name;
-            this.friendsList = friendsList;
-            this.Email = email;
-            this.Password = password;
-            this.PhoneNumber = phoneNumber;
+            Id = new UserId(Guid.NewGuid());
+            Name = name;
+            friendsList = friendsList;
+            Email = email;
+            Password = password;
+            BirthDate = birthDate;
+            PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
             this.EmotionTime = EmotionTime;
-            this.Active = true;
+            Active = true;
         }
 
-        public User(Name name, Email email, List<Friendship> friendsList, Password password, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
+        public User(Name name, Email email, List<Friendship> friendsList, Password password, LifeDate birthDate, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
         {
-            this.Id = new UserId(Guid.NewGuid());
-            this.Name = name;
-            this.Email = email;
+            Id = new UserId(Guid.NewGuid());
+            Name = name;
+            Email = email;
             this.friendsList = friendsList;
-            this.Password = password;
-            this.PhoneNumber = phoneNumber;
+            Password = password;
+            BirthDate = birthDate;
+            PhoneNumber = phoneNumber;
             this.tags = tags;
             this.emotionalState = emotionalState;
             this.EmotionTime = EmotionTime;
-            this.Active = true;
+            Active = true;
         }
 
-        public User(Name name, Email email,  Password password, PhoneNumber phoneNumber, List<Tag> tags)
+        public User(Name name, Email email,  Password password, PhoneNumber phoneNumber, LifeDate birthDate, List<Tag> tags)
         {
-            this.Id = new UserId(Guid.NewGuid());
-            this.Name = name;
-            this.Email = email;
-            this.friendsList = new List<Friendship>();
-            this.Password = password;
-            this.PhoneNumber = phoneNumber;
+            Id = new UserId(Guid.NewGuid());
+            Name = name;
+            Email = email;
+            friendsList = new List<Friendship>();
+            Password = password;
+            BirthDate = birthDate;
+            PhoneNumber = phoneNumber;
             this.tags = tags;
-            this.emotionalState = new EmotionalState(Emotion.esperança);
-            this.EmotionTime = new EmotionTime(DateTime.Now);
-            this.Active = true;
+            emotionalState = new EmotionalState(Emotion.esperança);
+            EmotionTime = new EmotionTime(DateTime.Now);
+            Active = true;
         }
 
 
         public void ChangeName(Name name)
         {
-            if (!this.Active)
+            if (!Active)
             {
                 return; 
             }
             if(name == null){
                 return; //se o nome for nulo, mantém o mesmo
             }
-            this.Name = name;
+            Name = name;
         }
 
         public void ChangeEmail(Email email)
         {
-            if (!this.Active)
+            if (!Active)
             {
                 return; 
             }
@@ -108,13 +109,13 @@ namespace DDDNetCore.Domain.Users
             {
                 return; //se o email for nulo, mantém o mesmo
             }
-            this.Email = email;
+            Email = email;
         }
 
 
         public void ChangeTags(List<Tag> tags)
         {
-            if (!this.Active)
+            if (!Active)
             {
                 return; 
             }
@@ -130,7 +131,7 @@ namespace DDDNetCore.Domain.Users
             if (friendships.Count == 0) return;
             foreach (var friendship in friendships)
             {
-                if (!this.friendsList.Contains(friendship))
+                if (!friendsList.Contains(friendship))
                 {
                     AddFriendship(friendship);
                 }
@@ -139,12 +140,12 @@ namespace DDDNetCore.Domain.Users
 
         public void RemoveFriendship(Friendship friendship)
         {
-            this.friendsList.Remove(friendship);
+            friendsList.Remove(friendship);
         }
 
         public void ChangePhoneNumber(PhoneNumber phoneNumber)
         {
-            if (!this.Active)
+            if (!Active)
             {
                 return; 
             }
@@ -152,12 +153,12 @@ namespace DDDNetCore.Domain.Users
             {
                 return; //se o telefone for nulo, mantém o mesmo
             }
-            this.PhoneNumber = phoneNumber;
+            PhoneNumber = phoneNumber;
         }
 
         public void ChangeEmotionalState(EmotionalState emotionalState)
         {
-            if (!this.Active)
+            if (!Active)
             {
                 return; 
             }
@@ -168,42 +169,40 @@ namespace DDDNetCore.Domain.Users
                 return; //se o emotional state for nulo, mantém o mesmo
             } 
             this.emotionalState = emotionalState;
-            this.EmotionTime = new EmotionTime(DateTime.UtcNow);
+            EmotionTime = new EmotionTime(DateTime.UtcNow);
         }
 
 
         public void ChangePassword(Password newPassword)
         {
-            if(!this.Active) return;
+            if(!Active) return;
 
 
             if (newPassword == null)
             {
                return;
             }
-             this.Password = newPassword;
+             Password = newPassword;
         }
 
         public void MarkAsInative()
         {
-            if (this.Active)
+            if (Active)
             {
                 throw new BusinessRuleValidationException("It is not possible to delete an active user.");
             }
-            else
-            {
-                this.Active = false;
-            }
+
+            Active = false;
         }
 
         
         public void updateEmotionTime(EmotionTime time){
-            this.EmotionTime = time;
+            EmotionTime = time;
         }
 
         public void AddFriendship(Friendship friendship)
         {
-            if (this.friendsList == null)
+            if (friendsList == null)
             {
                 friendsList = new List<Friendship>();
             }
@@ -212,7 +211,7 @@ namespace DDDNetCore.Domain.Users
             {
                 throw new Exception("The friendship is invalid!");
             }
-            this.friendsList.Add(friendship);
+            friendsList.Add(friendship);
         }
 
         public override bool Equals(object obj)
@@ -222,14 +221,14 @@ namespace DDDNetCore.Domain.Users
                 return false;
             }
 
-            if (this.GetType().Name != obj.GetType().Name)
+            if (GetType().Name != obj.GetType().Name)
             {
                 return false;
             }
 
             var u = (User) obj;
 
-            if (this.Id == u.Id)
+            if (Id == u.Id)
             {
                 return true;
             }

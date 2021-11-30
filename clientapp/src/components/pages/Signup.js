@@ -85,12 +85,14 @@ export default function SignUp() {
 		);
 
 		const user = {
-			name: firstName + " " + lastName,
+			name: (firstName + " " + lastName),
 			email: email,
 			password: password,
 			phonenNumber: phoneNumber,
-			//birthDate: birthDate
-		}(async () => {
+			birthDate: birthDate.toJSON()
+		}
+		console.log(user);
+		/* (async () => {
 			const response = await fetch(
 				"https://21s5dd20socialgame.azurewebsites.net/api/Users",
 
@@ -101,9 +103,9 @@ export default function SignUp() {
 				}
 			);
 
-            const contente = await response.json();
-            console.log(contente);
-		})();
+            const content = await response.json();
+            console.log(content);
+		}) */
 	}
 
 	/*const data = new FormData(event.currentTarget);

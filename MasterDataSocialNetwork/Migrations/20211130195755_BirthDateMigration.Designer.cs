@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDDNetCore.Migrations
 {
     [DbContext(typeof(DDDNetCoreDbContext))]
-    [Migration("20211125152557_UpdateMigration")]
-    partial class UpdateMigration
+    [Migration("20211130195755_BirthDateMigration")]
+    partial class BirthDateMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,9 +34,6 @@ namespace DDDNetCore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("missionId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("requester")
                         .HasColumnType("nvarchar(max)");
 
@@ -57,9 +54,6 @@ namespace DDDNetCore.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Enabler")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MissionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TargetUser")
@@ -368,6 +362,22 @@ namespace DDDNetCore.Migrations
                                 .HasForeignKey("UserId");
                         });
 
+                    b.OwnsOne("DDDNetCore.Domain.Users.LifeDate", "BirthDate", b1 =>
+                        {
+                            b1.Property<string>("UserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<DateTime>("date")
+                                .HasColumnType("datetime2");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.OwnsOne("DDDNetCore.Domain.Users.Name", "Name", b1 =>
                         {
                             b1.Property<string>("UserId")
@@ -439,6 +449,8 @@ namespace DDDNetCore.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
                         });
+
+                    b.Navigation("BirthDate");
 
                     b.Navigation("Email");
 

@@ -53,6 +53,7 @@ namespace DDDNetCore.Controllers{
        [HttpPost]
         public async Task<ActionResult<ConnectionDto>> Create(CreatingConnectionDto dto)
         {
+            
             try
             {
                 var intro = await _service.AddAsync(dto);

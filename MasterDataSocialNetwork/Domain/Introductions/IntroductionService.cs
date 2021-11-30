@@ -37,7 +37,7 @@ namespace DDDNetCore.Domain.Introductions
             var list = await _repo.GetAllAsync();
 
             List<IntroductionDto> listDto = list.ConvertAll(intro =>
-                new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus, intro.MessageToTargetUser,
+                new IntroductionDto(intro.Id.AsGuid(), intro.decisionStatus, intro.MessageToTargetUser,
                     intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser, intro.Requester,
                     intro.Enabler, intro.TargetUser));
 
@@ -51,7 +51,7 @@ namespace DDDNetCore.Domain.Introductions
             if (intro == null)
                 return null;
 
-            return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+            return new IntroductionDto(intro.Id.AsGuid(), intro.decisionStatus,
                 intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
                 intro.Requester, intro.Enabler, intro.TargetUser);
         }
@@ -67,7 +67,7 @@ namespace DDDNetCore.Domain.Introductions
 
             await _unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(), introduction.MissionId, introduction.decisionStatus,
+            return new IntroductionDto(introduction.Id.AsGuid(), introduction.decisionStatus,
                 introduction.MessageToTargetUser, introduction.MessageToIntermediate,
                 introduction.MessageFromIntermediateToTargetUser, introduction.Requester, introduction.Enabler,
                 introduction.TargetUser);
@@ -86,7 +86,7 @@ namespace DDDNetCore.Domain.Introductions
             _repo.Remove(introduction);
             await _unitOfWork.CommitAsync();
 
-            return new IntroductionDto(introduction.Id.AsGuid(), introduction.MissionId, introduction.decisionStatus,
+            return new IntroductionDto(introduction.Id.AsGuid(),  introduction.decisionStatus,
                 introduction.MessageToTargetUser, introduction.MessageToIntermediate,
                 introduction.MessageFromIntermediateToTargetUser, introduction.Requester, introduction.Enabler,
                 introduction.TargetUser);
@@ -113,13 +113,13 @@ namespace DDDNetCore.Domain.Introductions
                     "Users might not be connected. Check friendships between them.");
             }**/
 
-            var intro = new Introduction(dto.MessageToTargetUser, dto.MessageToIntermediate, dto.MissionId,
+            var intro = new Introduction(dto.MessageToTargetUser, dto.MessageToIntermediate,
                 dto.Requester, dto.Enabler, dto.TargetUser);
 
             await _repo.AddAsync(intro);
             await _unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+            return new IntroductionDto(intro.Id.AsGuid(),  intro.decisionStatus,
                 intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
                 intro.Requester, intro.Enabler, intro.TargetUser);
         }
@@ -140,13 +140,13 @@ namespace DDDNetCore.Domain.Introductions
 
             var newIntermediateDescription = new Description("[Repassed]" + dto.MessageToIntermediate.text);
             var newTargetDescription = new Description("[Repassed]" + dto.MessageToTargetUser.text);
-            var intro = new Introduction(newTargetDescription, newIntermediateDescription, dto.MissionId,
+            var intro = new Introduction(newTargetDescription, newIntermediateDescription, 
                 new UserId(dto.Requester.Value), new UserId(dto.Enabler.Value), new UserId(dto.TargetUser.Value));
 
             await _repo.AddAsync(intro);
             //await _unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+            return new IntroductionDto(intro.Id.AsGuid(),  intro.decisionStatus,
                 intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
                 intro.Requester, intro.Enabler, intro.TargetUser);
         }
@@ -173,7 +173,7 @@ namespace DDDNetCore.Domain.Introductions
 
             await _unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+            return new IntroductionDto(intro.Id.AsGuid(),  intro.decisionStatus,
                 intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
                 intro.Requester, intro.Enabler, intro.TargetUser);
         }
@@ -188,7 +188,7 @@ namespace DDDNetCore.Domain.Introductions
             var list = await _repo.getPendentIntroductions(id);
 
             var listDto = list.ConvertAll(intro =>
-                new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus, intro.MessageToTargetUser,
+                new IntroductionDto(intro.Id.AsGuid(),  intro.decisionStatus, intro.MessageToTargetUser,
                     intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser, intro.Requester,
                     intro.Enabler, intro.TargetUser));
 
@@ -222,21 +222,21 @@ namespace DDDNetCore.Domain.Introductions
                 {
                     var newEnabler = await _repoUser.GetByIdAsync(new UserId(introPath[1]));
                     var newIntro = new CreatingIntroductionDto(intro.MessageToIntermediate, intro.MessageToTargetUser,
-                        intro.MissionId, intro.Requester, newEnabler.Id, intro.TargetUser);
+                        intro.Requester, newEnabler.Id, intro.TargetUser);
                     await AddDisconectedEnablerAsync(newIntro);
                     intro.approveIntermediate();
                 }
                 else
                 {
                     await _connectionService.AddAsync(new CreatingConnectionDto(intro.MessageToTargetUser,
-                        intro.Requester, intro.TargetUser,intro.MissionId));
+                        intro.Requester, intro.TargetUser));
                     intro.AcceptedIntroduction();
                     
                 }
                 
                 await _unitOfWork.CommitAsync();
                 
-                return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+                return new IntroductionDto(intro.Id.AsGuid(), intro.decisionStatus,
                     intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
                     intro.Requester, intro.Enabler, intro.TargetUser);
             }
@@ -286,15 +286,15 @@ namespace DDDNetCore.Domain.Introductions
                 return null;
             }
 
-            var mission = await _repoMission.GetByIdAsync(intro.MissionId);
+            //var mission = await _repoMission.GetByIdAsync(intro.MissionId);
 
             intro.declineIntermediate();
 
-            mission.UnsucessMissionStatus();
+            //mission.UnsucessMissionStatus();
 
             await _unitOfWork.CommitAsync();
 
-            return new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus,
+            return new IntroductionDto(intro.Id.AsGuid(), intro.decisionStatus,
                 intro.MessageToTargetUser, intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser,
                 intro.Requester, intro.Enabler, intro.TargetUser);
         }
@@ -304,7 +304,7 @@ namespace DDDNetCore.Domain.Introductions
             var list = await _repo.getPendentIntroductionsOnlyIntermediate(id);
 
             List<IntroductionDto> listDto = list.ConvertAll(intro =>
-                new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus, intro.MessageToTargetUser,
+                new IntroductionDto(intro.Id.AsGuid(),  intro.decisionStatus, intro.MessageToTargetUser,
                     intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser, intro.Requester,
                     intro.Enabler, intro.TargetUser));
 
@@ -316,7 +316,7 @@ namespace DDDNetCore.Domain.Introductions
             var list = await _repo.getPendentIntroductionsOnlyTargetUser(id);
 
             List<IntroductionDto> listDto = list.ConvertAll(intro =>
-                new IntroductionDto(intro.Id.AsGuid(), intro.MissionId, intro.decisionStatus, intro.MessageToTargetUser,
+                new IntroductionDto(intro.Id.AsGuid(),  intro.decisionStatus, intro.MessageToTargetUser,
                     intro.MessageToIntermediate, intro.MessageFromIntermediateToTargetUser, intro.Requester,
                     intro.Enabler, intro.TargetUser));
 

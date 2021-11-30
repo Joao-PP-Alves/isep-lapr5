@@ -18,7 +18,8 @@ namespace DDDNetCore.Controllers
         private readonly IUserService _service;
 
 
-        public UsersController(IUserService service){
+        public UsersController(IUserService service)
+        {
             _service = service;
         }
 
@@ -33,32 +34,84 @@ namespace DDDNetCore.Controllers
         [HttpGet("ByEmail/{email}")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetByEmail(string email)
         {
-            return await _service.GetByEmail(email);
+            List<UserDto> users;
+            try
+            {
+                users = await _service.GetByEmail(email);
+                if (users == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return users;
         }
 
         //GET: api/users/ByEmail/j
         [HttpGet("ByName/{name}")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetByName(string name)
         {
-            return await _service.GetByName(name);
+            List<UserDto> users;
+            try
+            {
+                users = await _service.GetByName(name);
+
+                if (users == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return users;
         }
 
         //GET: api/users/ByTags/tag1.tag2.tag3
         [HttpGet("ByTags/{tags}")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetByTags(string tags)
         {
-            return await _service.GetByTags(tags);
+            List<UserDto> users;
+            try
+            {
+                users = await _service.GetByTags(tags);
+                if (users == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return users;
         }
 
         //GET: api/Users
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetGetById(Guid id)
         {
-            var user = await _service.GetByIdAsync(new UserId(id));
-            if (user == null)
+            UserDto user;
+            try
             {
-                return NotFound();
+                user = await _service.GetByIdAsync(new UserId(id));
+                if (user == null)
+                {
+                    return NotFound();
+                }
             }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
 
             return user;
         }
@@ -66,34 +119,37 @@ namespace DDDNetCore.Controllers
         //GET: api/Users/MyFriends/(GUID)/1
         [HttpGet("MyFriends/{id}/{level}")]
         // Level is the depth of the friendships
-        public async Task<Task<Network<UserDto, FriendshipDto>>> GetMyFriends(Guid id, int level)
+        public async Task<ActionResult<Network<UserDto, FriendshipDto>>> GetMyFriends(Guid id, int level)
         {
-            var user = await _service.GetByIdAsync(new UserId(id));
-            if (user == null)
+            UserDto user;
+            Network<UserDto, FriendshipDto> net;
+            try
             {
-                return null;
+                user = await _service.GetByIdAsync(new UserId(id));
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                net = await _service.GetMyFriends(new UserId(user.Id),
+                    new Network<UserDto, FriendshipDto>(false), level);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
             }
 
-            Task<Network<UserDto, FriendshipDto>> net = _service.GetMyFriends(new UserId(user.Id),
-                new Network<UserDto, FriendshipDto>(false), level);
-            
             return net;
         }
 
 
         //GET: api/Users/GetPossibleIntroductionTargets/1/2
         [HttpGet("GetPossibleIntroductionTargets/{id}/{id2}")]
-
         public async Task<ActionResult<IEnumerable<UserDto>>> GetPossibleIntroductionTargets(Guid id, Guid id2)
         {
             var user = await _service.GetByIdAsync(new UserId(id));
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             var user2 = await _service.GetByIdAsync(new UserId(id));
-            if (user == null)
+            if (user == null || user2 == null)
             {
                 return NotFound();
             }
@@ -158,7 +214,7 @@ namespace DDDNetCore.Controllers
 
             try
             {
-                var showUser = await GetGetById(id);  //para mostrar as informações do perfil do user antes de as alterar
+                var showUser = await GetGetById(id); //para mostrar as informações do perfil do user antes de as alterar
 
                 var user = await _service.UpdateEmotionalStateAsync(dto);
 
@@ -222,23 +278,18 @@ namespace DDDNetCore.Controllers
 
             return await _service.GetFriendsSuggestionForNewUsers(new UserId(id));
         }
-        
+
         [HttpPost("NewFriendship")]
         public async Task<ActionResult<FriendshipDto>> NewFriendship(CreatingFriendshipDto dto)
         {
             try
             {
                 return await _service.NewFriendship(dto);
-                //var friendship = await _service.AddAsync(dto);
-
-                //return CreatedAtAction(nameof(GetById), new { id = friendship.Id }, friendship);
             }
-            catch(BusinessRuleValidationException ex)
+            catch (Exception ex)
             {
                 return BadRequest(new {Message = ex.Message});
             }
         }
     }
 }
-    
-    
