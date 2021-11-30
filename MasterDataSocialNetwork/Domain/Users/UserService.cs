@@ -206,8 +206,7 @@ namespace DDDNetCore.Domain.Users
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var user = new User(dto.name, dto.email, dto.friendsList, dto.password, dto.phoneNumber, dto.tags, dto.emotionalState,
-                dto.EmotionTime);
+            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.tags);
             await this._repo.AddAsync(user);
             await this._unitOfWork.CommitAsync();
           user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
