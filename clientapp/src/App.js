@@ -7,7 +7,6 @@ import {
   Redirect
 } from 'react-router-dom';
 import React from 'react';
-//import { Switch } from "react-router";
 import User from "./components/mdr/user/user";
 import CreateUser from './components/mdr/user/createUser';
 import UseAuth from "./hooks/UserAuth";
@@ -19,7 +18,7 @@ import TermsAndConditions from './components/pages/termsAndConditions';
 import PrivacyPolicy from './components/pages/privacyPolicy';
 
 import Users from './components/mdr/user/user';
-import LandingPage from './components/landing_page/LandingPage';
+import LandingPage from './components/pages/landing_page/LandingPage';
 
 import ListPendentConnections from './components/pages/connections/ListPendentConnections';
 import Dashboard from './components/pages/dashboard/Dashboard';

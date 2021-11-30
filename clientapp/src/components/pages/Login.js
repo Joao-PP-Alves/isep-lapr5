@@ -44,6 +44,10 @@ const theme = createTheme();
   const history = useHistory();
 
   const handleSubmit = (data) => {
+    //simulates logged in user
+    localStorage.setItem('loggedInUser',"0057aa5e-3a14-456c-be17-d36fafd48ec5");
+    console.log(localStorage.getItem('loggedInUser'));
+
     setMakingRequest(true);
       fetch(
         showSignUp
