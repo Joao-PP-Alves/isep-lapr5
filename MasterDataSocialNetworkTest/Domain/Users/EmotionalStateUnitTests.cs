@@ -12,7 +12,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
         [TestMethod]
 
         public void testEmotionalStateCorrect(){
-            EmotionalState emo = new EmotionalState(Emotion.anger);
+            EmotionalState emo = new EmotionalState(Emotion.esperança);
         }
 
         /*[TestMethod]

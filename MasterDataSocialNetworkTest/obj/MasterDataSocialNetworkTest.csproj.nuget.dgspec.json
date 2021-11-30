@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj": {}
+    "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj": {
+    "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+        "projectUniqueName": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
         "projectName": "MasterDataSocialNetworkTest",
-        "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
-        "packagesPath": "C:\\Users\\Davide\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
+        "projectPath": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+        "packagesPath": "C:\\Users\\Sara Borges\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Davide\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Sara Borges\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -26,8 +26,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
-                "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
+              "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
+                "projectPath": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
               }
             }
           }
@@ -82,17 +82,17 @@
         }
       }
     },
-    "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
+    "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj",
+        "projectUniqueName": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj",
         "projectName": "DDDNetCore",
-        "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj",
-        "packagesPath": "C:\\Users\\Davide\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\obj\\",
+        "projectPath": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj",
+        "packagesPath": "C:\\Users\\Sara Borges\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetwork\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Davide\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Sara Borges\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
