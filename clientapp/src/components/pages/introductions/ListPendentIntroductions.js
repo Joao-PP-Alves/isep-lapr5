@@ -27,6 +27,7 @@ import Links from "../../Links";
 import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
+import { DataGrid } from "@mui/x-data-grid";
 
 function Copyright(props) {
   return (
@@ -40,6 +41,38 @@ function Copyright(props) {
     </Typography>
   );
 }
+
+
+const rows = [
+	{ id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
+	{ id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
+	{ id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
+	{ id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
+	{ id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
+	{ id: 6, lastName: "Melisandre", firstName: null, age: 150 },
+	{ id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
+	{ id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
+	{ id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+];
+
+
+const columns = [
+	{ field: "id", headerName: "ID", width: 70 },
+	{ field: "firstName", headerName: "First name", width: 130 },
+	{ field: "description", headerName: "Description", width: 130 },
+	{
+		description: "This column has a value getter and is not sortable.",
+		sortable: false,
+		width: 160,
+		valueGetter: (params) =>
+			`${params.getValue(params.id, "firstName") || ""} ${
+				params.getValue(params.id, "lastName") || ""
+			}`,
+	},
+];
+
+
+
 
 const drawerWidth = 240;
 
@@ -241,14 +274,14 @@ function EditProfileContent() {
   };
 
   useEffect(() => {
-    search();
+    //search();
   }, []);
 
   const [searchedVS, setSearchedVS] = useState([]);
 
-  function search() {
+function search() {
     fetchPendentIntroductions();
-  }
+  } 
 
   const fetchPendentIntroductions= async () => {
 
@@ -278,7 +311,10 @@ function EditProfileContent() {
 
   // push the information from sample to rows
 
-  const rows = [];
+  const rows = [
+    {id: "1", firstName: "Davide", description: "ola"},
+    {id: "2", firstName: "Sara", description: "ola"}
+  ];
 
   for (let i = 0; i < searchedVS.length; i += 1) {
     rows.push(createData(i, ...sample[i]));
@@ -322,20 +358,6 @@ function EditProfileContent() {
 								<AccountCircleTwoToneIcon />
 							</Badge>
 						</IconButton>
-						<Button
-							href="/"
-							variant="outlined"
-							sx={{
-								mr: 5,
-								my: 1,
-								mx: 1.5,
-								color: "#f2f1f0",
-								fontWeight: "bold",
-								fontfamily: "Merriweather Sans",
-							}}
-						>
-							Logout
-						</Button>
 					</Toolbar>
 				</AppBar>
 				<Drawer variant="permanent" open={open}>
@@ -380,26 +402,12 @@ function EditProfileContent() {
 									width: 1150,
 								}}
 							>
-								<VirtualizedTable
-									rowCount={rows.length}
-									rowGetter={({ index }) => rows[index]}
-									columns={[
-										{
-											width: 400,
-											label: "ID",
-											dataKey: "id",
-										},
-										{
-											width: 400,
-											label: "Requester ID",
-											dataKey: "requester",
-										},
-										{
-											width: 700,
-											label: "Description   ",
-											dataKey: "description",
-										},
-									]}
+								<DataGrid
+									rows={rows}
+									columns={columns}
+									pageSize={5}
+									rowsPerPageOptions={[5]}
+									checkboxSelection
 								/>
 							</Paper>
 						</Grid>
