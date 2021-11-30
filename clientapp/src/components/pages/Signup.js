@@ -78,7 +78,7 @@ export default function SignUp() {
 			email,
 			"Password:",
 			password,
-			"PhoneNumebr:",
+			"PhoneNumber:",
 			phoneNumber,
 			"BirthDate",
 			birthDate
