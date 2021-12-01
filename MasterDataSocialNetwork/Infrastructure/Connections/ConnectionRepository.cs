@@ -6,6 +6,7 @@ using DDDNetCore.Domain.Connections;
 using Microsoft.EntityFrameworkCore;
 using DDDNetCore.Infrastructure.Shared;
 using DDDNetCore.Domain.Users;
+using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Infrastructure.Connections
 {
@@ -17,7 +18,8 @@ namespace DDDNetCore.Infrastructure.Connections
         }
 
         public async Task<List<Connection>> getPendentConnections(UserId id){
-            return await ((DbSet<Connection>)base.getContext()).Where(x => id.Equals(x.targetUser)).ToListAsync();
+            return await ((DbSet<Connection>)base.getContext()).Where(x => (id.Equals(x.targetUser) 
+            && x.decision.Equals(Decision.PENDING))).ToListAsync();
         }
     }
 }
