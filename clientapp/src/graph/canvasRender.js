@@ -9,7 +9,7 @@ function loadImage(url) {
     });
 }
 
-export default async function renderToCanvas({
+export default async function canvasRender({
     canvas,
     width,
     height,

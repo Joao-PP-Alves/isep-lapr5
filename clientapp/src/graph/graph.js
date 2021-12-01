@@ -1,4 +1,4 @@
-import React, { createRef, useEffect } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import * as THREE from 'three';
 
 export default function Graph() {
@@ -21,14 +21,14 @@ export default function Graph() {
     const [requesterName, setRequesterName] = useState("");
     const [requesterEmail, setRequesterEmail] = useState("");
 
-    const fetchUser = async (requesterId) => {
+    const fetchAllUser = async () => {
         const requesterData = axios.get(
-            Links.MDR_URL() + "/api/users/" + requesterId
-        ).then((response2) => {
-            const requesterObj = response2.data;
-            setRequesterName(requesterObj.name.text);
-            setRequesterEmail(requesterObj.email.emailAddress);
-        });
+            Links.MDR_URL() + "/api/users/")
+            .then((response2) => {
+                const requesterObj = response2.data;
+                setRequesterName(requesterObj.name.text);
+                setRequesterEmail(requesterObj.email.emailAddress);
+            });
 
     };
 
@@ -54,7 +54,7 @@ export default function Graph() {
         rows.push(createData(...users[i]));
     }
 
-    //const root = data.find(());
+    //const root = data.find(('info.json'));
 
     initializeScene(scene, camera, renderer, this);
 
