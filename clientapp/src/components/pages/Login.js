@@ -45,7 +45,7 @@ const theme = createTheme();
 
   const handleSubmit = (data) => {
     //simulates logged in user
-    localStorage.setItem('loggedInUser',"0057aa5e-3a14-456c-be17-d36fafd48ec5");
+    localStorage.setItem('loggedInUser',"be31c3c0-7b0f-4985-ba66-ebe1fb9ca60b");
     console.log(localStorage.getItem('loggedInUser'));
 
     setMakingRequest(true);
