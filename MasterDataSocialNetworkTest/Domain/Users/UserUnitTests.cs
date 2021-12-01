@@ -15,7 +15,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users {
          public void setup(){
             var list  = new List<Tag>();
             list.Add(new Tag("tag1"));
-            user = new User(new Name("Joao"), new Email("email@gmail.com"),new Password(), new PhoneNumber("911197791"), list );
+            user = new User(new Name("Joao"), new Email("email@gmail.com"),new Password(), new PhoneNumber("911197791"), new LifeDate(),list );
 
         }
 

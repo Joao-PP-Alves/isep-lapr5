@@ -33,7 +33,7 @@ namespace MasterDataSocialNetworkTest.Controllers{
 
         [TestMethod]
         public void GetByIdTest(){
-            IntroductionDto introDto = new IntroductionDto(Guid.NewGuid(),null,IntroductionStatus.PENDING_APPROVAL,null,null,null,null,null,null);
+            IntroductionDto introDto = new IntroductionDto(Guid.NewGuid(),IntroductionStatus.PENDING_APPROVAL,null,null,null,null,null,null);
             service.Setup(p => p.GetByIdAsync(new IntroductionId(introDto.Id))).ReturnsAsync(introDto);
             Task<ActionResult<IntroductionDto>> result = controller.GetById(introDto.Id);
             Assert.AreEqual(result.Result.Value.Id,introDto.Id);

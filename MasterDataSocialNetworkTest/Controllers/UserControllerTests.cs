@@ -38,7 +38,7 @@ namespace MasterDataSocialNetworkTest.Controllers{
 
         [TestMethod]
         public void GetByIdTest(){
-            UserDto userDto = new UserDto(Guid.NewGuid(),null,null,null,null,null,null,null);
+            UserDto userDto = new UserDto(Guid.NewGuid(),null,null,null,null,null,null,null,null);
             service.Setup(p => p.GetByIdAsync(new UserId(userDto.Id))).ReturnsAsync(userDto);
             Task<ActionResult<UserDto>> result = controller.GetGetById(userDto.Id);
             Assert.AreEqual(userDto.Id,result.Result.Value.Id);
@@ -46,7 +46,7 @@ namespace MasterDataSocialNetworkTest.Controllers{
 
         [TestMethod]
         public void GetByNameTest(){
-            UserDto userDto = new UserDto(Guid.NewGuid(),null,null,null,null,null,null,null);
+            UserDto userDto = new UserDto(Guid.NewGuid(),null,null,null,null,null,null,null,null);
             List<UserDto> list = new List<UserDto>();
             list.Add(userDto);
             service.Setup(p => p.GetByName("str")).ReturnsAsync(list);
@@ -57,7 +57,7 @@ namespace MasterDataSocialNetworkTest.Controllers{
 
         [TestMethod]
         public void GetByEmailTest(){
-            UserDto userDto = new UserDto(Guid.NewGuid(),null,null,null,null,null,null,null);
+            UserDto userDto = new UserDto(Guid.NewGuid(),null,null,null,null,null,null,null,null);
             List<UserDto> list = new List<UserDto>();
             list.Add(userDto);
             service.Setup(p => p.GetByEmail("str@gmail.com")).ReturnsAsync(list);

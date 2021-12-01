@@ -68,8 +68,8 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
         [TestMethod]
         public void GetAllTest()
         {
-            Introduction intro = new Introduction(null, null, null, null, null, null);
-            Introduction intro2 = new Introduction(null, null, null, null, null, null);
+            Introduction intro = new Introduction(null, null, 0, null, null, null);
+            Introduction intro2 = new Introduction(null, null, 0, null, null, null);
             List<Introduction> list = new List<Introduction>();
             list.Add(intro);
             list.Add(intro2);
@@ -89,7 +89,7 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
         [TestMethod]
         public void GetByIdTest()
         {
-            Introduction intro = new Introduction(null, null, null, null, null, null);
+            Introduction intro = new Introduction(null, null, 0, null, null, null);
             repo.Setup(p => p.GetByIdAsync(intro.Id)).ReturnsAsync(intro);
             Task<IntroductionDto> task = service.GetByIdAsync(intro.Id);
             Assert.AreEqual(intro.Id, new IntroductionId(task.Result.Id));
@@ -99,7 +99,7 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
         public void GetPendentIntroductionsTest()
         {
             User user = new User();
-            Introduction intro = new Introduction(null, null, null, null, null, null);
+            Introduction intro = new Introduction(null, null, 0, null, null, null);
             List<Introduction> list = new List<Introduction>();
             list.Add(intro);
             repo.Setup(p => p.getPendentIntroductions(user.Id)).ReturnsAsync(list);
@@ -119,7 +119,7 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
         public void GetPendentIntroductionsOnlyIntermediateTest()
         {
             User user = new User();
-            Introduction intro = new Introduction(null, null, null, null, null, null);
+            Introduction intro = new Introduction(null, null, 0, null, null, null);
             List<Introduction> list = new List<Introduction>();
             list.Add(intro);
             repo.Setup(p => p.getPendentIntroductionsOnlyIntermediate(user.Id)).ReturnsAsync(list);
@@ -139,7 +139,7 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
         public void GetPendentIntroductionsOnlyTargetUserTest()
         {
             User user = new User();
-            Introduction intro = new Introduction(null, null, null, null, null, null);
+            Introduction intro = new Introduction(null, null, 0, null, null, null);
             List<Introduction> list = new List<Introduction>();
             list.Add(intro);
             repo.Setup(p => p.getPendentIntroductionsOnlyTargetUser(user.Id)).ReturnsAsync(list);
@@ -158,7 +158,7 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
         [TestMethod]
         public void ApproveIntrocutionTest()
         {
-            Introduction intro = new Introduction(new Description(""), new Description(""), new MissionId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new UserId("e3a9a97d-8f77-4fc3-8bb5-339942b8a77c"), new UserId("fbc61980-9643-4134-8441-344e9e5ba0b0"), new UserId("d126ffe1-54b4-4438-9de3-8b3beb64c351"));
+            Introduction intro = new Introduction(new Description(""), new Description(""), new UserId("e3a9a97d-8f77-4fc3-8bb5-339942b8a77c"), new UserId("fbc61980-9643-4134-8441-344e9e5ba0b0"), new UserId("d126ffe1-54b4-4438-9de3-8b3beb64c351"));
             repo.Setup(p => p.GetByIdAsync(null)).ReturnsAsync(intro);
             Task<IntroductionDto> task = service.GetByIdAsync(intro.Id);
             Mission mission = new Mission(new UserId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new DificultyDegree(Level.level2));
@@ -179,7 +179,7 @@ namespace MasterDataSocialNetworkTest.Domain.Introductions
 
         public void ReproveIntroductionTest()
         {
-            Introduction intro = new Introduction(null, null, null, null, null, null);
+            Introduction intro = new Introduction(null, null, 0, null, null, null);
             repo.Setup(p => p.GetByIdAsync(intro.Id)).ReturnsAsync(intro);
             Task<IntroductionDto> task = service.GetByIdAsync(intro.Id);
             Mission mission = new Mission(new UserId("62e83a19-b68e-4532-bb6d-bba4eb6b05d5"), new DificultyDegree(Level.level2));

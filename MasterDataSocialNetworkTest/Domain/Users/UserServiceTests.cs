@@ -48,7 +48,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users
         [TestMethod]
         public void GetAllTest()
         {
-            User user = new User(null, null, null, null, null, null, new EmotionTime(DateTime.UtcNow));
+            User user = new User(null, null, null, null, null, null);
             List<User> list = new List<User>();
             list.Add(user);
             repo.Setup(p => p.GetAllAsync()).ReturnsAsync(list);
@@ -59,7 +59,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users
         [TestMethod]
         public void GetByIdTest()
         {
-            User user = new User(null, null, null, null, null, null, new EmotionTime(DateTime.UtcNow));
+            User user = new User(null, null, null, null, null, null);
             repo.Setup(p => p.GetByIdAsync(user.Id)).ReturnsAsync(user);
             Task<UserDto> task = service.GetByIdAsync(user.Id);
             Assert.AreEqual(user.Id, new UserId(task.Result.Id));
@@ -69,7 +69,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users
         [TestMethod]
         public void GetByEmailTest()
         {
-            User user = new User(null, null, null, null, null, null, new EmotionTime(DateTime.UtcNow));
+            User user = new User(null, null, null, null, null, null);
             List<User> list = new List<User>();
             list.Add(user);
             repo.Setup(p => p.GetByEmail("email@gmail.com")).ReturnsAsync(list);
@@ -80,7 +80,7 @@ namespace MasterDataSocialNetworkTest.Domain.Users
         [TestMethod]
         public void GetByNameTest()
         {
-            User user = new User(null, null, null, null, null, null, new EmotionTime(DateTime.UtcNow));
+            User user = new User(null, null, null, null, null, null);
             List<User> list = new List<User>();
             list.Add(user);
             repo.Setup(p => p.GetByName("name")).ReturnsAsync(list);
