@@ -18,7 +18,8 @@ import { FormCheck } from "react-bootstrap";
 import { useState } from "react";
 import PrivacyPolicy from "./privacyPolicy";
 import LogIn from "./Login";
-import axios from "axios";
+import Chip from "@mui/material/Chip";
+import Autocomplete from "@mui/material/Autocomplete";
 
 function Copyright(props) {
 	return (
@@ -45,23 +46,24 @@ export default function SignUp() {
 	const [value, setValue] = React.useState(new Date());
 	const [makingRequest, setMakingRequest] = useState(false);
 
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [phoneNumber, setPhoneNumber] = useState("");
-	const [birthDate, setBirthDate] = useState(new Date());
+	const [input_email, setEmail] = useState("");
+	const [input_password, setPassword] = useState("");
+	const [input_firstName, setFirstName] = useState("");
+	const [input_lastName, setLastName] = useState("");
+	const [input_phoneNumber, setPhoneNumber] = useState("");
+	const [input_birthDate, setBirthDate] = useState(new Date());
+	const [input_tags, setTags] = useState([]);
 	const [checked, setChecked] = React.useState([true, false]);
 	const [setState] = useState("");
 
 	function validateForm() {
 		return (
-			email.length > 0 &&
-			password.length > 0 &&
-			firstName.length > 0 &&
-			lastName.length > 0 &&
-			phoneNumber.length > 0 &&
-			birthDate.length > 0 &&
+			input_email.length > 0 &&
+			input_password.length > 0 &&
+			input_firstName.length > 0 &&
+			input_lastName.length > 0 &&
+			input_phoneNumber.length > 0 &&
+			input_birthDate.length > 0 &&
 			checked
 		);
 	}
@@ -71,53 +73,87 @@ export default function SignUp() {
 
 		console.log(
 			"FirstName:",
-			firstName,
+			input_firstName,
 			"LastName:",
-			lastName,
+			input_lastName,
 			"Email:",
-			email,
+			input_email,
 			"Password:",
-			password,
+			input_password,
 			"PhoneNumber:",
-			phoneNumber,
+			input_phoneNumber,
 			"BirthDate",
-			birthDate
+			input_birthDate
 		);
 
+		const user_name = {
+			text: input_firstName + " " + input_lastName,
+		};
+
+		const user_email = {
+			emailAddress: input_email,
+		};
+
+		const user_password = {
+			value: input_password,
+		};
+
+		const user_phoneNumber = {
+			number: input_phoneNumber,
+		};
+
+		const user_birthDate = {
+			date: input_birthDate.toJSON(),
+		};
+
+		const user_tag = {
+			name: input_tags,
+		};
+
 		const user = {
-			name: (firstName + " " + lastName),
-			email: email,
-			password: password,
-			phonenNumber: phoneNumber,
-			birthDate: birthDate.toJSON()
+			name: user_name,
+			email: user_email,
+			password: user_password,
+			tags: [user_tag],
+			phonenNumber: user_phoneNumber,
+			birthDate: user_birthDate,
+		};
+		console.log(JSON.stringify(user));
+
+		const response = fetch(
+			"https://21s5dd20socialgame.azurewebsites.net/api/Users",
+
+			{
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(user),
+			}
+		)
+			.then((response) => response.json())
+			.then((json) => console.log(json));
+
+		if (!response.ok) {
+			setMakingRequest(false);
+			return null;
+		} else {
+			console.log("User created!");
 		}
-		console.log(user);
-		/* (async () => {
-			const response = await fetch(
-				"https://21s5dd20socialgame.azurewebsites.net/api/Users",
-
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(user),
-				}
-			);
-
-            const content = await response.json();
-            console.log(content);
-		}) */
 	}
 
-	/*const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        /*console.log({
-            firstName: data.get("firstName"),
-            lastName: data.get("lastName"),
-            birthDate: data.get("birthDate"),
-            phoneNumber: data.get("phoneNumber"),
-            email: data.get("email"),
-            password: data.get("password"),
-        });*/
+	const handleDelete = (chipToDelete) => () => {
+		console.log(input_tags);
+		const index = input_tags.indexOf(chipToDelete);
+		if (index > -1) {
+			input_tags.splice(index, 1);
+		}
+		console.log(input_tags);
+	};
+
+	const handleAddChip = (chip) => {
+		console.log(input_tags);
+		input_tags.push(chip);
+		console.log(input_tags);
+	};
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -155,7 +191,7 @@ export default function SignUp() {
 											id="firstName"
 											label="First Name"
 											autoFocus
-											value={firstName}
+											value={input_firstName}
 											onChange={(e) => setFirstName(e.target.value)}
 										/>
 									</Grid>
@@ -167,19 +203,20 @@ export default function SignUp() {
 											label="Last Name"
 											name="lastName"
 											autoComplete="family-name"
-											value={lastName}
+											value={input_lastName}
 											onChange={(e) => setLastName(e.target.value)}
 										/>
 									</Grid>
+
 									<Grid item xs={12} sm={6}>
 										<DesktopDatePicker
 											label="Birth date"
 											inputFormat="dd/MM/yyyy"
-											value={birthDate}
+											value={input_birthDate}
 											/* onChange={handleChange} */
 											onChange={(e) => setBirthDate(e.target.value)}
 											renderInput={(params) => <TextField {...params} />}
-											value={birthDate}
+											value={input_birthDate}
 											onChange={(e) => setBirthDate(e.target.value)}
 										/>
 									</Grid>
@@ -192,10 +229,41 @@ export default function SignUp() {
 											label="Phone number"
 											name="phoneNumber"
 											autoComplete="phone-number"
-											value={phoneNumber}
+											value={input_phoneNumber}
 											onChange={(e) => setPhoneNumber(e.target.value)}
 										/>
 									</Grid>
+
+									<Grid item xs={12}>
+										<Autocomplete
+											multiple
+											id="tags-filled"
+											options={savedTags.map((option) => option.name)}
+											//defaultValue={[savedTags[0].name]}
+											freeSolo
+											
+											renderTags={(value, getTagProps) =>
+												value.map((option, index) => (
+													
+													<Chip
+														variant="outlined"
+														label={option}
+														onDelete={handleDelete(option)}
+														{...getTagProps({ index })}
+													/>
+												))
+											}
+											renderInput={(params) => (
+												<TextField
+													{...params}
+													variant="filled"
+													label="Tags"
+													placeholder="What interests you?"
+												/>
+											)}
+										/>
+									</Grid>
+
 									<Grid item xs={12}>
 										<TextField
 											required
@@ -204,7 +272,7 @@ export default function SignUp() {
 											label="Email Address"
 											name="email"
 											autoComplete="email"
-											value={email}
+											value={input_email}
 											onChange={(e) => setEmail(e.target.value)}
 										/>
 									</Grid>
@@ -217,7 +285,7 @@ export default function SignUp() {
 											type="password"
 											id="password"
 											autoComplete="new-password"
-											value={password}
+											value={input_password}
 											onChange={(e) => setPassword(e.target.value)}
 										/>
 									</Grid>
@@ -271,3 +339,9 @@ export default function SignUp() {
 		</LocalizationProvider>
 	);
 }
+
+const savedTags = [
+	{ name: "isep" },
+	{ name: "react" },
+	{ name: "informática" },
+];

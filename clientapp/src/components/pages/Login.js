@@ -50,15 +50,7 @@ const theme = createTheme();
 
     setMakingRequest(true);
       fetch(
-        showSignUp
-          ? "https://localhost:5001/api/Users"
-          : "https://localhost:5001/api/Users/login",
-          {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            //convert react to json and send post method's body
-            body: JSON.stringify(data),
-          }
+       "https://21s5dd20socialgame.azurewebsites.net/api/Users"
       ).then((response) => {
         console.log(response.status);
         if(!response.ok) {

@@ -202,25 +202,7 @@ function DashboardContent() {
 									<EditIcon />
 									Logout
 								</Button>
-								<Button href="/" disableRipple>
-									<FileCopyIcon />
-									Delete Account
-								</Button>
 							</StyledMenu>
-							<Button
-								href="/"
-								variant="outlined"
-								sx={{
-									mr: 5,
-									my: 1,
-									mx: 1.5,
-									color: "#f2f1f0",
-									fontWeight: "bold",
-									fontfamily: "Merriweather Sans",
-								}}
-							>
-								Logout
-							</Button>
 						</Toolbar>
 					</AppBar>
 					<Drawer variant="permanent" open={open}>

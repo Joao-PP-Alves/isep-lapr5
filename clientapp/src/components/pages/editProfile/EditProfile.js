@@ -235,10 +235,6 @@ function EditProfileContent() {
 								<EditIcon />
 								Logout
 							</Button>
-							<Button href="/" disableRipple>
-								<FileCopyIcon />
-								Delete Account
-							</Button>
 						</StyledMenu>
 					</Toolbar>
 				</AppBar>
