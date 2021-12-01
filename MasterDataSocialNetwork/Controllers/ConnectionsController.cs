@@ -56,9 +56,9 @@ namespace DDDNetCore.Controllers{
             
             try
             {
-                var intro = await _service.AddAsync(dto);
+                var connection = await _service.AddAsync(dto);
 
-                return CreatedAtAction(nameof(GetById), new { id = intro.id }, intro);
+                return CreatedAtAction(nameof(GetById), new { id = connection.id }, connection);
             }
             catch(BusinessRuleValidationException ex)
             {
