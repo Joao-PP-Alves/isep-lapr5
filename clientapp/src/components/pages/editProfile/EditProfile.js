@@ -29,6 +29,12 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import Landing from "../landing_page/LandingPage";
+import axios from 'axios'; 
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import FormHelperText from "@mui/material/FormHelperText";
+
 
 function Copyright(props) {
   return (
@@ -107,49 +113,6 @@ const StyledMenu = styled((props) => (
 }));
 
 
-const StyledMenu2 = styled((props) => (
-	<Menu
-		elevation={0}
-		anchorOrigin={{
-			vertical: "bottom",
-			horizontal: "right",
-		}}
-		transformOrigin={{
-			vertical: "top",
-			horizontal: "right",
-		}}
-		{...props}
-	/>
-))(({ theme }) => ({
-	"& .MuiPaper-root": {
-		borderRadius: 6,
-		marginTop: theme.spacing(1),
-		minWidth: 180,
-		color:
-			theme.palette.mode === "light"
-				? "rgb(55, 65, 81)"
-				: theme.palette.grey[300],
-		boxShadow:
-			"rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
-		"& .MuiMenu-list": {
-			padding: "4px 0",
-		},
-		"& .MuiMenuItem-root": {
-			"& .MuiSvgIcon-root": {
-				fontSize: 18,
-				color: theme.palette.text.secondary,
-				marginRight: theme.spacing(1.5),
-			},
-			"&:active": {
-				backgroundColor: alpha(
-					theme.palette.primary.main,
-					theme.palette.action.selectedOpacity
-				),
-			},
-		},
-	},
-}));
-
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
@@ -182,18 +145,38 @@ function EditProfileContent() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
 	const [setOpen] = React.useState(true);
+	const [emotion, setEmotion] = React.useState('');
+
+	const handleEmotionChange = (event) => {
+		setEmotion(event.target.value);
+	};
+	
 	const toggleDrawer = () => {
 		setOpen(!open);
 	};
-const handleClick = (event) => {
+
+	const handleClick = (event) => {
 	setAnchorEl(event.currentTarget);
-};
-const handleClose = () => {
+	};
+
+	const handleClose = () => {
 	setAnchorEl(null);
-};
-const showEmotions = () => {
+	};
+
+	const showEmotions = () => {
 	/* fazer fetch das emoçoes */
-}
+	};
+
+	const handleSave = () => {
+		const article = { title: "React PUT Request Example" };
+			axios
+			.put(
+				"https://21s5dd20socialgame.azurewebsites.net/api/User/0057aa5e-3a14-456c-be17-d36fafd48ec5",
+				article
+			)
+		.	then((response) => this.setState({ updatedAt: response.data.updatedAt }));
+
+	}
 
   return (
 		<ThemeProvider theme={mdTheme}>
@@ -233,7 +216,6 @@ const showEmotions = () => {
 							aria-haspopup="true"
 							aria-expanded={open ? "true" : undefined}
 							variant="contained"
-							disableElevation
 							onClick={handleClick}
 						>
 							<Badge badgeContent={4} color="secondary">
@@ -304,7 +286,7 @@ const showEmotions = () => {
 								}}
 							>
 								<Typography component="h1" variant="h5">
-									Register new account
+									Edit profile
 								</Typography>
 								<Box component="form" sx={{ mt: 3 }}>
 									<Grid container spacing={2}>
@@ -329,38 +311,27 @@ const showEmotions = () => {
 										</Grid>
 
 										<Grid item xs={12} sm={6}>
-											<Grid item xs={12} sm={6}>
-												<TextField
-													fullWidth
-													id="emotionalState"
+											<FormControl sx={{ minWidth: 80 }}>
+												<InputLabel id="demo-simple-select-autowidth-label">
+													Emotional State
+												</InputLabel>
+												<Select
+													labelId="demo-simple-select-autowidth-label"
+													id="demo-simple-select-autowidth"
+													value={emotion}
+													onChange={handleEmotionChange}
+													autoWidth
 													label="Emotional State"
-													name="emotionalState"
-													autoComplete="emotional-state"
-												/>
-											</Grid>
-											<Button
-												color="inherit"
-												id="emotionsButton"
-												aria-controls="emotionsButton"
-												aria-haspopup="true"
-												aria-expanded={open ? "true" : undefined}
-												variant="contained"
-												disableElevation
-												onClick={showEmotions}
-											>
-												Emotions
-											</Button>
-											{/* <StyledMenu2
-												id="emotionsbutton"
-												MenuListProps={{
-													"aria-labelledby": "emotionsbutton",
-												}}
-												anchorEl={anchorEl}
-												open={open}
-												onClose={handleClose}
-											>
-												
-											</StyledMenu2> */}
+												>
+													<MenuItem value="">
+														<em>None</em>
+													</MenuItem>
+													<MenuItem value={10}>Twenty</MenuItem>
+													<MenuItem value={21}>Twenty one</MenuItem>
+													<MenuItem value={22}>Twenty one and a half</MenuItem>
+												</Select>
+												<FormHelperText>Tell me how are you feeling.</FormHelperText>
+											</FormControl>
 										</Grid>
 										<Grid item xs={12} sm={6}>
 											<TextField
@@ -392,43 +363,44 @@ const showEmotions = () => {
 												autoComplete="confirm-password"
 											/>
 										</Grid>
-									</Grid>
-
-									<Grid item xs={12} sm={6}>
-										<Button
-											type="save"
-											width="500"
-											variant="contained"
-											sx={{
-												p: 2,
-												display: "flex",
-												flexDirection: "column",
-												height: 2,
-												width: 500,
-												my: 5,
-											}}
-											xs={12}
-										>
-											Save Changes
-										</Button>
-									</Grid>
-									<Grid item xs={12} sm={6}>
-										<Button
-											type="save"
-											width="500"
-											variant="contained"
-											sx={{
-												p: 2,
-												display: "flex",
-												flexDirection: "column",
-												height: 2,
-												width: 500,
-												my: 5,
-											}}
-											xs={12}
-										>
-											Discard
-										</Button>
+										<Grid item xs={12} sm={6}>
+											<Button
+												type="save"
+												width="500"
+												variant="contained"
+												sx={{
+													p: 2,
+													display: "flex",
+													flexDirection: "column",
+													height: 2,
+													width: 500,
+													my: 5,
+												}}
+												xs={12}
+												onClick={handleSave}
+											>
+												Save Changes
+											</Button>
+										</Grid>
+										<Grid item xs={12} sm={6}>
+											<Button
+												type="discard"
+												width="500"
+												variant="contained"
+												sx={{
+													p: 2,
+													display: "flex",
+													flexDirection: "column",
+													height: 2,
+													width: 500,
+													my: 5,
+												}}
+												xs={12}
+												href="/editProfile"
+											>
+												Discard
+											</Button>
+										</Grid>
 									</Grid>
 								</Box>
 							</Paper>

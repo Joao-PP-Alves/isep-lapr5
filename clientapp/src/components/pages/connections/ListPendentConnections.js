@@ -25,6 +25,7 @@ import { withStyles } from '@mui/styles';
 import clsx from 'clsx';
 import Links from "../../Links";
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 
 
@@ -239,9 +240,6 @@ function ListPendentConnectionsContent() {
   //get logged user
   const userId = localStorage.getItem('loggedInUser');
 
-  console.log(userId);  
-
-
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -268,18 +266,32 @@ function ListPendentConnectionsContent() {
 
   };
 
+  const [requesterName, setRequesterName] = useState("");
+  const [requesterEmail, setRequesterEmail] = useState("");
+
+  const fetchUser= async (requesterId) => {
+    const requesterData = axios.get(
+      Links.MDR_URL() + "/api/users/" + requesterId
+    ).then((response2) => {
+      const requesterObj = response2.data;
+      setRequesterName(requesterObj.name.text);
+      setRequesterEmail(requesterObj.email.emailAddress);
+    });
+
+  };
+
   // transform json array to array sample[]
 
   let sample = [];
 
   for (var i = 0; i < searchedVS.length; i++){
     var obj = searchedVS[i];
-    console.log(obj);
-    sample.push([obj.id,obj.requester.value,obj.description.text]);
+    fetchUser(obj.requester.value);
+    sample.push([obj.id,requesterName,requesterEmail,obj.description.text]);
   }
 
-  function createData(number, id, requester, description) {
-    return { number, id, requester, description };
+  function createData( id, requester,requester_email, description) {
+    return { id, requester,requester_email, description };
   }
 
   // push the information from sample to rows
@@ -287,7 +299,7 @@ function ListPendentConnectionsContent() {
   const rows = [];
 
   for (let i = 0; i < searchedVS.length; i += 1) {
-    rows.push(createData(i, ...sample[i]));
+    rows.push(createData(...sample[i]));
   }
 
   //TODO ia aqui!
@@ -377,14 +389,14 @@ function ListPendentConnectionsContent() {
           rowGetter={({ index }) => rows[index]}
           columns={[
             {
-              width: 400,
-              label: 'ID',
-              dataKey: 'id',
+              width: 300,
+              label: 'Requester Name',
+              dataKey: 'requester'
             },
             {
-              width: 400,
-              label: 'Requester ID',
-              dataKey: 'requester'
+              width: 300,
+              label: 'Requester Email',
+              dataKey: 'requester_email'
             },
             {
               width: 700,
