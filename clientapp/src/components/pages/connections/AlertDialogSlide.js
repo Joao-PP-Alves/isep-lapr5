@@ -32,7 +32,7 @@ export default function AlertDialogSlide({connectionId,render}) {
 
   const handleDecline = async () => {
     const requesterData = await axios.put(
-        Links.MDR_URL() + "/api/connections/decline/" + connectionId
+        Links.MDR_URL() + "/api/connections/decline/" + connectionId.id
       );
       handleClose();
       alert("Connection Declined!");
