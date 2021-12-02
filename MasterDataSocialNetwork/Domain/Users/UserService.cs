@@ -372,9 +372,37 @@ namespace DDDNetCore.Domain.Users
                 friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
         }
 
-        public Task<Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>>> MyPerspective(UserId userId, int param)
+        public async Task<Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>>> MyPerspective(UserId userId, int param)
         {
-            throw new NotImplementedException();
+            var user = await _repo.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("The provider user does not exist");
+            }
+
+            List<UserPerspectiveDto> keys = new List<UserPerspectiveDto>();
+            List<UserPerspectiveDto> values = new List<UserPerspectiveDto>();
+            keys.Add(new UserPerspectiveDto(user.Id.AsString(),user.Name,null,"0","0"));
+            Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>> toReturn =
+                new Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>>(keys, values);
+            recursivo(param, toReturn);
+            return toReturn;
+        }
+
+        public Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>> recursivo(int param,
+            Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>> toReturn)
+        {
+            if (param == 0)
+            {
+                return toReturn;
+            }
+            else
+            {
+                //TODO
+                recursivo(param-1,toReturn);
+            }
+
+            return null;
         }
 
         /// <summary>

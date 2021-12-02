@@ -6,18 +6,18 @@ namespace DDDNetCore.Domain.Services.DTO
 {
     public class UserPerspectiveDto
     {
-        public Guid userId {get;set;}
+        public String userId {get;set;}
 
         public Name userName {get;set;}
         
-        public Guid parentId { get; set; }
+        public String parentId { get; set; }
         
-        public ConnectionStrength connectionStrength { get; set; }
+        public String connectionStrength { get; set; }
         
-        public RelationshipStrength relationshipStrength { get; set; }
+        public String relationshipStrength { get; set; }
 
-        public UserPerspectiveDto(Guid userId, Name userName, Guid parentId, ConnectionStrength connectionStrength,
-            RelationshipStrength relationshipStrength)
+        public UserPerspectiveDto(String userId, Name userName, String parentId, String connectionStrength,
+            String relationshipStrength)
         {
             this.userId = userId;
             this.userName = userName;
