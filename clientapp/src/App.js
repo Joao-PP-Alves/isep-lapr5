@@ -59,7 +59,6 @@ function App() {
       <Route path="/editProfile" component={EditProfile}/>
       <Route path="/introductions/pendent" component={ListPendentIntroductions}/>
       <Route path="/friends" component={ListFriends}/>
-      <Route path="/graph" component={AppGraph}/>
       <Redirect to="/"/>
     </Switch>
   </Router>

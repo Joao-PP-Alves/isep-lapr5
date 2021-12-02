@@ -6,7 +6,7 @@ import Node from './node.js';
     friend : Node,
     ligacao : Number,
     relacao : Number
-}
+}*/
 */
 export default class Edge{
     constructor(parameters,scene){

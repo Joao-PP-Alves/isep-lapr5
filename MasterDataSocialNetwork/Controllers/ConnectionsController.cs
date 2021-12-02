@@ -45,7 +45,7 @@ namespace DDDNetCore.Controllers{
 
         // GET: api/Connections/pendent/5
         [HttpGet("pendent/{id}")]
-        public async Task<ActionResult<IEnumerable<ConnectionDto>>> GetPendent(Guid id){
+        public async Task<ActionResult<IEnumerable<ConnectionWithRequesterDto>>> GetPendent(Guid id){
             return await _service.GetPendentConnections(new UserId(id));
         }
 

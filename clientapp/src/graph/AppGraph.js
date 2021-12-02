@@ -1,9 +1,9 @@
 import React, { createRef, useEffect } from 'react';
-import renderGraph from './renderGraph';
+import Graph from './graph'
 
 export default function AppGraph() {
   const divRef = createRef();
-  useEffect(() => renderGraph(divRef.current), [divRef]);
+  useEffect(() => new Graph(divRef.current), [divRef]);
   return (
       <div ref={divRef} />
   );

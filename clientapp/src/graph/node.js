@@ -3,13 +3,12 @@ import * as THREE from 'three';
 
   /*parameters = {
    color: Color,
-   radius : Number,
    user: User,
    parent : T,
    x: Number,
    y: Number,
   }*/
- 
+ */
 
 export default class Node {
     constructor(parameters) {
@@ -17,7 +16,7 @@ export default class Node {
             Object.defineProperty(this, key, { value: value, writable: true, configurable: true, enumerable: true });
         }
 
-        // Create a circle
+        // Create the ball (a circle)
         const geometry = new THREE.CircleGeometry(this.radius, 16);
         const material = new THREE.MeshBasicMaterial({ color: this.color });
         this.object = new THREE.Mesh(geometry, material);

@@ -372,6 +372,11 @@ namespace DDDNetCore.Domain.Users
                 friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
         }
 
+        public Task<Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>>> MyPerspective(UserId userId, int param)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Checks if a user exists
         /// </summary>
