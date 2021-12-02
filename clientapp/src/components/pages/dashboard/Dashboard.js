@@ -30,6 +30,16 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import Landing from "../landing_page/LandingPage";
+import Stack from "@mui/material/Stack";
+import AutoAwesomeTwoToneIcon from '@mui/icons-material/AutoAwesomeTwoTone';
+import LogoutTwoToneIcon from "@mui/icons-material/LogoutTwoTone";
+import Modal from "@mui/material/Modal";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import FormHelperText from "@mui/material/FormHelperText";
+import axios from "axios";
+import { useState } from "react";
 
 
 function Copyright(props) {
@@ -49,6 +59,18 @@ function Copyright(props) {
         </Typography>
     );
 }
+
+const style = {
+	position: "absolute",
+	top: "50%",
+	left: "50%",
+	transform: "translate(-50%, -50%)",
+	width: 400,
+	bgcolor: "background.paper",
+	border: "2px solid #000",
+	boxShadow: 24,
+	p: 4,
+};
 
 const drawerWidth = 240;
 
@@ -145,7 +167,12 @@ function DashboardContent() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
     const [setOpen] = React.useState(true);
-    const toggleDrawer = () => {
+    const [openModal, setOpenModal] = React.useState(false);
+	const [emotion] = React.useState("");
+	const [makingRequest, setMakingRequest] = useState(false);
+	const [input_emotion, setEmotion] = useState("");
+
+	const toggleDrawer = () => {
         setOpen(!open);
     };
 	const handleClick = (event) => {
@@ -154,7 +181,47 @@ function DashboardContent() {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+	const handleOpenModal = () => {
+		setOpenModal(true);
+	};
+	const handleModalClose = () => {
+		setOpenModal(false);
+	};
+	const handleEmotionChange = (event) => {
+		setEmotion(event.target.value);
+	};
 
+	function handleSave(event){
+		event.preventDefault();
+		console.log("Emotional state:", input_emotion);
+
+		const user_emotion = {
+			emotion: input_emotion,
+		};
+
+		const user = {
+			emotionalState: user_emotion,
+		};
+
+		console.log(JSON.stringify(user));
+		const response = fetch(
+			"https://21s5dd20socialgame.azurewebsites.net/api/Users/0f277d33-df08-4954-bd3b-26adb739927d" /*falta pôr um id de um user*/,
+			{
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(user),
+			}
+		)
+			.then((response) => response.json())
+			.then((json) => console.log(json));
+
+		if (!response.ok) {
+			setMakingRequest(false);
+			return null;
+		} else {
+			console.log("User updated!");
+		}
+	}
 
     return (
 			<ThemeProvider theme={mdTheme}>
@@ -198,10 +265,70 @@ function DashboardContent() {
 								open={open}
 								onClose={handleClose}
 							>
-								<Button href="/" disableRipple>
-									<EditIcon />
-									Logout
-								</Button>
+								<Stack spacing={2}>
+									<Button href="/" disableRipple>
+										<LogoutTwoToneIcon />
+										Logout
+									</Button>
+									<Button
+										disableRipple
+										type="button"
+										class="btn btn-info btn-lg"
+										data-toggle="modal"
+										data-target="#myModal"
+										onClick={handleOpenModal}
+									>
+										<AutoAwesomeTwoToneIcon />
+										Change my mood
+									</Button>
+
+									<Modal
+										hideBackdrop
+										open={open}
+										onClose={handleOpenModal}
+										aria-labelledby="child-modal-title"
+										aria-describedby="child-modal-description"
+									>
+										<Box sx={style}>
+											<Typography
+												id="modal-modal-title"
+												variant="h6"
+												component="h2"
+											>
+												Change my emotional state
+											</Typography>
+											<Stack>
+												<FormControl sx={{ minWidth: 80 }}>
+													<InputLabel id="demo-simple-select-autowidth-label">
+														Emotional State
+													</InputLabel>
+													<Select
+														labelId="demo-simple-select-autowidth-label"
+														id="demo-simple-select-autowidth"
+														value={emotion}
+														onChange={handleEmotionChange}
+														autoWidth
+														label="Emotional State"
+													>
+														<MenuItem value="">
+															<em>None</em>
+														</MenuItem>
+														<MenuItem value={10}>Twenty</MenuItem>
+														<MenuItem value={21}>Twenty one</MenuItem>
+														<MenuItem value={22}>
+															Twenty one and a half
+														</MenuItem>
+													</Select>
+													<FormHelperText>
+														Tell me how are you feeling.
+													</FormHelperText>
+												</FormControl>
+											</Stack>
+											<Button onClick={handleClose}>Close</Button>
+											<Button onClick={handleSave}>Save Changes</Button>
+										</Box>
+									</Modal>
+								</Stack>
 							</StyledMenu>
 						</Toolbar>
 					</AppBar>
