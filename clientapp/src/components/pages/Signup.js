@@ -115,7 +115,7 @@ export default function SignUp() {
 			email: user_email,
 			password: user_password,
 			tags: [user_tag],
-			phonenNumber: user_phoneNumber,
+			phoneNumber: user_phoneNumber,
 			birthDate: user_birthDate,
 		};
 		console.log(JSON.stringify(user));
