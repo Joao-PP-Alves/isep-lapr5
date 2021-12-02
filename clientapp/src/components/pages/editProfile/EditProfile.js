@@ -156,6 +156,10 @@ function EditProfileContent() {
 	const handleEmotionChange = (event) => {
 		setEmotion(event.target.value);
 	};
+
+	const handleDateChange = (newValue) => {
+		setBirthDate(newValue);
+	};
 	
 	const toggleDrawer = () => {
 		setOpen(!open);
@@ -379,6 +383,21 @@ function EditProfileContent() {
 												/>
 											</Grid>
 
+											<Grid item xs={12} sm={6}>
+												<TextField
+													fullWidth
+													id="email"
+													label="Email"
+													name="email"
+													autoComplete="email"
+													value={input_email}
+													onChange={(e) => setEmail(e.target.value)}
+												/>
+
+											</Grid>
+											<Grid item xs ={12} sm={6}>
+												{/* pôr aqui a cena para as tags */}
+											</Grid>
 											<Grid item xs={12} sm={4}>
 												<FormControl sx={{ minWidth: 80 }}>
 													<InputLabel id="demo-simple-select-autowidth-label">
@@ -421,11 +440,8 @@ function EditProfileContent() {
 													label="Birth date"
 													inputFormat="dd/MM/yyyy"
 													value={input_birthDate}
-													/* onChange={handleChange} */
-													onChange={(e) => setBirthDate(e.target.value)}
+													onChange={handleDateChange}
 													renderInput={(params) => <TextField {...params} />}
-													value={input_birthDate}
-													onChange={(e) => setBirthDate(e.target.value)}
 												/>
 											</Grid>
 											<Grid item xs={12} sm={4}>
