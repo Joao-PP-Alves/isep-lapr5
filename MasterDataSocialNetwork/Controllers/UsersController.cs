@@ -179,11 +179,11 @@ namespace DDDNetCore.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDto>> UpdateProfile(Guid id, UserDto dto)
         {
-            if (id != dto.Id)
+            /*if (id != dto.Id)
             {
                 return BadRequest();
-            }
-
+            }*/
+            dto.Id = id;
             try
             {
                 var showUser = await GetGetById(id); //para mostrar as informações do perfil do user antes de as alterar

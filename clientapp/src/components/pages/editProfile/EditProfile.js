@@ -16,24 +16,21 @@ import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems} from '../dashboard/ListItems';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import EditIcon from "@mui/icons-material/Edit";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import Landing from "../landing_page/LandingPage";
-import axios from 'axios'; 
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import FormHelperText from "@mui/material/FormHelperText";
+import { useState } from "react";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 
 function Copyright(props) {
@@ -145,7 +142,16 @@ function EditProfileContent() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
 	const [setOpen] = React.useState(true);
-	const [emotion, setEmotion] = React.useState('');
+	const [emotion] = React.useState('');
+	const [input_email, setEmail] = useState("");
+	const [input_password, setPassword] = useState("");
+	const [input_firstName, setFirstName] = useState("");
+	const [input_lastName, setLastName] = useState("");
+	const [input_phoneNumber, setPhoneNumber] = useState("");
+	const [input_birthDate, setBirthDate] = useState(new Date());
+	const [input_tags, setTags] = useState([]);
+	const [input_emotion, setEmotion] = useState("");
+	const [makingRequest, setMakingRequest] = useState(false);
 
 	const handleEmotionChange = (event) => {
 		setEmotion(event.target.value);
@@ -164,182 +170,280 @@ function EditProfileContent() {
 	};
 
 	const showEmotions = () => {
-	/* fazer fetch das emoçoes */
+		
 	};
 
-	const handleSave = () => {
-		const article = { title: "React PUT Request Example" };
-			axios
-			.put(
-				"https://21s5dd20socialgame.azurewebsites.net/api/User/0057aa5e-3a14-456c-be17-d36fafd48ec5",
-				article
-			)
-		.	then((response) => this.setState({ updatedAt: response.data.updatedAt }));
+	function handleSave(event) {
+		event.preventDefault();
+		console.log("Emotional state:", input_emotion);
 
+		console.log(
+			"FirstName:",
+			input_firstName,
+			"LastName:",
+			input_lastName,
+			"Email:",
+			input_email,
+			"Password:",
+			input_password,
+			"PhoneNumber:",
+			input_phoneNumber,
+			"BirthDate",
+			input_birthDate
+		);
+
+		const user_name = {
+			text: input_firstName + " " + input_lastName,
+		};
+
+		const user_email = {
+			emailAddress: input_email,
+		};
+
+		const user_password = {
+			value: input_password,
+		};
+
+		const user_phoneNumber = {
+			number: input_phoneNumber,
+		};
+
+		const user_birthDate = {
+			date: input_birthDate.toJSON(),
+		};
+
+		const user_tag = {
+			name: input_tags,
+		};
+
+		const user_emotionalState ={
+			emotion: input_emotion,
+		}
+
+		const user = {
+			name: user_name,
+			email: user_email,
+			/* tags: [user_tag],*/
+			phoneNumber: user_phoneNumber,
+			emotionalState: user_emotionalState,
+			friendsList: []
+		};
+		console.log(JSON.stringify(user));
+
+		const response = fetch(
+			"https://21s5dd20socialgame.azurewebsites.net/api/Users/0f277d33-df08-4954-bd3b-26adb739927d" /*falta pôr um id de um user*/,
+			{
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(user),
+			}
+		)
+			.then((response) => response.json())
+			.then((json) => console.log(json));
+
+		if (!response.ok) {
+			setMakingRequest(false);
+			return null;
+		} else {
+			console.log("User updated!");
+		}
 	}
 
   return (
-		<ThemeProvider theme={mdTheme}>
-			<Box sx={{ display: "flex" }}>
-				<CssBaseline />
-				<AppBar position="absolute" open={open}>
-					<Toolbar
-						sx={{
-							pr: "24px", // keep right padding when drawer closed
-						}}
-					>
-						<IconButton
-							edge="start"
-							color="inherit"
-							aria-label="open drawer"
-							onClick={toggleDrawer}
+		<LocalizationProvider dateAdapter={AdapterDateFns}>
+			<ThemeProvider theme={mdTheme}>
+				<Box sx={{ display: "flex" }}>
+					<CssBaseline />
+					<AppBar position="absolute" open={open}>
+						<Toolbar
 							sx={{
-								marginRight: "36px",
-								...(open && { display: "none" }),
+								pr: "24px", // keep right padding when drawer closed
 							}}
 						>
-							<MenuIcon />
-						</IconButton>
-						<Typography
-							component="h1"
-							variant="h6"
-							color="inherit"
-							noWrap
-							sx={{ flexGrow: 1 }}
-						>
-							Edit Profile
-						</Typography>
-						<IconButton
-							color="inherit"
-							id="accountButton"
-							aria-controls="demo-customized-menu"
-							aria-haspopup="true"
-							aria-expanded={open ? "true" : undefined}
-							variant="contained"
-							onClick={handleClick}
-						>
-							<Badge badgeContent={4} color="secondary">
-								<AccountCircleTwoToneIcon />
-							</Badge>
-						</IconButton>
-						<StyledMenu
-							id="accountButton"
-							MenuListProps={{
-								"aria-labelledby": "accountButton",
-							}}
-							anchorEl={anchorEl}
-							open={open}
-							onClose={handleClose}
-						>
-							<Button href="/" disableRipple>
-								<EditIcon />
-								Logout
-							</Button>
-						</StyledMenu>
-					</Toolbar>
-				</AppBar>
-				<Drawer variant="permanent" open={open}>
-					<Toolbar
-						sx={{
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "flex-end",
-							px: [1],
-						}}
-					>
-						<IconButton onClick={toggleDrawer}>
-							<ChevronLeftIcon />
-						</IconButton>
-					</Toolbar>
-					<Divider />
-					<List>{mainListItems}</List>
-					<Divider />
-				</Drawer>
-				<Box
-					component="main"
-					sx={{
-						backgroundColor: (theme) =>
-							theme.palette.mode === "light"
-								? theme.palette.grey[100]
-								: theme.palette.grey[900],
-						flexGrow: 1,
-						height: "100vh",
-						width: "100vh",
-						overflow: "auto",
-					}}
-				>
-					<Toolbar />
-					<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-						{/* Recent Deposits */}
-						<Grid item xs={12} md={4} lg={3}>
-							<Paper
+							<IconButton
+								edge="start"
+								color="inherit"
+								aria-label="open drawer"
+								onClick={toggleDrawer}
 								sx={{
-									p: 2,
-									display: "flex",
-									flexDirection: "column",
-									height: 600,
-									width: 1150,
+									marginRight: "36px",
+									...(open && { display: "none" }),
 								}}
 							>
-								<Typography component="h1" variant="h5">
-									Edit profile
-								</Typography>
-								<Box component="form" sx={{ mt: 3 }}>
-									<Grid container spacing={2}>
-										<Grid item xs={12} sm={6}>
-											<TextField
-												autoComplete="given-name"
-												name="firstName"
-												fullWidth
-												id="firstName"
-												label="First Name"
-												autoFocus
-											/>
-										</Grid>
-										<Grid item xs={12} sm={6}>
-											<TextField
-												fullWidth
-												id="lastName"
-												label="Last Name"
-												name="lastName"
-												autoComplete="family-name"
-											/>
-										</Grid>
+								<MenuIcon />
+							</IconButton>
+							<Typography
+								component="h1"
+								variant="h6"
+								color="inherit"
+								noWrap
+								sx={{ flexGrow: 1 }}
+							>
+								Edit Profile
+							</Typography>
+							<IconButton
+								color="inherit"
+								id="accountButton"
+								aria-controls="demo-customized-menu"
+								aria-haspopup="true"
+								aria-expanded={open ? "true" : undefined}
+								variant="contained"
+								onClick={handleClick}
+							>
+								<Badge badgeContent={4} color="secondary">
+									<AccountCircleTwoToneIcon />
+								</Badge>
+							</IconButton>
+							<StyledMenu
+								id="accountButton"
+								MenuListProps={{
+									"aria-labelledby": "accountButton",
+								}}
+								anchorEl={anchorEl}
+								open={open}
+								onClose={handleClose}
+							>
+								<Button href="/" disableRipple>
+									<EditIcon />
+									Logout
+								</Button>
+							</StyledMenu>
+						</Toolbar>
+					</AppBar>
+					<Drawer variant="permanent" open={open}>
+						<Toolbar
+							sx={{
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "flex-end",
+								px: [1],
+							}}
+						>
+							<IconButton onClick={toggleDrawer}>
+								<ChevronLeftIcon />
+							</IconButton>
+						</Toolbar>
+						<Divider />
+						<List>{mainListItems}</List>
+						<Divider />
+					</Drawer>
+					<Box
+						component="main"
+						sx={{
+							backgroundColor: (theme) =>
+								theme.palette.mode === "light"
+									? theme.palette.grey[100]
+									: theme.palette.grey[900],
+							flexGrow: 1,
+							height: "100vh",
+							width: "100vh",
+							overflow: "auto",
+						}}
+					>
+						<Toolbar />
+						<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+							{/* Recent Deposits */}
+							<Grid item xs={12} md={4} lg={3}>
+								<Paper
+									sx={{
+										p: 2,
+										display: "flex",
+										flexDirection: "column",
+										height: 600,
+										width: 1150,
+									}}
+								>
+									<Typography component="h1" variant="h5">
+										Edit profile
+									</Typography>
+									<Box component="form" sx={{ mt: 3 }}>
+										<Grid container spacing={2}>
+											<Grid item xs={12} sm={6}>
+												<TextField
+													autoComplete="given-name"
+													name="firstName"
+													fullWidth
+													id="firstName"
+													label="First Name"
+													autoFocus
+													value={input_firstName}
+													onChange={(e) => setFirstName(e.target.value)}
+												/>
+											</Grid>
+											<Grid item xs={12} sm={6}>
+												<TextField
+													fullWidth
+													id="lastName"
+													label="Last Name"
+													name="lastName"
+													autoComplete="family-name"
+													value={input_lastName}
+													onChange={(e) => setLastName(e.target.value)}
+												/>
+											</Grid>
 
-										<Grid item xs={12} sm={6}>
-											<FormControl sx={{ minWidth: 80 }}>
-												<InputLabel id="demo-simple-select-autowidth-label">
-													Emotional State
-												</InputLabel>
-												<Select
-													labelId="demo-simple-select-autowidth-label"
-													id="demo-simple-select-autowidth"
-													value={emotion}
-													onChange={handleEmotionChange}
-													autoWidth
-													label="Emotional State"
-												>
-													<MenuItem value="">
-														<em>None</em>
-													</MenuItem>
-													<MenuItem value={10}>Twenty</MenuItem>
-													<MenuItem value={21}>Twenty one</MenuItem>
-													<MenuItem value={22}>Twenty one and a half</MenuItem>
-												</Select>
-												<FormHelperText>Tell me how are you feeling.</FormHelperText>
-											</FormControl>
-										</Grid>
-										<Grid item xs={12} sm={6}>
-											<TextField
-												fullWidth
-												id="phoneNumber"
-												label="Phone number"
-												name="phoneNumber"
-												autoComplete="phone-number"
-											/>
-										</Grid>
+											<Grid item xs={12} sm={4}>
+												<FormControl sx={{ minWidth: 80 }}>
+													<InputLabel id="demo-simple-select-autowidth-label">
+														Emotional State
+													</InputLabel>
+													<Select
+														labelId="demo-simple-select-autowidth-label"
+														id="demo-simple-select-autowidth"
+														autoWidth
+														label="Emotional State"
+														value={input_emotion}
+														onChange={handleEmotionChange}
+													>
+														<MenuItem value="esperança">
+															<em>Esperança</em>
+														</MenuItem>
+														<MenuItem value="felicidade">
+															<em>Felicidade</em>
+														</MenuItem>
+														<MenuItem value="tristeza">
+															<em>Tristeza</em>
+														</MenuItem>
+														<MenuItem value="raiva">
+															<em>Raiva</em>
+														</MenuItem>
+														<MenuItem value="stress">
+															<em>Stress</em>
+														</MenuItem>
+														<MenuItem value="medo">
+															<em>Medo</em>
+														</MenuItem>
+													</Select>
+													<FormHelperText>
+														Tell me how are you feeling.
+													</FormHelperText>
+												</FormControl>
+											</Grid>
+											<Grid item xs={12} sm={4}>
+												<DesktopDatePicker
+													label="Birth date"
+													inputFormat="dd/MM/yyyy"
+													value={input_birthDate}
+													/* onChange={handleChange} */
+													onChange={(e) => setBirthDate(e.target.value)}
+													renderInput={(params) => <TextField {...params} />}
+													value={input_birthDate}
+													onChange={(e) => setBirthDate(e.target.value)}
+												/>
+											</Grid>
+											<Grid item xs={12} sm={4}>
+												<TextField
+													fullWidth
+													id="phoneNumber"
+													label="Phone number"
+													name="phoneNumber"
+													autoComplete="phone-number"
+													value={input_phoneNumber}
+													onChange={(e) => setPhoneNumber(e.target.value)}
+												/>
+											</Grid>
 
-										<Grid item xs={12}>
+											{/*<Grid item xs={12}>
 											<TextField
 												fullWidth
 												name="password"
@@ -358,54 +462,55 @@ function EditProfileContent() {
 												id="confirmpassword"
 												autoComplete="confirm-password"
 											/>
+										</Grid>*/}
+											<Grid item xs={12} sm={6}>
+												<Button
+													type="save"
+													width="500"
+													variant="contained"
+													sx={{
+														p: 2,
+														display: "flex",
+														flexDirection: "column",
+														height: 2,
+														width: 500,
+														my: 5,
+													}}
+													xs={12}
+													onClick={handleSave}
+												>
+													Save Changes
+												</Button>
+											</Grid>
+											<Grid item xs={12} sm={6}>
+												<Button
+													type="discard"
+													width="500"
+													variant="contained"
+													sx={{
+														p: 2,
+														display: "flex",
+														flexDirection: "column",
+														height: 2,
+														width: 500,
+														my: 5,
+													}}
+													xs={12}
+													href="/editProfile"
+												>
+													Discard
+												</Button>
+											</Grid>
 										</Grid>
-										<Grid item xs={12} sm={6}>
-											<Button
-												type="save"
-												width="500"
-												variant="contained"
-												sx={{
-													p: 2,
-													display: "flex",
-													flexDirection: "column",
-													height: 2,
-													width: 500,
-													my: 5,
-												}}
-												xs={12}
-												onClick={handleSave}
-											>
-												Save Changes
-											</Button>
-										</Grid>
-										<Grid item xs={12} sm={6}>
-											<Button
-												type="discard"
-												width="500"
-												variant="contained"
-												sx={{
-													p: 2,
-													display: "flex",
-													flexDirection: "column",
-													height: 2,
-													width: 500,
-													my: 5,
-												}}
-												xs={12}
-												href="/editProfile"
-											>
-												Discard
-											</Button>
-										</Grid>
-									</Grid>
-								</Box>
-							</Paper>
-						</Grid>
-						<Copyright sx={{ pt: 4 }} />
-					</Container>
+									</Box>
+								</Paper>
+							</Grid>
+							<Copyright sx={{ pt: 4 }} />
+						</Container>
+					</Box>
 				</Box>
-			</Box>
-		</ThemeProvider>
+			</ThemeProvider>
+		</LocalizationProvider>
 	);
 }
 
