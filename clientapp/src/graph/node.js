@@ -8,7 +8,7 @@ import * as THREE from 'three';
    x: Number,
    y: Number,
   }*/
- */
+ 
 
 export default class Node {
     constructor(parameters) {

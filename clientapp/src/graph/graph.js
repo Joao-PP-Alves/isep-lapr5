@@ -11,22 +11,23 @@ export default class Graph {
     nodes;
     edges;
     rootNode;
-    canvas = canvas.nativeElement;
+    canvas;
     constructor(){
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(
+        //this.canvas = canvas.domElement;
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(
           75,
           window.innerWidth / window.innerHeight,
           0.1,
           1000
         );
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        div.appendChild(renderer.domElement);
-        camera.position.z = 5;
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        //div.appendChild(renderer.domElement);
+        this.camera.position.z = 5;
         var dtos = this.getData();
         this.createNodes(dtos);
-        this.addNodesToScene(rootNode);
+        this.addNodesToScene(this.rootNode);
         this.addEdgesToScene(this.nodes,dtos);
 
         this.renderer.render();
@@ -90,7 +91,7 @@ export default class Graph {
     }
 
 
-    getData() { 
+    //getData() { 
         // Anda Inês, trabalha AQUIIII
         // O que está aqui não deve interessar
         /** let users = [];
@@ -130,12 +131,13 @@ export default class Graph {
 
         let edges = [];
         
-        this.addDataToScene(users, rows, root); */
+        this.addDataToScene(users, rows, root); 
     }*/
 
 
     
-    addNodesToScene(node){
+    addNodesToScene(node)
+    {
         if (node.parent === null){
             node.initialize();
         }
@@ -150,7 +152,7 @@ export default class Graph {
 
                 node.adjacents[i].angleRange = node.angleRange / n;
 
-                var posX = 100 * (node.adjacents[i]*depth) * Math.cos(node.adjacents[i].angle) - 0 * Math.sin(node.adjacents[i].angle);
+                var posX = 100 * (node.adjacents[i].depth) * Math.cos(node.adjacents[i].angle) - 0 * Math.sin(node.adjacents[i].angle);
 
                 var posY = 100 * (node.adjacents[i].depth) * Math.sin(node.adjacents[i].angle) + 0 * Math.cos(node.adjacents[i].angle);
 
@@ -160,6 +162,7 @@ export default class Graph {
                 this.addNodesToScene(node.adjacents[i]);
             }
         }
+    }
         /**var length = 0;
         dtos.forEach(u => {
             if (u.parent === userId){
@@ -191,6 +194,6 @@ export default class Graph {
         level++;
         
     calculateLevel()*/
-    }
+    
 
 }
