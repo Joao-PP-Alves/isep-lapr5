@@ -169,10 +169,6 @@ function EditProfileContent() {
 	setAnchorEl(null);
 	};
 
-	const showEmotions = () => {
-		
-	};
-
 	function handleSave(event) {
 		event.preventDefault();
 		console.log("Emotional state:", input_emotion);
@@ -231,7 +227,8 @@ function EditProfileContent() {
 		console.log(JSON.stringify(user));
 
 		const response = fetch(
-			"https://21s5dd20socialgame.azurewebsites.net/api/Users/0f277d33-df08-4954-bd3b-26adb739927d" /*falta pôr um id de um user*/,
+			"https://localhost:5001/api/Users/0f277d33-df08-4954-bd3b-26adb739927d",
+			//"https://21s5dd20socialgame.azurewebsites.net/api/Users/0f277d33-df08-4954-bd3b-26adb739927d" /*falta pôr um id de um user*/,
 			{
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
