@@ -2,32 +2,32 @@ import React, { useState, createRef, useEffect } from 'react';
 import initializeScene from './initializeScene';
 import * as THREE from 'three';
 
-parameters = {
+/**parameters = {
     scene = THREE.Scene(),
     camera = THREE.Camera(),
     renderer = THREE.WebGLRenderer(),
     canvas = canvas.nativeElement,
 
 
-}
+}*/
 
 export default class Graph {
-    constructor(div,userId){
+    constructor(div){
         const { scene, renderer, camera } = initializeScene(div);
-        getData();
+       // getData();
         this.initializeScene();
 
     }
 
 
-    getData() {
+     /**getData() {
 
         const [requesterName, setRequesterName] = useState("");
         const [requesterEmail, setRequesterEmail] = useState("");
 
-        const fetchAllUser = async () => {
+        const fetchUser = async (requesterId) => {
             const requesterData = axios.get(
-                Links.MDR_URL() + "/api/users/")
+                Links.MDR_URL() + "/api/users/"+requesterId)
                 .then((response2) => {
                     const requesterObj = response2.data;
                     setRequesterName(requesterObj.name.text);
@@ -75,7 +75,7 @@ export default class Graph {
         let edges = [];
         
         this.addDataToScene(users, rows, nodes, edges);
-    }
+    }*/
 
     
     addDataToScene(users, friendships, nodes, edges){
@@ -90,8 +90,8 @@ export default class Graph {
                     radius : 3,
                     user : fr.requester,
                     parent : fr.id,
-                    x : root.x + this.radius * Math.cos(angle), //calcular em radial
-                    y : root.y + this.radius * Math.cos(angle) //calcular em radial
+                    x : this.radius * Math.cos(angle), //calcular em radial
+                    y : this.radius * Math.cos(angle) //calcular em radial
                 })
                 i++;
             }
