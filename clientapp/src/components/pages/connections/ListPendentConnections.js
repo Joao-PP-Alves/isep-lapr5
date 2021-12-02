@@ -26,8 +26,13 @@ import clsx from 'clsx';
 import Links from "../../Links";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { DataGrid } from '@mui/x-data-grid';
+import AlertDialogSlide from './AlertDialogSlide';
+import AddIcon from "@material-ui/icons/Add";
 
-
+let rows = [];
 
 function Copyright(props) {
   return (
@@ -119,15 +124,12 @@ const styles = (theme) => ({
     tableCell: {
       flex: 1,
     },
-    noClick: {
-      cursor: 'initial',
-    },
   });
   
   class MuiVirtualizedTable extends React.PureComponent {
     static defaultProps = {
       headerHeight: 48,
-      rowHeight: 48,
+      rowHeight: 48,  
     };
   
     getRowClassName = ({ index }) => {
@@ -138,10 +140,14 @@ const styles = (theme) => ({
       });
     };
   
-    cellRenderer = ({ cellData, columnIndex }) => {
+    cellRenderer = ({ cellData, columnIndex, rowIndex }) => {
       const { columns, classes, rowHeight, onRowClick } = this.props;
       return (
+        <AlertDialogSlide
+          connectionId={rows[parseInt(rowIndex)]}
+          render={(open) => (
         <TableCell
+          onDoubleClick={open}
           component="div"
           className={clsx(classes.tableCell, classes.flexContainer, {
             [classes.noClick]: onRowClick == null,
@@ -154,8 +160,11 @@ const styles = (theme) => ({
               : 'left'
           }
         >
+          
           {cellData}
         </TableCell>
+          )}
+        />
       );
     };
   
@@ -296,7 +305,7 @@ function ListPendentConnectionsContent() {
 
   // push the information from sample to rows
 
-  const rows = [];
+  rows = [];
 
   for (let i = 0; i < searchedVS.length; i += 1) {
     rows.push(createData(...sample[i]));
@@ -407,6 +416,7 @@ function ListPendentConnectionsContent() {
         />
       </Paper>
               </Grid>
+              
             <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
