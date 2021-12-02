@@ -1,14 +1,13 @@
-import * as THREE from '../three/build/three.module.js';
+import * as THREE from 'three';
 import Node from './node.js';
 
-parameters = {
-    eu : Node,
-    amigo : Node,
-    width : Number,
+/**parameters = {
+    parent : Node,
+    friend : Node,
     ligacao : Number,
     relacao : Number
 }
-
+*/
 export default class Edge{
     constructor(parameters,scene){
         for (const [key, value] of Object.entries(parameters)) {
