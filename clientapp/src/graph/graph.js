@@ -1,4 +1,5 @@
 import React, { useState, createRef, useEffect } from 'react';
+import initializeScene from './initializeScene';
 import * as THREE from 'three';
 
 parameters = {
@@ -10,27 +11,16 @@ parameters = {
 
 }
 
-export default class Graph{
-
-    constructor(userId){
-        this.userRequesterId = userId;
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-        );
-        this.renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.z = 5;
-        
-        addDatatoScene();
+export default class Graph {
+    constructor(div,userId){
+        const { scene, renderer, camera } = initializeScene(div);
+        getData();
         this.initializeScene();
 
     }
 
-    addDatatoScene() {
+
+    getData() {
 
         const [requesterName, setRequesterName] = useState("");
         const [requesterEmail, setRequesterEmail] = useState("");
@@ -65,42 +55,49 @@ export default class Graph{
             rows.push(createData(...users[i]));
         }
 
+        let root;
         let nodes = [];
         users.forEach(element => {
             if (element.id === this.userRequesterId){
                 var node = new Node({
                     color : 0x00ff00,
+                    radius : 3,
                     user : element,
                     parent : 'undefined',
                     x : 0.0,
                     y : 0.0
                 }, this.scene);
+                root = node;
                 nodes.push(node);
             }
         });
 
-        //Need friendships Here
-        let friendships = [];
+        let edges = [];
+        
+        this.addDataToScene(users, rows, nodes, edges);
+    }
 
-        //
-        /** let edges = [];
+    
+    addDataToScene(users, friendships, nodes, edges){
+       
+        const slice = (2 * Math.PI) / friendships.length;
+        let i=0;
         friendships.forEach(fr => {
-            if(fr."friend1".id === this.userRequesterId){
+            if(fr.id === this.userRequesterId){
+                const angle = slice * i;
                 var node = new Node({
                     color : 0x0000ff,
-                    user : fr.friend2,
-                    parent : fr.friend1,
-                    x : 0.1, //calcular em radial
-                    y : 0.1 //calcular em radial
+                    radius : 3,
+                    user : fr.requester,
+                    parent : fr.id,
+                    x : root.x + this.radius * Math.cos(angle), //calcular em radial
+                    y : root.y + this.radius * Math.cos(angle) //calcular em radial
                 })
+                i++;
             }
-        })*/
+        });
+        
 
     }
 
-    initializeScene(scene,camera,renderer,graph) {
-        scene.add(graph);
-        renderer.renderer(scene,camera);
-        return;
-    } 
 }
