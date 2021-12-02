@@ -10,7 +10,7 @@ parameters = {
 
 }
 
-export default class Graph {
+export default class Graph{
     constructor(userId){
         this.userRequesterId = userId;
         this.scene = new THREE.Scene();
@@ -102,5 +102,4 @@ export default class Graph {
         renderer.renderer(scene,camera);
         return;
     } 
-    
 }
