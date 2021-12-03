@@ -26,6 +26,16 @@ namespace DDDNetCore.Domain.Users {
             return friendships;
         }
 
+        public async Task<List<FriendshipWithFriendDto>> GetByUserIdWithFriend(UserId userId)
+        {
+            List<FriendshipWithFriendDto> friendships = new List<FriendshipWithFriendDto>();
+            friendships =  _repoUser.GetByIdAsync(userId).Result.friendsList.ConvertAll<FriendshipWithFriendDto>(friendship =>
+                new FriendshipWithFriendDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength, friendship.friend, 
+                friendship.requester, friendship.friendshipTag,_repoUser.GetByIdAsync(friendship.friend).Result));
+            
+            return friendships;
+        }
+
         public async Task<Dictionary<int, List<UserDto>>> createMap(int level)
         {
             Dictionary<int, List<UserDto>> web = new Dictionary<int, List<UserDto>>();
@@ -42,6 +52,24 @@ namespace DDDNetCore.Domain.Users {
         {
             return new FriendshipDto(friendship.Id.AsGuid(), friendship.connection_strength, friendship.relationship_strength,
                 friendship.friend, friendship.requester, friendship.friendshipTag);
+        }
+
+        public async Task<FriendshipDto> UpdateFriendshipConnectionStrength(Guid userId, Guid friendshipId, String connection_strength){
+            var friendship = _repoUser.GetFriendshipAsync(new UserId(userId), new FriendshipId(friendshipId));
+            friendship.ChangeConnectionStrenght(new ConnectionStrength(connection_strength));
+
+            await this._unitOfWork.CommitAsync();
+            return new FriendshipDto(friendship.Id.AsGuid(),friendship.connection_strength,friendship.relationship_strength,friendship.friend,friendship.requester,friendship.friendshipTag);
+
+        }
+
+        public async Task<FriendshipDto> UpdateFriendshipTag(Guid userId, Guid friendshipId, String tag){
+            var friendship = _repoUser.GetFriendshipAsync(new UserId(userId), new FriendshipId(friendshipId));
+            friendship.ChangeFriendshipTag(new Tag(tag));
+
+            await this._unitOfWork.CommitAsync();
+            return new FriendshipDto(friendship.Id.AsGuid(),friendship.connection_strength,friendship.relationship_strength,friendship.friend,friendship.requester,friendship.friendshipTag);
+
         }
 
         public void UpdateFriendsList(FriendshipDto dto, Guid id)
