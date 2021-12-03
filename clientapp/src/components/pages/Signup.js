@@ -8,12 +8,18 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SaveIcon from "@mui/icons-material/Save";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import { FormCheck } from "react-bootstrap";
 import { useState } from "react";
 import PrivacyPolicy from "./privacyPolicy";
@@ -42,8 +48,12 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function SignUp() {
-    const [validated, setValidated] = useState(false);
+    const [validated, setValidated] = useState(true);
     const [value, setValue] = React.useState(new Date());
     const [makingRequest, setMakingRequest] = useState(false);
 
@@ -54,11 +64,35 @@ export default function SignUp() {
     const [input_phoneNumber, setPhoneNumber] = useState("");
     const [input_birthDate, setBirthDate] = useState(new Date());
     const [input_tags, setTags] = useState([]);
-    const [checked, setChecked] = React.useState([true, false]);
-    const [setState] = useState("");
+    const [checked, setChecked] = React.useState(false);
+
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const [openSnackBarError, setOpenSnackBarError] = React.useState(false);
 
     const handleDateChange = (newValue) => {
         setBirthDate(newValue);
+    };
+
+    const handleCheckChange = (event) => {
+        !checked ? console.log("checked") : console.log("not checked");
+        setChecked(event.target.checked);
+    };
+
+    const handleClick = () => {
+        setOpenSnackBar(true);
+    };
+
+    const handleClose = (event, reason) => {
+        setOpenSnackBar(false);
+    };
+
+    const handleCloseError = (event, reason) => {
+        setOpenSnackBarError(false);
+    };
+
+    const validateForm = (newState) => {
+        console.log("validating");
+        setValidated(newState);
     };
 
     const user_name = {
@@ -82,8 +116,8 @@ export default function SignUp() {
     };
 
     const user_tag = {
-        name:""
-    }
+        name: "",
+    };
 
     const user_tags = {
         tags: [user_tag],
@@ -96,9 +130,9 @@ export default function SignUp() {
         createTags() {
             input_tags.forEach((element) => {
                 const user_tag = {
-                    name: element
+                    name: element,
                 };
-                this.tags.push(user_tag)
+                this.tags.push(user_tag);
             });
             this.tags.shift();
         },
@@ -107,23 +141,11 @@ export default function SignUp() {
         birthDate: user_birthDate,
     };
 
-    function validateForm() {
-        return (
-            input_email.length > 0 &&
-            input_password.length > 0 &&
-            input_firstName.length > 0 &&
-            input_lastName.length > 0 &&
-            input_phoneNumber.length > 0 &&
-            input_birthDate.length > 0 &&
-            checked
-        );
-    }
-
     function handleSubmit(event) {
         event.preventDefault();
-        
+        setMakingRequest(true);
         user.createTags();
-       
+
         const response = fetch(
             "https://21s5dd20socialgame.azurewebsites.net/api/Users",
 
@@ -133,15 +155,25 @@ export default function SignUp() {
                 body: JSON.stringify(user),
             }
         )
-            .then((response) => response.json())
-            .then((json) => console.log(json));
+            .then((response) => {
+                response.json();
+                if (!response.ok) {
+                    return null;
+                } else {
+                    setOpenSnackBar(true);
 
-        if (!response.ok) {
-            setMakingRequest(false);
-            return null;
-        } else {
-            console.log("User created!");
-        }
+                    //
+                    //    MUDAR PARA DASHBOARD AQUI
+                    //
+                }
+                setMakingRequest(false);
+            })
+            .then((json) => console.log(json))
+
+            .catch((err) => {
+                setOpenSnackBarError(true);
+                setMakingRequest(false);
+            });
     }
 
     const handleDelete = (chipToDelete) => () => {
@@ -150,6 +182,34 @@ export default function SignUp() {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={openSnackBar}
+                autoHideDuration={3000}
+                onClose={handleClose}
+            >
+                <Alert
+                    onClose={handleClose}
+                    severity="success"
+                    sx={{ width: "100%" }}
+                >
+                    User Registered Successfully!
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={openSnackBarError}
+                autoHideDuration={3000}
+                onClose={handleCloseError}
+            >
+                <Alert
+                    onClose={handleCloseError}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    Failed To Register User!
+                </Alert>
+            </Snackbar>
             <ThemeProvider theme={theme}>
                 <form className={"formulary"} onSubmit={handleSubmit}>
                     <Container component="main" maxWidth="xs">
@@ -233,30 +293,6 @@ export default function SignUp() {
                                     </Grid>
 
                                     <Grid item xs={12}>
-                                        {/*<Autocomplete
-                                            multiple
-                                            id="tags-filled"
-                                            freeSolo
-                                            renderTags={(value, getTagProps) =>
-                                                value.map((option, index) => (
-                                                    <Chip
-                                                        variant="outlined"
-                                                        label={option}
-                                                        {...getTagProps({
-                                                            index,
-                                                        })}
-                                                    />
-                                                ))
-                                            }
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    variant="filled"
-                                                    label="freeSolo"
-                                                    placeholder="Favorites"
-                                                />
-                                            )}
-                                            />*/}
                                         <Stack spacing={3} sx={{ width: 500 }}>
                                             <Autocomplete
                                                 multiple
@@ -345,29 +381,29 @@ export default function SignUp() {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <FormCheck
+                                        <FormControlLabel
                                             control={
                                                 <Checkbox
                                                     checked={checked}
-                                                    //onChange={handleChange}
+                                                    onChange={handleCheckChange}
                                                     color="primary"
                                                 />
                                             }
-                                            label="I agree with the terms and conditions."
-                                            feedbackType="invalid"
+                                            label="I agree with the terms and conditions"
                                         />
                                     </Grid>
                                 </Grid>
-                                <Button
+                                <LoadingButton
                                     type="submit"
                                     fullWidth
                                     variant="contained"
+                                    loading={makingRequest}
+                                    loadingPosition="end"
                                     sx={{ mt: 3, mb: 2 }}
-                                    enabled={!validateForm() || makingRequest}
                                     onClick={handleSubmit}
                                 >
                                     Sign Up
-                                </Button>
+                                </LoadingButton>
                                 <Grid item>
                                     <Link href="/login" variant="body2">
                                         Already have an account? Login.
