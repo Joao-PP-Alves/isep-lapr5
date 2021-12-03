@@ -409,33 +409,31 @@ namespace DDDNetCore.Domain.Users
             {
                 return toReturn;
             }
-            else
+
+            foreach (var usergraph in network.Vertices())
             {
-                foreach (var usergraph in network.Vertices())
+                foreach (var userList in toReturn)
                 {
-                    foreach (var userList in toReturn)
+                    if (usergraph.Id.ToString().Equals(userList.userId))
                     {
-                        if (usergraph.Id.ToString().Equals(userList.userId))
+                        if (!auxList.Contains(userList))
                         {
-                            if (!auxList.Contains(userList))
+                            foreach (var vertices in network.adjVertices(usergraph))
                             {
-                                foreach (var vertices in network.adjVertices(usergraph))
-                                {
-                                    var edge = network.GetEdge(usergraph, vertices);
-                                    var userToAdd = new UserPerspectiveDto(vertices.Id.ToString(), vertices.name.text,
-                                        usergraph.Id.ToString(), edge.element.connection_strength.value,
-                                        edge.element.relationship_strength.value);
-                                    toReturn.Add(userToAdd);
-                                    auxList.Add(userToAdd);
-                                    transforma(auxList, network, toReturn);
-                                }
+                                var edge = network.GetEdge(usergraph, vertices);
+                                var userToAdd = new UserPerspectiveDto(vertices.Id.ToString(), vertices.name.text,
+                                    usergraph.Id.ToString(), edge.element.connection_strength.value,
+                                    edge.element.relationship_strength.value);
+                                toReturn.Add(userToAdd);
+                                auxList.Add(userToAdd);
+                                transforma(auxList, network, toReturn);
                             }
                         }
                     }
                 }
-
-                return toReturn;
             }
+
+            return toReturn;
         }
 
         /// <summary>

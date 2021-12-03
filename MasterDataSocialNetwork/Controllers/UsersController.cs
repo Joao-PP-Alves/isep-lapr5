@@ -294,10 +294,9 @@ namespace DDDNetCore.Controllers
 
         //GET: api/Users/MyPerspective/id/param
         [HttpGet("MyPerspective/{id}/{param}")]
-        public async Task<ActionResult<Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>>>> getPerspective(
+        public async Task<ActionResult<List<UserPerspectiveDto>>> getPerspective(
             Guid id, int param)
         {
-
             try
             {
                 var user = await _service.GetByIdAsync(new UserId(id));
@@ -306,7 +305,7 @@ namespace DDDNetCore.Controllers
                     return NotFound();
                 }
                 
-                return null;
+                return await _service.MyPerspective(new UserId(id),param);
             }
             catch (Exception ex)
             {
