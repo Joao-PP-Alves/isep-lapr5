@@ -23,14 +23,8 @@ import { AutoSizer, Column, Table } from 'react-virtualized';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 import clsx from 'clsx';
-import Links from "../../Links";
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import { DataGrid } from '@mui/x-data-grid';
 import AlertDialogSlide from './AlertDialogSlide';
-import AddIcon from "@material-ui/icons/Add";
 
 let rows = [];
 
