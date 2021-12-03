@@ -382,14 +382,14 @@ namespace DDDNetCore.Domain.Users
 
             List<UserPerspectiveDto> keys = new List<UserPerspectiveDto>();
             List<UserPerspectiveDto> values = new List<UserPerspectiveDto>();
-            keys.Add(new UserPerspectiveDto(user.Id.AsString(),user.Name,null,"0","0"));
+            keys.Add(new UserPerspectiveDto(user.Id.AsString(),user.Name.text,null,"0","0"));
             Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>> toReturn =
                 new Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>>(keys, values);
-            recursivo(param, toReturn);
+           // recursivo(param, toReturn);
             return toReturn;
         }
 
-        public Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>> recursivo(int param,
+        /*public Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>> recursivo(int param,
             Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>> toReturn)
         {
             if (param == 0)
@@ -398,12 +398,22 @@ namespace DDDNetCore.Domain.Users
             }
             else
             {
-                //TODO
+                var insideList = new List<UserPerspectiveDto>();
+                foreach (var updto in toReturn.Item1)
+                {
+                    if (insideList.Count != 0 && !insideList.Contains(updto))
+                    {
+                        insideList.Add(updto);
+                        var upfriendsList = GetMyFriends(new UserId(updto.userId),)
+                    }
+                }
+
                 recursivo(param-1,toReturn);
+                
             }
 
             return null;
-        }
+        }*/
 
         /// <summary>
         /// Checks if a user exists

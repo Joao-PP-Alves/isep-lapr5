@@ -8,7 +8,7 @@ namespace DDDNetCore.Domain.Services.DTO
     {
         public String userId {get;set;}
 
-        public Name userName {get;set;}
+        public String userName {get;set;}
         
         public String parentId { get; set; }
         
@@ -16,7 +16,7 @@ namespace DDDNetCore.Domain.Services.DTO
         
         public String relationshipStrength { get; set; }
 
-        public UserPerspectiveDto(String userId, Name userName, String parentId, String connectionStrength,
+        public UserPerspectiveDto(String userId, String userName, String parentId, String connectionStrength,
             String relationshipStrength)
         {
             this.userId = userId;
