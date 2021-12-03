@@ -17,10 +17,13 @@ namespace DDDNetCore.Controllers
     {
         private readonly IUserService _service;
 
+        private readonly IFriendshipService _serviceFriendships;
 
-        public UsersController(IUserService service)
+
+        public UsersController(IUserService service, IFriendshipService serviceFriendships)
         {
             _service = service;
+            _serviceFriendships = serviceFriendships;
         }
 
         //GET: api/Users
@@ -140,6 +143,26 @@ namespace DDDNetCore.Controllers
             }
 
             return net;
+        }
+
+        [HttpGet("Friendships/{id}")]
+        public async Task<ActionResult<List<FriendshipWithFriendDto>>> GetFriendshipsByUserId(Guid id){
+            List<FriendshipWithFriendDto> list;
+            try
+            {
+                list = await _serviceFriendships.GetByUserIdWithFriend(new UserId(id));
+                if (list == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+
+            return list;
         }
 
 
@@ -291,8 +314,7 @@ namespace DDDNetCore.Controllers
                 return BadRequest(new {Message = ex.Message});
             }
         }
-
-        //GET: api/Users/MyPerspective/id/param
+		//GET: api/Users/MyPerspective/id/param
         [HttpGet("MyPerspective/{id}/{param}")]
         public async Task<ActionResult<List<UserPerspectiveDto>>> getPerspective(
             Guid id, int param)
@@ -312,5 +334,28 @@ namespace DDDNetCore.Controllers
                 return BadRequest(new {Message = ex.Message});
             }
         }
-    }
+
+		[HttpPut("ConnectionStrength/{userId}")]
+        public async Task<ActionResult<FriendshipDto>> UpdateFriendshipConnectionStrength(Guid userId,UpdateFriendshipConnectionStrengthDto dto){
+            try
+            {
+                return await _serviceFriendships.UpdateFriendshipConnectionStrength(userId,dto.Id,dto.connection_strength);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+
+        [HttpPut("Tag/{userId}")]
+        public async Task<ActionResult<FriendshipDto>> UpdateFriendshipTag(Guid userId,UpdateFriendshipTagDto dto){
+            try
+            {
+                return await _serviceFriendships.UpdateFriendshipTag(userId,dto.Id,dto.tag);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }    }
 }

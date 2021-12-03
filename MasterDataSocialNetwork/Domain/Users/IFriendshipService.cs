@@ -15,6 +15,12 @@ namespace DDDNetCore.Domain.Users{
 
         Task createFriends(UserId requesterId, UserId friendId);
 
+        Task<List<FriendshipWithFriendDto>> GetByUserIdWithFriend(UserId userId);
+
+        Task<FriendshipDto> UpdateFriendshipConnectionStrength(Guid userId, Guid friendshipId, String connection_strength);
+
+        Task<FriendshipDto> UpdateFriendshipTag(Guid userId, Guid friendshipId, String tag);
+
 
 
 

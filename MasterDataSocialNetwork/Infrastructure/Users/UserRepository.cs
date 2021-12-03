@@ -146,6 +146,14 @@ namespace DDDNetCore.Infrastructure.Users
         {
             return _context.Users.Include(f => f.friendsList).Include(b=>b.BirthDate).Where(user => user.Id == id).FirstOrDefaultAsync();
         }
+
+        public Friendship GetFriendshipAsync(UserId id, FriendshipId friendshipId)
+        {
+            Task<User> user = GetByIdAsync(id);
+
+            return user.Result.friendsList.Find(x => x.Id == friendshipId);
+        }
+        
     }
 }
 
