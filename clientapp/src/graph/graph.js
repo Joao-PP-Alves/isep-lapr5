@@ -7,14 +7,34 @@ import renderToCanvas from './renderToCanvas';
 
 export default class Graph {
     scene;
+    camera;
+    renderer;
     constructor(div){
-        const { scene, renderer, camera } = this.initializeScene(div);
-        
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        //this.renderer.appendChild.domElement;
+        //div.appendChild(renderer.domElement);
+        this.camera.position.z = 5;
+        const canvas = document.createElement('canvas');
+       
         var dtos = this.getData();
         this.createNodes(dtos);
         this.addNodesToScene(this.rootNode);
         this.addEdgesToScene(this.nodes,dtos);
-
+        
+        renderToCanvas({
+            canvas,
+            width: 120,
+            height: 60,
+            Component: () => <Graph/>
+          });
         this.renderer.render();
     }
 
@@ -74,29 +94,6 @@ export default class Graph {
             });
         });
     }
-
-    initializeScene(div) {
-        const scene = new THREE.Scene();
-        this.scene = scene;
-        const camera = new THREE.PerspectiveCamera(
-          75,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          1000
-        );
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        div.appendChild(renderer.domElement);
-        camera.position.z = 5;
-        const canvas = document.createElement('canvas');
-        renderToCanvas({
-            canvas,
-            width: 120,
-            height: 60,
-            Component: () => <Graph/>
-          });
-        return { scene, renderer, camera };
-      }
 
       getData (){
           
