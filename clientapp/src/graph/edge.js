@@ -2,9 +2,8 @@ import * as THREE from 'three';
 import Node from './node.js';
 
 /**parameters = {
-    eu : Node,
-    amigo : Node,
-    width : Number,
+    parent : Node,
+    friend : Node,
     ligacao : Number,
     relacao : Number
 }*/
@@ -17,8 +16,8 @@ export default class Edge{
 
         const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
         const points = [];
-        points.push( new THREE.Vector3( me.x, me.y, 0) );
-        points.push( new THREE.Vector3( friend.x, friend.y, 0 ) );
+        points.push( new THREE.Vector3( this.parent.x, this.parent.y, 0) );
+        points.push( new THREE.Vector3( this.friend.x, this.friend.y, 0 ) );
 
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         const line = new THREE.Line( geometry, material );

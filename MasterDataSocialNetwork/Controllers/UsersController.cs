@@ -314,8 +314,29 @@ namespace DDDNetCore.Controllers
                 return BadRequest(new {Message = ex.Message});
             }
         }
+		//GET: api/Users/MyPerspective/id/param
+        [HttpGet("MyPerspective/{id}/{param}")]
+        public async Task<ActionResult<Tuple<List<UserPerspectiveDto>, List<UserPerspectiveDto>>>> getPerspective(
+            Guid id, int param)
+        {
 
-        [HttpPut("ConnectionStrength/{userId}")]
+            try
+            {
+                var user = await _service.GetByIdAsync(new UserId(id));
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+
+		[HttpPut("ConnectionStrength/{userId}")]
         public async Task<ActionResult<FriendshipDto>> UpdateFriendshipConnectionStrength(Guid userId,UpdateFriendshipConnectionStrengthDto dto){
             try
             {
@@ -337,6 +358,5 @@ namespace DDDNetCore.Controllers
             {
                 return BadRequest(new {Message = ex.Message});
             }
-        }
-    }
+        }    }
 }
