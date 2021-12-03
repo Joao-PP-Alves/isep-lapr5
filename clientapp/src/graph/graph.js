@@ -1,30 +1,15 @@
 import React, { useState, createRef, useEffect } from 'react';
-import initializeScene from './initializeScene';
 import * as THREE from 'three';
 import Edge from './edge';
 import Node from './node';
+import renderToCanvas from './renderToCanvas';
+
 
 export default class Graph {
     scene;
-    camera;
-    renderer;
-    nodes;
-    edges;
-    rootNode;
-    canvas;
-    constructor(){
-        //this.canvas = canvas.domElement;
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(
-          75,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          1000
-        );
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        //div.appendChild(renderer.domElement);
-        this.camera.position.z = 5;
+    constructor(div){
+        const { scene, renderer, camera } = this.initializeScene(div);
+        
         var dtos = this.getData();
         this.createNodes(dtos);
         this.addNodesToScene(this.rootNode);
@@ -90,7 +75,32 @@ export default class Graph {
         });
     }
 
+    initializeScene(div) {
+        const scene = new THREE.Scene();
+        this.scene = scene;
+        const camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        div.appendChild(renderer.domElement);
+        camera.position.z = 5;
+        const canvas = document.createElement('canvas');
+        renderToCanvas({
+            canvas,
+            width: 120,
+            height: 60,
+            Component: () => <Graph/>
+          });
+        return { scene, renderer, camera };
+      }
 
+      getData (){
+          
+      }
     //getData() { 
         // Anda Inês, trabalha AQUIIII
         // O que está aqui não deve interessar
