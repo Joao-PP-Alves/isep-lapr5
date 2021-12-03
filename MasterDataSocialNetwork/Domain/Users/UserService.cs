@@ -433,7 +433,7 @@ namespace DDDNetCore.Domain.Users
                 }
             }
 
-            return toReturn;
+            return null;
         }
 
         /// <summary>
