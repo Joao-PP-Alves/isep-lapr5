@@ -40,6 +40,12 @@ import Select from "@mui/material/Select";
 import FormHelperText from "@mui/material/FormHelperText";
 import axios from "axios";
 import { useState } from "react";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import parse from "autosuggest-highlight/parse";
+import match from "autosuggest-highlight/match";
+
+let rows = [];
 
 
 function Copyright(props) {
@@ -91,6 +97,16 @@ const AppBar = styled(MuiAppBar, {
         }),
     }),
 }));
+
+const top100Films = [
+	{ title: "The Shawshank Redemption", year: 1994 },
+	{ title: "The Godfather", year: 1972 },
+	{ title: "The Godfather: Part II", year: 1974 },
+	{ title: "The Dark Knight", year: 2008 },
+	{ title: "12 Angry Men", year: 1957 },
+	{ title: "Schindler's List", year: 1993 },
+	{ title: "Pulp Fiction", year: 1994 },
+]
 
 const Drawer = styled(MuiDrawer, {
     shouldForwardProp: (prop) => prop !== "open",
@@ -171,6 +187,47 @@ function DashboardContent() {
 	const [emotion] = React.useState("");
 	const [makingRequest, setMakingRequest] = useState(false);
 	const [input_emotion, setEmotion] = useState("");
+ 
+	const [searchedVS, setSearchedVS] = useState([]);
+	const rows = [];
+
+	  function search() {
+			fetchUsers();
+		}
+
+		const fetchUsers = async () => {
+			const data = await fetch(
+				//Links.MDR_URL() + "/api/connections/pendent/" + userId
+				"https://localhost:5001/api/Users/" /*+ userId*/
+			);
+			const vsList = await data.json();
+			console.log(vsList);
+			setSearchedVS(vsList);
+		};
+
+		// transform json array to array sample[]
+
+		let sample = [];
+
+		for (var i = 0; i < searchedVS.length; i++) {
+			var obj = searchedVS[i];
+			sample.push([
+				obj.requesterObject.name.text,
+			]);
+		}
+
+		function createData(id, requester, requester_email, description) {
+			return { id, requester, requester_email, description };
+		}
+
+		// push the information from sample to rows
+
+		rows = [];
+
+		for (let i = 0; i < searchedVS.length; i += 1) {
+			rows.push(createData(...sample[i]));
+		}
+	
 
 	const toggleDrawer = () => {
         setOpen(!open);
@@ -242,6 +299,38 @@ function DashboardContent() {
 							>
 								Dashboard
 							</Typography>
+
+							<Autocomplete
+								id="highlights-demo"
+								sx={{ width: 300 }}
+								options={rows}
+								getOptionLabel={(option) => option.name}
+								renderInput={(params) => (
+									<TextField {...params} label="Search Users" margin="normal" />
+								)}
+								renderOption={(props, option, { inputValue }) => {
+									const matches = match(option.name, inputValue);
+									const parts = parse(option.name, 0);
+
+									return (
+										<li {...props}>
+											<div>
+												{parts.map((part, index) => (
+													<span
+														key={index}
+														style={{
+															fontWeight: part.highlight ? 700 : 400,
+														}}
+													>
+														{part.text}
+													</span>
+												))}
+											</div>
+										</li>
+									);
+								}}
+							/>
+
 							<IconButton
 								color="inherit"
 								id="accountButton"

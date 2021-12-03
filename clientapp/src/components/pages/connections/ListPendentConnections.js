@@ -324,8 +324,9 @@ function ListPendentConnectionsContent() {
   const fetchPendentConnections= async () => {
 
     const data = await fetch(
-      Links.MDR_URL() + "/api/connections/pendent/" + userId
-    );
+			//Links.MDR_URL() + "/api/connections/pendent/" + userId
+			"https://localhost:5001/api/connections/pendent/" + userId
+		);
     const vsList = await data.json();
     console.log(vsList);
     setSearchedVS(vsList);
