@@ -34,6 +34,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import { useState, useEffect } from "react";
 import MinimalizedNetwork from "./MinimalizedNetwork";
+import match from "autosuggest-highlight/match";
 
 let rows = [];
 
@@ -280,7 +281,7 @@ function DashboardContent() {
 								<TextField {...params} label="Search Users" margin="normal" />
 							)}
 							renderOption={(props, option, { inputValue }) => {
-								//const matches = match(option.name, inputValue);
+								const matches = match(option.name, inputValue);
 								const parts = parse(option.name, 0);
 
 								return (
