@@ -32,13 +32,15 @@ namespace DDDNetCore.Domain.Connections
             this.missionService = missionService;
         }
 
-        public async Task<List<ConnectionDto>> GetPendentConnections(UserId id)
+        public async Task<List<ConnectionWithRequesterDto>> GetPendentConnections(UserId id)
         {
             var list = await _repo.getPendentConnections(id);
 
-            List<ConnectionDto> listDto = list.ConvertAll(intro =>
-                new ConnectionDto(intro.Id.AsGuid(), intro.requester, intro.targetUser, intro.description,
-                    intro.decision));
+            //var requester = await _repoUser.GetByIdAsync();
+
+            List<ConnectionWithRequesterDto> listDto = list.ConvertAll(intro =>
+                new ConnectionWithRequesterDto(intro.Id.AsGuid(), intro.requester, intro.targetUser, intro.description,
+                    intro.decision,_repoUser.GetByIdAsync(intro.requester).Result));
 
             return listDto;
         }

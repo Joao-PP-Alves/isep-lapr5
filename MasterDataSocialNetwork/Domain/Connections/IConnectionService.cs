@@ -10,7 +10,7 @@ namespace DDDNetCore.Domain.Connections
 {
     public interface IConnectionService
     {
-        Task<List<ConnectionDto>> GetPendentConnections(UserId id);
+        Task<List<ConnectionWithRequesterDto>> GetPendentConnections(UserId id);
 
         Task<List<ConnectionDto>> GetAllAsync();
 

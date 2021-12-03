@@ -102,10 +102,11 @@ namespace DDDNetCore.Domain.Users
             }
 
             var listDto = list.ConvertAll(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate,
+                    user.tags,
                     user.emotionalState,
                     user.EmotionTime));
-            
+
             return listDto;
         }
 
@@ -119,7 +120,8 @@ namespace DDDNetCore.Domain.Users
             }
 
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -147,7 +149,8 @@ namespace DDDNetCore.Domain.Users
             }
 
             List<UserDto> listDto = list.ConvertAll(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate,
+                    user.tags,
                     user.emotionalState,
                     user.EmotionTime));
 
@@ -178,7 +181,8 @@ namespace DDDNetCore.Domain.Users
             }
 
             List<UserDto> listDto = list.ConvertAll(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate,
+                    user.tags,
                     user.emotionalState,
                     user.EmotionTime));
 
@@ -215,7 +219,8 @@ namespace DDDNetCore.Domain.Users
             }
 
             List<UserDto> listDto = list.ConvertAll(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate,
+                    user.tags,
                     user.emotionalState,
                     user.EmotionTime));
 
@@ -228,7 +233,8 @@ namespace DDDNetCore.Domain.Users
             await _repo.AddAsync(user);
             await _unitOfWork.CommitAsync();
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -253,7 +259,8 @@ namespace DDDNetCore.Domain.Users
             user.ChangeEmail(dto.email);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await _unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -273,7 +280,8 @@ namespace DDDNetCore.Domain.Users
 
             await _unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -295,7 +303,8 @@ namespace DDDNetCore.Domain.Users
             _repo.Remove(user);
             await _unitOfWork.CommitAsync();
 
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -317,7 +326,8 @@ namespace DDDNetCore.Domain.Users
             user.ChangeEmotionalState(dto.emotionalState);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await _unitOfWork.CommitAsync();
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -328,7 +338,8 @@ namespace DDDNetCore.Domain.Users
         /// <returns></returns>
         public async Task<UserDto> ConvertToDto(User user)
         {
-            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate, user.tags,
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate, user.tags,
                 user.emotionalState, user.EmotionTime);
         }
 
@@ -362,7 +373,7 @@ namespace DDDNetCore.Domain.Users
             // Creates a new friendship between them
             var friendship = new Friendship(friend.Id, requester.Id, dto.connection_strength, dto.relationship_strength,
                 dto.friendshipTag);
-            
+
             // Adds the friendship to the databse
             await _repo.NewFriendship(new FriendshipDto(friendship.Id.AsGuid(), dto.connection_strength,
                 dto.relationship_strength, dto.friend, dto.requester, dto.friendshipTag));
@@ -372,24 +383,77 @@ namespace DDDNetCore.Domain.Users
                 friendship.relationship_strength, friend.Id, requester.Id, friendship.friendshipTag);
         }
 
-        /// <summary>
-        /// Checks if a user exists
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <exception cref="Exception"></exception>
-        private async Task checkUserIdAsync(UserId userId)
+        public async Task<List<UserPerspectiveDto>> MyPerspective(UserId userId, int param)
         {
+            List<UserPerspectiveDto> toReturn = new List<UserPerspectiveDto>();
             var user = await _repo.GetByIdAsync(userId);
             if (user == null)
-                throw new Exception("The provided user does not exist");
+            {
+                throw new Exception("The provider user does not exist");
+            }
+            else
+            {
+                var network = GetMyFriends(userId, new Network<UserDto, FriendshipDto>(false), param);
+                toReturn.Add(new UserPerspectiveDto(user.Id.Value, user.Name.text, null, null, null));
+                transforma(new List<UserPerspectiveDto>(), network.Result, toReturn);
+            }
+
+            return toReturn;
         }
 
-        public async Task checkIfTwoUsersAreFriends(UserId user1, UserId user2)
+        private List<UserPerspectiveDto> transforma(List<UserPerspectiveDto> auxList,
+            Network<UserDto, FriendshipDto> network,
+            List<UserPerspectiveDto> toReturn)
         {
-            if (_repo.checkIfFriends(user1, user2))
+            if (auxList.Count.Equals(network.Vertices().Count))
             {
-                throw new BusinessRuleValidationException("Users are already friends.");
+                return toReturn;
+            }
+
+            foreach (var usergraph in network.Vertices())
+            {
+                foreach (var userList in toReturn)
+                {
+                    if (usergraph.Id.ToString().Equals(userList.userId))
+                    {
+                        if (!auxList.Contains(userList))
+                        {
+                            foreach (var vertices in network.adjVertices(usergraph))
+                            {
+                                var edge = network.GetEdge(usergraph, vertices);
+                                var userToAdd = new UserPerspectiveDto(vertices.Id.ToString(), vertices.name.text,
+                                    usergraph.Id.ToString(), edge.element.connection_strength.value,
+                                    edge.element.relationship_strength.value);
+                                toReturn.Add(userToAdd);
+                                auxList.Add(userToAdd);
+                                transforma(auxList, network, toReturn);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+            /// Checks if a user exists
+            /// </summary>
+            /// <param name="userId"></param>
+            /// <exception cref="Exception"></exception>
+            private async Task checkUserIdAsync(UserId userId)
+            {
+                var user = await _repo.GetByIdAsync(userId);
+                if (user == null)
+                    throw new Exception("The provided user does not exist");
+            }
+
+            public async Task checkIfTwoUsersAreFriends(UserId user1, UserId user2)
+            {
+                if (_repo.checkIfFriends(user1, user2))
+                {
+                    throw new BusinessRuleValidationException("Users are already friends.");
+                }
             }
         }
     }
-}

@@ -21,8 +21,8 @@ export default function AlertDialogSlide({connectionId,render}) {
       setOpen(false);
   };
 
-  const handleAccept = () => {
-    const requesterData = axios.put(
+  const handleAccept = async () => {
+    const requesterData = await axios.put(
         Links.MDR_URL() + "/api/connections/accept/" + connectionId.id
       );
       handleClose();
@@ -30,9 +30,9 @@ export default function AlertDialogSlide({connectionId,render}) {
 
   }
 
-  const handleDecline = () => {
-    const requesterData = axios.put(
-        Links.MDR_URL() + "/api/connections/decline/" + connectionId
+  const handleDecline = async () => {
+    const requesterData = await axios.put(
+        Links.MDR_URL() + "/api/connections/decline/" + connectionId.id
       );
       handleClose();
       alert("Connection Declined!");

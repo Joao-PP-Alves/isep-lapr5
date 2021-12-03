@@ -23,14 +23,8 @@ import { AutoSizer, Column, Table } from 'react-virtualized';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 import clsx from 'clsx';
-import Links from "../../Links";
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import { DataGrid } from '@mui/x-data-grid';
 import AlertDialogSlide from './AlertDialogSlide';
-import AddIcon from "@material-ui/icons/Add";
 
 let rows = [];
 
@@ -143,11 +137,7 @@ const styles = (theme) => ({
     cellRenderer = ({ cellData, columnIndex, rowIndex }) => {
       const { columns, classes, rowHeight, onRowClick } = this.props;
       return (
-        <AlertDialogSlide
-          connectionId={rows[parseInt(rowIndex)]}
-          render={(open) => (
         <TableCell
-          onDoubleClick={open}
           component="div"
           className={clsx(classes.tableCell, classes.flexContainer, {
             [classes.noClick]: onRowClick == null,
@@ -163,8 +153,6 @@ const styles = (theme) => ({
           
           {cellData}
         </TableCell>
-          )}
-        />
       );
     };
   
@@ -183,6 +171,68 @@ const styles = (theme) => ({
         </TableCell>
       );
     };
+
+    rowRenderer({
+      className,
+      columns,
+      index,
+      key,
+      onRowClick,
+      onRowDoubleClick,
+      onRowMouseOut,
+      onRowMouseOver,
+      onRowRightClick,
+      rowData,
+      style,
+    }) {
+      const a11yProps = {'aria-rowindex': index + 1};
+
+  if (
+    onRowClick ||
+    onRowDoubleClick ||
+    onRowMouseOut ||
+    onRowMouseOver ||
+    onRowRightClick
+  ) {
+    a11yProps['aria-label'] = 'row';
+    a11yProps.tabIndex = 0;
+
+    if (onRowClick) {
+      a11yProps.onClick = event => onRowClick({event, index, rowData});
+    }
+    if (onRowDoubleClick) {
+      a11yProps.onDoubleClick = event =>
+        onRowDoubleClick({event, index, rowData});
+    }
+    if (onRowMouseOut) {
+      a11yProps.onMouseOut = event => onRowMouseOut({event, index, rowData});
+    }
+    if (onRowMouseOver) {
+      a11yProps.onMouseOver = event => onRowMouseOver({event, index, rowData});
+    }
+    if (onRowRightClick) {
+      a11yProps.onContextMenu = event =>
+        onRowRightClick({event, index, rowData});
+    }
+  }
+
+  return (
+    <AlertDialogSlide
+          connectionId={rows[parseInt(index)]}
+          render={(open) => (
+    <div
+      {...a11yProps}
+      className={className}
+      key={key}
+      onClick={open}
+      role="row"
+      style={style}>
+      {columns}
+    </div>
+    )}
+    />
+  );
+    }
   
     render() {
       const { classes, columns, rowHeight, headerHeight, ...tableProps } = this.props;
@@ -192,6 +242,7 @@ const styles = (theme) => ({
             <Table
               height={height}
               width={width}
+              rowRenderer={this.rowRenderer}
               rowHeight={rowHeight}
               gridStyle={{
                 direction: 'inherit',
@@ -267,25 +318,12 @@ function ListPendentConnectionsContent() {
   const fetchPendentConnections= async () => {
 
     const data = await fetch(
-      Links.MDR_URL() + "/api/connections/pendent/" + userId
-    );
+			//Links.MDR_URL() + "/api/connections/pendent/" + userId
+			"https://localhost:5001/api/connections/pendent/" + userId
+		);
     const vsList = await data.json();
     console.log(vsList);
     setSearchedVS(vsList);
-
-  };
-
-  const [requesterName, setRequesterName] = useState("");
-  const [requesterEmail, setRequesterEmail] = useState("");
-
-  const fetchUser= async (requesterId) => {
-    const requesterData = axios.get(
-      Links.MDR_URL() + "/api/users/" + requesterId
-    ).then((response2) => {
-      const requesterObj = response2.data;
-      setRequesterName(requesterObj.name.text);
-      setRequesterEmail(requesterObj.email.emailAddress);
-    });
 
   };
 
@@ -295,8 +333,7 @@ function ListPendentConnectionsContent() {
 
   for (var i = 0; i < searchedVS.length; i++){
     var obj = searchedVS[i];
-    fetchUser(obj.requester.value);
-    sample.push([obj.id,requesterName,requesterEmail,obj.description.text]);
+    sample.push([obj.id,obj.requesterObject.name.text,obj.requesterObject.email.emailAddress,obj.description.text]);
   }
 
   function createData( id, requester,requester_email, description) {
