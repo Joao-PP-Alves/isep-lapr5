@@ -3,9 +3,10 @@
 % Tamanho da rede.
 calcula_tamanho(Origem,0,Tamanho):-!,
 	no(_,Origem,_),
-	Tamanho is 1.
+	Tamanho is 0.
 
 calcula_tamanho(Origem,N,Tamanho):-
+	N > 0,
 	N1 is N-1,
 	no(Orig,Origem,_),
 	amigos_proximos(Orig,L),
@@ -15,7 +16,7 @@ calcula_tamanho(Origem,N,Tamanho):-
 amigos_proximos(Origem,L):-
 findall(X,ligacao(Origem,X,_),L).
 
-mais_amigos(L2,X,0):-length(L2,X),!.
+mais_amigos(L2,X1,0):-length(L2,X), X1 is X-1,!.
 
 mais_amigos(L,Tamanho,N):-
 	amigos_dos_amigos(L,L2),
