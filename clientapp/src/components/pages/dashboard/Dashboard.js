@@ -193,7 +193,8 @@ function DashboardContent() {
 	const fetchUsers = async () => {
 		const data = await fetch(
 			//Links.MDR_URL() + "/api/connections/pendent/" + userId
-			"https://localhost:5001/api/Users"
+			//"https://localhost:5001/api/Users"
+			"https://21s5dd20socialgame.azurewebsites.net/api/Users"
 		);
 		const vsList = await data.json();
 		console.log(vsList);

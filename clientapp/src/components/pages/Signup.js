@@ -159,8 +159,7 @@ export default function SignUp() {
                 } else {
                     setOpenSnackBar(true);
 
-                    window.setTimeout(redirectDashboard,100);
-
+				window.setTimeout(redirectDashboard,100);
                 }
                 setMakingRequest(false);
             })

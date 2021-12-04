@@ -10629,19 +10629,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Sara Borges\\.nuget\\packages\\": {}
+    "C:\\Users\\Davide\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+      "projectUniqueName": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
       "projectName": "MasterDataSocialNetworkTest",
-      "projectPath": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
-      "packagesPath": "C:\\Users\\Sara Borges\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
+      "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\MasterDataSocialNetworkTest.csproj",
+      "packagesPath": "C:\\Users\\Davide\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetworkTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Sara Borges\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Davide\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -10653,8 +10653,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
-              "projectPath": "C:\\Users\\Sara Borges\\Desktop\\Projeto Integrador\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
+            "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj": {
+              "projectPath": "C:\\Users\\Davide\\Documents\\UNIVERSIDADE\\3ºAno\\LAPR5\\21s5_dd_20\\MasterDataSocialNetwork\\DDDNetCore.csproj"
             }
           }
         }
