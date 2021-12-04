@@ -4,10 +4,10 @@ import Links from "../components/Links";
 import * as THREE from 'three';
 import Edge from './edge';
 import Node from './node';
-import renderToCanvas from './renderToCanvas';
 import camera_zoom from './camera_zoom';
 import Orientation from './orientation';
 import { camera_const } from './camera_const';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 //import {returnRows} from './getMyFriends';
 
 
@@ -137,8 +137,18 @@ export default class Graph {
 
         var aspectRatio = window.innerWidth / window.innerHeight;
         this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 100);
+        const controls = new OrbitControls( this.camera, this.renderer.domElement );
+        controls.enableRotate = false;
+        controls.maxDistance  = 100;
+        controls.minDistance  = 5;
+
+
         this.camera.position.set(0, 0, 100);
+        controls.update();
+        
         this.scene.add(this.camera);
+
+        
 
         this.cameraMinimap = new THREE.PerspectiveCamera(
             90, window.innerWidth / window.innerHeight, 0.1, 100
@@ -174,120 +184,11 @@ export default class Graph {
         return this.canvas;
     }
 
-    cameraOffset = this.topViewCamera
-    cameraZoom = 1
-    MAX_ZOOM = 5
-    MIN_ZOOM = 0.1
-    SCROLL_SENSITIVITY = 0.0005
-    isDragging = false;
-    dragStart = { x: 0, y: 0 }
-    initialPinchDistance = null
-    lastZoom = this.cameraZoom
-
-    getEventLocation(e) {
-        if (e.touches && e.touches.length == 1) {
-            return { x: e.touches[0].clientX, y: e.touches[0].clientY }
-        }
-        else if (e.clientX && e.clientY) {
-            return { x: e.clientX, y: e.clientY }
-        }
-    }
-
-    onPointerDown(e) {
-        this.isDragging = true
-        this.dragStart.x = this.getEventLocation(e).x / this.cameraZoom - this.cameraOffset.x
-        this.dragStart.y = this.getEventLocation(e).y / this.cameraZoom - this.cameraOffset.y
-    }
-
-    onPointerUp(e) {
-        this.isDragging = false
-        this.initialPinchDistance = null
-        this.lastZoom = this.cameraZoom
-    }
-
-    onPointerMove(e) {
-        if (this.isDragging) {
-            this.cameraOffset.x = this.getEventLocation(e).x / this.cameraZoom - this.dragStart.x
-            this.cameraOffset.y = this.getEventLocation(e).y / this.cameraZoom - this.dragStart.y
-        }
-    }
-
-    handleTouch(e, singleTouchHandler) {
-        if (e.touches.length == 1) {
-            singleTouchHandler(e)
-        }
-        else if (e.type == "touchmove" && e.touches.length == 2) {
-            this.isDragging = false
-            this.handlePinch(e)
-        }
-    }
-
-    handlePinch(e) {
-        e.preventDefault()
-
-        let touch1 = { x: e.touches[0].clientX, y: e.touches[0].clientY }
-        let touch2 = { x: e.touches[1].clientX, y: e.touches[1].clientY }
-
-        // This is distance squared, but no need for an expensive sqrt as it's only used in ratio
-        let currentDistance = (touch1.x - touch2.x) ** 2 + (touch1.y - touch2.y) ** 2
-
-        if (this.initialPinchDistance == null) {
-            this.initialPinchDistance = currentDistance
-        }
-        else {
-            this.adjustZoom(null, currentDistance / this.initialPinchDistance)
-        }
-    }
-
-    adjustZoom(zoomAmount, zoomFactor) {
-        if (!this.isDragging) {
-            if (zoomAmount) {
-                this.cameraZoom += zoomAmount
-            }
-            else if (zoomFactor) {
-                console.log(zoomFactor)
-                this.cameraZoom = zoomFactor * this.lastZoom
-            }
-
-            this.cameraZoom = Math.min(this.cameraZoom,this.MAX_ZOOM)
-            this.cameraZoom = Math.max(this.cameraZoom,this.MIN_ZOOM)
-
-            console.log(zoomAmount)
-        }
-    }
-
-
-    updateValue(value) {
-        //    
-    }
-
-    onMouseWheel() {
-        console.log("Doin it");
-        this.topViewCamera.updateDistance(1.0);
-    }
-
-    onWindowResize(vpW, vpH) {
-        this.renderer.setSize(vpW, vpH);
-    }
-
     update() {
         this.renderer.render(this.scene, this.camera);
         this.render();
 
         requestAnimationFrame(this.update.bind(this));
-    }
-
-    animate() {
-        if (document.readyState !== 'loading') {
-            this.render();
-        } else {
-            window.addEventListener('DOMContentLoaded', () => {
-                this.render();
-            });
-        }
-        window.addEventListener('resize', () => {
-            this.resize();
-        });
     }
 
 
