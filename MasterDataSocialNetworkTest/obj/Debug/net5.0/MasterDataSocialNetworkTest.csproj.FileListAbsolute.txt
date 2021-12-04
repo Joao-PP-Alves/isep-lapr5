@@ -993,3 +993,13 @@ C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\MasterDataSocialNetwo
 C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\DDDNetCore.pdb
 C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\MasterDataSocialNetworkTest\obj\Debug\net5.0\MasterDataSocialNetworkTest.csproj.CopyComplete
 C:\Users\Sara Borges\Desktop\Projeto Integrador\21s5_dd_20\MasterDataSocialNetworkTest\obj\Debug\net5.0\MasterDataSocialNetworkTest.genruntimeconfig.cache
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\publish\web.config
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\web.config
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\appsettings.Development.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\appsettings.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\DDDNetCore.deps.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\DDDNetCore.runtimeconfig.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\publish\appsettings.Development.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\publish\appsettings.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\publish\DDDNetCore.deps.json
+C:\Users\Davide\Documents\UNIVERSIDADE\3ºAno\LAPR5\21s5_dd_20\MasterDataSocialNetworkTest\bin\Debug\net5.0\publish\publish\publish\publish\DDDNetCore.runtimeconfig.json

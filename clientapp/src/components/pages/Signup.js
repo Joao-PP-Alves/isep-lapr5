@@ -162,9 +162,7 @@ export default function SignUp() {
                 } else {
                     setOpenSnackBar(true);
 
-                    //
-                    //    MUDAR PARA DASHBOARD AQUI
-                    //
+                    
                 }
                 setMakingRequest(false);
             })
