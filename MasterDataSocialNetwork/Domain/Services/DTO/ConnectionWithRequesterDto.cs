@@ -19,6 +19,7 @@ namespace DDDNetCore.Domain.Services.DTO{
 
         public Decision decision {get; set;}
 
+        // change to value objects from user
         public User requesterObject {get; set;}
 
         public ConnectionWithRequesterDto(Guid id, UserId requester, UserId targetUser, Description description, Decision decision, User requesterObject){

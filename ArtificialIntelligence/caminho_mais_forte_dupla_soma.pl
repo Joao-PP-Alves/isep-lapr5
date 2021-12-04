@@ -1,9 +1,5 @@
 :- module(caminho_mais_forte_dupla_soma, [dfsLengthDouble/4,
 											plan_maxlig2/4]).
-%Determinar o caminho mais forte (maximiza o somat�rio das for�as de
-% liga��o) para determinado utilizador
-%Considerando a soma das duas for�as em cada ramo da travessia (do n� A para o B e do
-%B para o A)
 
 :-dynamic melhor_sol_maxlig2/2.
 

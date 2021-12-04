@@ -142,6 +142,11 @@ namespace DDDNetCore.Controllers{
         public async Task<ActionResult<IntroductionDto>> ReproveIntroduction(Guid id){
             return await _service.ReproveIntroduction(new IntroductionId(id));
         }
+
+        [HttpGet("pendentWithNames/{id}")]
+        public async Task<ActionResult<List<IntroductionWithUsersNamesDto>>> GetPendentWithNames(Guid id){
+            return await _service.GetPendentIntroductionsWithUsernames(new UserId(id));
+        }
         
 
 
