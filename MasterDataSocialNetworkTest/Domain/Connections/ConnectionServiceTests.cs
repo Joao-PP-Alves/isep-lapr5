@@ -140,7 +140,7 @@ namespace MasterDataSocialNetworkTest.Domain.Connections
 
             repoConnections.Setup(p => p.getPendentConnections(user.Id)).ReturnsAsync(list);
 
-            Task<List<ConnectionWithRequesterDto>> task = service.GetPendentConnections(user.Id);
+            Task<List<ConnectionDto>> task = service.GetPendentConnections(user.Id);
 
             var bothLists = task.Result.Zip(list, (n, w) => new
             {

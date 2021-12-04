@@ -22,16 +22,12 @@ namespace MasterDataSocialNetworkTest.Controllers{
     public class UserControllerTests{
 
         Mock<IUserService> service;
-
-        Mock<IFriendshipService> friendShipService;
-
         UsersController controller;
 
         [TestInitialize]
         public void setup(){
             service = new Mock<IUserService>();
-            friendShipService = new Mock<IFriendshipService>();
-            controller = new UsersController(service.Object, friendShipService.Object);
+            controller = new UsersController(service.Object);
         }
 
         [TestCleanup]
