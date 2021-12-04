@@ -1,5 +1,5 @@
 :- module(caminho_mais_seguro_1ligacao, [dfsLength_safest_oneWay/5,
-											plan_safestlig_oneWay/5]).
+											plan_safestlig_oneWay/6]).
 
 :-dynamic melhor_sol_safest_oneWay/2.
 :-dynamic conta_sol/1.
@@ -17,7 +17,7 @@ dfs2Length_safest_oneWay(Act,Dest,Min,LA,Cam,Len):-
     Len is Len2 + Len1.
 
 
-plan_safestlig_oneWay(Orig,Dest,Min,LCaminho_maxlig,LCaminho_length):-
+plan_safestlig_oneWay(Orig,Dest,Min,LCaminho_maxlig,LCaminho_length,NS):-
 		get_time(Ti),
 		(melhor_caminho_safest_oneWay(Orig,Dest,Min);true),
 		retract(melhor_sol_safest_oneWay(LCaminho_maxlig,LCaminho_length)),retract(conta_sol(NS)),
