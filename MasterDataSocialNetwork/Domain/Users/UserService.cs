@@ -395,6 +395,7 @@ namespace DDDNetCore.Domain.Users
             else
             {
                 toReturn.Add(new UserPerspectiveDto(user.Id.Value, user.Name.text, null, null, null));
+                //toReturn.Add(new UserPerspectiveDto(user.Id.Value, user.Name.text, null, "1", "1"));
                 transforma(param, new List<UserPerspectiveDto>(), toReturn);
                 return toReturn;
             }

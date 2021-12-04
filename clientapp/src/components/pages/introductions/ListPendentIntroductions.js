@@ -212,7 +212,7 @@ function search() {
 
     const data = await fetch(
 			//mudar o id para uma parâmetro passado!
-			Links.MDR_URL() + "/api/introductions/pendentWithNames/" + userId
+			Links.MDR_URL() + "introductions/pendentWithNames/" + userId
 		);
     const vsList = await data.json();
     console.log(vsList);

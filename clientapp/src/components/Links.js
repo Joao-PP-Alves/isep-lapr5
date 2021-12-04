@@ -1,4 +1,3 @@
 class MyClass {
-    static MDR_URL() { return "https://21s5dd20socialgame.azurewebsites.net/api"; }
-}
+    static MDR_URL() { return "https://localhost:5001"; }}
 export default MyClass;

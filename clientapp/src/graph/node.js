@@ -17,7 +17,7 @@ export default class Node {
         }
 
         // Create the ball (a circle)
-        const geometry = new THREE.CircleGeometry(this.radius, 4);
+        const geometry = new THREE.CircleGeometry(this.radius, 128);
         const material = new THREE.MeshBasicMaterial({ color: this.color });
         this.object = new THREE.Mesh(geometry, material);
     }
@@ -28,7 +28,7 @@ export default class Node {
         scene.add(this.object);
     }
     setNewColor(newColor){
-        const geometry = new THREE.CircleGeometry(this.radius, 4);
+        const geometry = new THREE.CircleGeometry(this.radius, 128);
         const material = new THREE.MeshBasicMaterial({ color: newColor });
         this.object = new THREE.Mesh(geometry, material);
     }

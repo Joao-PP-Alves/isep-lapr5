@@ -17,9 +17,6 @@ class AppGraphContent extends React.Component {
 
         this.graph = new Graph(canvas);
 
-        // Init any event listeners
-        window.addEventListener('mousemove', this.mouseMove);
-        window.addEventListener('resize', this.handleResize);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -27,16 +24,6 @@ class AppGraphContent extends React.Component {
         const newValue = this.props.whateverProperty;
         this.Graph.updateValue(newValue);
     }
-
-
-    // ******************* EVENT LISTENERS ******************* //
-    mouseMove = (event) => {
-        this.graph.onMouseMove();
-    }
-
-    handleResize = () => {
-        this.graph.onWindowResize(window.innerWidth, window.innerHeight);
-    };
 
     render() {
         return (

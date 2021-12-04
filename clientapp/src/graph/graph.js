@@ -4,34 +4,34 @@ import Links from "../components/Links";
 import * as THREE from 'three';
 import Edge from './edge';
 import Node from './node';
-import renderToCanvas from './renderToCanvas';
 import camera_zoom from './camera_zoom';
 import Orientation from './orientation';
 import { camera_const } from './camera_const';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 //import {returnRows} from './getMyFriends';
 
 
 
 
 let rows = [];
-function createData( id, name,parent ,forcaLigacao, forcaRelacao) {
-    return { id, name,parent ,forcaLigacao, forcaRelacao};
+function createData(id, name, parent, forcaLigacao, forcaRelacao) {
+    return { id, name, parent, forcaLigacao, forcaRelacao };
 }
 
 let colors = [];
 
-function populateRows(){
-    rows.push(createData("1","Ferndando",null,"3","10"));
-    rows.push(createData("2","Ferndanda","1","4","10"));
-    rows.push(createData("3","Ricardo","1","5","10"));
-    rows.push(createData("4","Luísa","1","6","10"));
-    rows.push(createData("5","Lurdes","1","7","10"));
-    rows.push(createData("6","Raquel","2","8","10"));
-    rows.push(createData("7","Olavo","2","9","10"));
-    rows.push(createData("8","Rajesh","6","10","10"));
-    rows.push(createData("9","Rita","3","11","10"));
-    rows.push(createData("10","Rute","4","12","10"));
-    rows.push(createData("11","Diogo","4","13","10"));
+function populateRows() {
+    rows.push(createData("1", "Ferndando", null, "3", "10"));
+    rows.push(createData("2", "Ferndanda", "1", "4", "10"));
+    rows.push(createData("3", "Ricardo", "1", "5", "10"));
+    rows.push(createData("4", "Luísa", "1", "6", "10"));
+    rows.push(createData("5", "Lurdes", "1", "7", "10"));
+    rows.push(createData("6", "Raquel", "2", "8", "10"));
+    rows.push(createData("7", "Olavo", "2", "9", "10"));
+    rows.push(createData("8", "Rajesh", "6", "10", "10"));
+    rows.push(createData("9", "Rita", "3", "11", "10"));
+    rows.push(createData("10", "Rute", "4", "12", "10"));
+    rows.push(createData("11", "Diogo", "4", "13", "10"));
     colors.push(0xff0000);
     colors.push(0x00ff00);
     colors.push(0x0000ff);
@@ -99,7 +99,7 @@ for (let i = 0; i < searchedVS.length; i += 1) {
 }
 }
 */
-function returnRows(){
+function returnRows() {
     populateRows();
     return rows;
 }
@@ -116,73 +116,72 @@ export default class Graph {
 
     nodes = [];
     edges = [];
-    constructor(canvasRef){
+    constructor(canvasRef) {
 
         this.canvas = canvasRef;
         this.renderer = new THREE.WebGLRenderer({
             canvas: canvasRef,
             antialias: true,
-            alpha : true}); 
+            alpha: true
+        });
 
-    
+
         this.renderer.setPixelRatio(window.devicePixelRatio);
 
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-    
+        this.renderer.setSize(window.innerWidth * 0.99, window.innerHeight * 0.99);
+
         document.body.appendChild(this.renderer.domElement);
 
         this.scene = new THREE.Scene();
-        
+
 
         var aspectRatio = window.innerWidth / window.innerHeight;
         this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 100);
+        const controls = new OrbitControls( this.camera, this.renderer.domElement );
+        controls.enableRotate = false;
+        controls.maxDistance  = 100;
+        controls.minDistance  = 5;
+
+
         this.camera.position.set(0, 0, 100);
+        controls.update();
+        
         this.scene.add(this.camera);
+
+        
 
         this.cameraMinimap = new THREE.PerspectiveCamera(
             90, window.innerWidth / window.innerHeight, 0.1, 100
         );
         this.cameraMinimap.position.set(0, 0, 100);
-        
+
         this.scene.add(this.cameraMinimap);
 
-        this.light = new THREE.AmbientLight( 0x404040 );
+        this.light = new THREE.AmbientLight(0x404040);
         this.light.position.z = 100;
         this.scene.add(this.light);
 
         //const canvas = document.createElement('graphCanvas');
-        
+
         var dtos = returnRows();
 
         this.createNodes(dtos);
         var lvl = 0;
         this.addNodesToScene(this.rootNode, lvl);
-     
-        this.addEdgesToScene(this.nodes,dtos);
 
-        this.miniMapCameraParameters = merge(true, camera_const, { view: 'mini-map', multipleViewsViewport: new THREE.Vector4(0.99, 0.03, 0.3, 0.3), initialOrientation: new Orientation(180.0, 0.0), initialZoom: 0.7});
+        this.addEdgesToScene(this.nodes, dtos);
+
+        this.miniMapCameraParameters = merge(true, camera_const, { view: 'mini-map', multipleViewsViewport: new THREE.Vector4(0.99, 0.03, 0.3, 0.3), initialOrientation: new Orientation(180.0, 0.0), initialZoom: 0.7 });
         this.miniMapCamera = new camera_zoom(this.miniMapCameraParameters, window.innerWidth, window.innerHeight);
-    
-        this.topViewCameraParameters = merge(true, camera_const, { view: 'top', initialOrientation: new Orientation(0.0, -90.0), initialZoom: 0.7});
+
+        this.topViewCameraParameters = merge(true, camera_const, { view: 'top', initialOrientation: new Orientation(0.0, -90.0), initialZoom: 0.7 });
         this.topViewCamera = new camera_zoom(this.topViewCameraParameters, window.innerWidth, window.innerHeight);
         this.update();
         //this.renderer.render(this.scene,this.camera);
     }
 
-    getCanvas(){
+    getCanvas() {
         return this.canvas;
-    }
-
-    updateValue(value) {
-        //    
-    }
-  
-    onMouseMove() {
-       //
-    }
-  
-    onWindowResize(vpW, vpH) {
-        this.renderer.setSize(vpW, vpH);
     }
 
     update() {
@@ -192,153 +191,137 @@ export default class Graph {
         requestAnimationFrame(this.update.bind(this));
     }
 
-    animate(){
-        if (document.readyState !== 'loading') {
-            this.render();
-        } else {
-            window.addEventListener('DOMContentLoaded', () => {
-                this.render();
-            });
-        }
-        window.addEventListener('resize', () => {
-            this.resize();
-        });
-    }
 
-
-    addEdgesToScene(nodes,dtos)
-    {
+    addEdgesToScene(nodes, dtos) {
         nodes.forEach(node => {
-            
+
             var adjacentes = node.adjacents;
-            
+
             adjacentes.forEach(adj => {
-                
-                dtos.forEach(dto=> {
-                  
+
+                dtos.forEach(dto => {
+
                     if (dto.parent === adj.parent && dto.id === adj.user) {
                         var edge = new Edge({
-                            parent : node,
-                            friend : adj,
-                            ligacao : dto.forcaLigacao,
-                            relacao : dto.forcaRelacao
-                        },this.scene)
+                            parent: node,
+                            friend: adj,
+                            ligacao: dto.forcaLigacao,
+                            relacao: dto.forcaRelacao
+                        }, this.scene)
                         this.edges.push(edge);
                     }
-                }) 
+                })
             })
         })
     }
 
-    createNodes(dtos){
-        dtos.forEach(dto =>{
+    createNodes(dtos) {
+        dtos.forEach(dto => {
 
             var node = new Node({
-                color : 0x00ff00,
-                radius : 3,
-                user : dto.id,
-                parent : dto.parent,
-                adjacents : [],
-                x : 0, 
-                y : 0,
-                angle : 0,
-                angleRange : 2*Math.PI,
-                depth : 0
+                color: 0x00ff00,
+                radius: 3,
+                user: dto.id,
+                parent: dto.parent,
+                adjacents: [],
+                x: 0,
+                y: 0,
+                angle: 0,
+                angleRange: 2 * Math.PI,
+                depth: 0
             })
-            if (dto.parent === null){
+            if (dto.parent === null) {
                 this.rootNode = node;
             }
             this.nodes.push(node);
 
         });
         dtos.forEach(dto => {
-            this.nodes.forEach(node =>{
-                if (dto.id === node.user){
+            this.nodes.forEach(node => {
+                if (dto.id === node.user) {
                     var adjacentes = [];
-                    dtos.forEach(dto2 =>{
-                        if (dto2.parent === dto.id){
+                    dtos.forEach(dto2 => {
+                        if (dto2.parent === dto.id) {
                             this.nodes.forEach(node2 => {
-                                if (node2.user === dto2.id){
+                                if (node2.user === dto2.id) {
                                     adjacentes.push(node2);
                                 }
                             });
                         }
-                    } );
+                    });
                     node.addAdjacents(adjacentes);
 
                 }
             });
         });
     }
-    
-    
+
+
     //getData() { 
-        // Anda Inês, trabalha AQUIIII
-        // O que está aqui não deve interessar
-        /** let users = [];
+    // Anda Inês, trabalha AQUIIII
+    // O que está aqui não deve interessar
+    /** let users = [];
 
-        for (var i = 0; i < searchedVS.length; i++) {
-            var obj = searchedVS[i];
-            fetchUser(obj.requester.value);
-            users.push([obj.id, requesterName, requesterEmail, obj.description.text]);
+    for (var i = 0; i < searchedVS.length; i++) {
+        var obj = searchedVS[i];
+        fetchUser(obj.requester.value);
+        users.push([obj.id, requesterName, requesterEmail, obj.description.text]);
+    }
+
+    function createData(id, requester, requester_email, description) {
+        return { friendshipId , id, requester, requester_email, description };
+    }
+
+    const rows = [];
+
+    for (let i = 0; i < searchedVS.length; i += 1) {
+        rows.push(createData(...users[i]));
+    }
+
+    let root;
+    let nodes = [];
+    users.forEach(element => {
+        if (element.id === this.userRequesterId){
+            var node = new Node({
+                color : 0x00ff00,
+                radius : 3,
+                user : element,
+                parent : 'undefined',
+                x : 0.0,
+                y : 0.0
+            }, this.scene);
+            root = node;
+            nodes.push(node);
         }
+    });
 
-        function createData(id, requester, requester_email, description) {
-            return { friendshipId , id, requester, requester_email, description };
-        }
-
-        const rows = [];
-
-        for (let i = 0; i < searchedVS.length; i += 1) {
-            rows.push(createData(...users[i]));
-        }
-
-        let root;
-        let nodes = [];
-        users.forEach(element => {
-            if (element.id === this.userRequesterId){
-                var node = new Node({
-                    color : 0x00ff00,
-                    radius : 3,
-                    user : element,
-                    parent : 'undefined',
-                    x : 0.0,
-                    y : 0.0
-                }, this.scene);
-                root = node;
-                nodes.push(node);
-            }
-        });
-
-        let edges = [];
-        
-        this.addDataToScene(users, rows, root); 
-    }*/
+    let edges = [];
+    
+    this.addDataToScene(users, rows, root); 
+}*/
 
 
 
-    addNodesToScene(node,lvl)
-    {
-        
-        if (node.parent === null){
+    addNodesToScene(node, lvl) {
+
+        if (node.parent === null) {
             node.setNewColor(colors[lvl]);
             node.initialize(this.scene);
         }
 
         var n = node.adjacents.length;
         lvl = lvl + 1;
-        for (var i= 0; i< node.adjacents.length; i++) 
-        {
+        for (var i = 0; i < node.adjacents.length; i++) {
             var center = 0;
-            if (node.adjacents[i].parent !== null){
-                
-                
+            if (node.adjacents[i].parent !== null) {
+
+
                 node.adjacents[i].setNewColor(colors[lvl]);
 
-                center = (-node.angleRange + (node.angleRange/n)) * 0.5;
+                center = (-node.angleRange + (node.angleRange / n)) * 0.5;
                 node.adjacents[i].depth = lvl;
                 node.adjacents[i].angle = node.angle + (node.angleRange / n * i) + center;
-    
+
                 node.adjacents[i].angleRange = node.angleRange / n;
 
                 var posX = 25 * (node.adjacents[i].depth) * Math.cos(node.adjacents[i].angle) - 0 * Math.sin(node.adjacents[i].angle);
@@ -349,12 +332,12 @@ export default class Graph {
 
                 node.adjacents[i].y = posY;
 
-                
+
                 node.adjacents[i].initialize(this.scene);
-                
-                this.addNodesToScene(node.adjacents[i],lvl);
+
+                this.addNodesToScene(node.adjacents[i], lvl);
             }
-            
+
         }
     }
 
@@ -368,7 +351,7 @@ export default class Graph {
         this.renderer.setScissor(viewportTop.x, viewportTop.y, viewportTop.width, viewportTop.height);
         this.renderer.setScissorTest(true);
         this.renderer.render(this.scene, this.camera);
-        
+
         const viewport = this.miniMapCamera.getViewport();
         this.renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
         this.renderer.setScissor(viewport.x, viewport.y, viewport.width, viewport.height);
