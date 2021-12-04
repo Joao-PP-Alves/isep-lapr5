@@ -23,7 +23,6 @@ import LogIn from "./Login";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
-import Dashboard from "./dashboard/Dashboard";
 
 function Copyright(props) {
     return (

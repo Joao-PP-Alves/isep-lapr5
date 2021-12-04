@@ -283,14 +283,18 @@ function DashboardContent() {
 							)}
 							renderOption={(props, option, { inputValue }) => {
 								const matches = match(option.name, inputValue);
-								const parts = parse(option.name, matches);
+								const users = parse(option.name, matches);
+								console.log("users:" + users);
 
 								return (
 									<li {...props}>
 										<div>
-											{parts.map((part, index) => (
+
+											
+											{users.map((part, index) => (
+												console.log(part),
 												console.log(index),
-												{/*<span
+												<span
 													key={index}
 
 													style={{
@@ -298,8 +302,8 @@ function DashboardContent() {
 													}}
 												>
 													{part.text}
-												</span>*/}
-											))}
+												</span>
+												))}
 										</div>
 									</li>
 								);
