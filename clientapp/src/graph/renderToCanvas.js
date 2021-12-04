@@ -19,6 +19,9 @@ export default async function renderToCanvas({
   canvas.height = height;
   const ctx = canvas.getContext('2d');
   const url = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+  <foreignObject width=${width} height=${height}>
+      ${renderToStaticMarkup(<Component />)}
+      </foreignObject>
       </svg>`;
   const image = await loadImage(url);
   ctx.drawImage(image, 0, 0);
