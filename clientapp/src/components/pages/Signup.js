@@ -1,6 +1,5 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
@@ -9,10 +8,8 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LoadingButton from "@mui/lab/LoadingButton";
-import SaveIcon from "@mui/icons-material/Save";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import Typography from "@mui/material/Typography";
@@ -20,13 +17,13 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import { FormCheck } from "react-bootstrap";
 import { useState } from "react";
 import PrivacyPolicy from "./privacyPolicy";
 import LogIn from "./Login";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
+import Dashboard from "./dashboard/Dashboard";
 
 function Copyright(props) {
     return (
@@ -162,9 +159,8 @@ export default function SignUp() {
                 } else {
                     setOpenSnackBar(true);
 
-                    //
-                    //    MUDAR PARA DASHBOARD AQUI
-                    //
+                    window.setTimeout(redirectDashboard,100);
+
                 }
                 setMakingRequest(false);
             })
@@ -174,6 +170,13 @@ export default function SignUp() {
                 setOpenSnackBarError(true);
                 setMakingRequest(false);
             });
+
+            
+    }
+
+    function redirectDashboard(){
+
+        window.location.href = "/dashBoard";
     }
 
     const handleDelete = (chipToDelete) => () => {
@@ -181,257 +184,220 @@ export default function SignUp() {
     };
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                open={openSnackBar}
-                autoHideDuration={3000}
-                onClose={handleClose}
-            >
-                <Alert
-                    onClose={handleClose}
-                    severity="success"
-                    sx={{ width: "100%" }}
-                >
-                    User Registered Successfully!
-                </Alert>
-            </Snackbar>
-            <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                open={openSnackBarError}
-                autoHideDuration={3000}
-                onClose={handleCloseError}
-            >
-                <Alert
-                    onClose={handleCloseError}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
-                    Failed To Register User!
-                </Alert>
-            </Snackbar>
-            <ThemeProvider theme={theme}>
-                <form className={"formulary"} onSubmit={handleSubmit}>
-                    <Container component="main" maxWidth="xs">
-                        <CssBaseline />
-                        <Box
-                            sx={{
-                                marginTop: 8,
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                                <LockOutlinedIcon />
-                            </Avatar>
-                            <Typography component="h1" variant="h5">
-                                Register new account
-                            </Typography>
-                            <Box
-                                component="form"
-                                noValidate
-                                onSubmit={handleSubmit}
-                                sx={{ mt: 3 }}
-                            >
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            autoComplete="given-name"
-                                            name="firstName"
-                                            required={true}
-                                            fullWidth
-                                            id="firstName"
-                                            label="First Name"
-                                            autoFocus
-                                            value={input_firstName}
-                                            onChange={(e) =>
-                                                setFirstName(e.target.value)
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            required
-                                            fullWidth
-                                            id="lastName"
-                                            label="Last Name"
-                                            name="lastName"
-                                            autoComplete="family-name"
-                                            value={input_lastName}
-                                            onChange={(e) =>
-                                                setLastName(e.target.value)
-                                            }
-                                        />
-                                    </Grid>
+			<LocalizationProvider dateAdapter={AdapterDateFns}>
+				<Snackbar
+					anchorOrigin={{ vertical: "top", horizontal: "center" }}
+					open={openSnackBar}
+					autoHideDuration={1000}
+					onClose={handleClose}
+				>
+					<Alert
+						onClose={handleClose}
+						severity="success"
+						sx={{ width: "100%" }}
+					>
+						User Registered Successfully!
+					</Alert>
+				</Snackbar>
+				<Snackbar
+					anchorOrigin={{ vertical: "top", horizontal: "center" }}
+					open={openSnackBarError}
+					autoHideDuration={1500}
+					onClose={handleCloseError}
+				>
+					<Alert
+						onClose={handleCloseError}
+						severity="error"
+						sx={{ width: "100%" }}
+					>
+						Failed To Register User!
+					</Alert>
+				</Snackbar>
+				<ThemeProvider theme={theme}>
+					<form className={"formulary"} onSubmit={handleSubmit}>
+						<Container component="main" maxWidth="xs">
+							<CssBaseline />
+							<Box
+								sx={{
+									marginTop: 8,
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "center",
+								}}
+							>
+								<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+									<LockOutlinedIcon />
+								</Avatar>
+								<Typography component="h1" variant="h5">
+									Register new account
+								</Typography>
+								<Box
+									component="form"
+									noValidate
+									onSubmit={handleSubmit}
+									sx={{ mt: 3 }}
+								>
+									<Grid container spacing={2}>
+										<Grid item xs={12} sm={6}>
+											<TextField
+												autoComplete="given-name"
+												name="firstName"
+												required={true}
+												fullWidth
+												id="firstName"
+												label="First Name"
+												autoFocus
+												value={input_firstName}
+												onChange={(e) => setFirstName(e.target.value)}
+											/>
+										</Grid>
+										<Grid item xs={12} sm={6}>
+											<TextField
+												required
+												fullWidth
+												id="lastName"
+												label="Last Name"
+												name="lastName"
+												autoComplete="family-name"
+												value={input_lastName}
+												onChange={(e) => setLastName(e.target.value)}
+											/>
+										</Grid>
 
-                                    <Grid item xs={12} sm={6}>
-                                        <DesktopDatePicker
-                                            label="Birth date"
-                                            inputFormat="dd/MM/yyyy"
-                                            value={input_birthDate}
-                                            onChange={handleDateChange}
-                                            renderInput={(params) => (
-                                                <TextField {...params} />
-                                            )}
-                                        />
-                                    </Grid>
+										<Grid item xs={12} sm={6}>
+											<DesktopDatePicker
+												label="Birth date"
+												inputFormat="dd/MM/yyyy"
+												value={input_birthDate}
+												onChange={handleDateChange}
+												renderInput={(params) => <TextField {...params} />}
+											/>
+										</Grid>
 
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            required
-                                            fullWidth
-                                            id="phoneNumber"
-                                            label="Phone number"
-                                            name="phoneNumber"
-                                            autoComplete="phone-number"
-                                            value={input_phoneNumber}
-                                            onChange={(e) =>
-                                                setPhoneNumber(e.target.value)
-                                            }
-                                        />
-                                    </Grid>
+										<Grid item xs={12} sm={6}>
+											<TextField
+												required
+												fullWidth
+												id="phoneNumber"
+												label="Phone number"
+												name="phoneNumber"
+												autoComplete="phone-number"
+												value={input_phoneNumber}
+												onChange={(e) => setPhoneNumber(e.target.value)}
+											/>
+										</Grid>
 
-                                    <Grid item xs={12}>
-                                        <Stack spacing={3} sx={{ width: 500 }}>
-                                            <Autocomplete
-                                                multiple
-                                                id="tags-filled"
-                                                options={savedTags.map(
-                                                    (option) => option.name
-                                                )}
-                                                freeSolo
-                                                value={input_tags}
-                                                onChange={(
-                                                    e,
-                                                    newval,
-                                                    reason
-                                                ) => {
-                                                    setTags(newval);
-                                                }}
-                                                renderTags={(
-                                                    value,
-                                                    getTagProps
-                                                ) =>
-                                                    value.map(
-                                                        (option, index) => (
-                                                            <Chip
-                                                                variant="outlined"
-                                                                label={option}
-                                                                {...getTagProps(
-                                                                    { index }
-                                                                )}
-                                                            />
-                                                        )
-                                                    )
-                                                }
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        {...params}
-                                                        variant="filled"
-                                                        label="Tags"
-                                                        placeholder="What interests you?"
-                                                        onKeyDown={(e) => {
-                                                            if (
-                                                                e.code ===
-                                                                    "enter" &&
-                                                                e.target.value
-                                                            ) {
-                                                                setTags(
-                                                                    input_tags.concat(
-                                                                        e.target
-                                                                            .value
-                                                                    )
-                                                                );
-                                                            }
-                                                        }}
-                                                    />
-                                                )}
-                                            />
-                                        </Stack>
-                                    </Grid>
+										<Grid item xs={12}>
+											<Stack spacing={3} sx={{ width: 500 }}>
+												<Autocomplete
+													multiple
+													id="tags-filled"
+													options={savedTags.map((option) => option.name)}
+													freeSolo
+													value={input_tags}
+													onChange={(e, newval, reason) => {
+														setTags(newval);
+													}}
+													renderTags={(value, getTagProps) =>
+														value.map((option, index) => (
+															<Chip
+																variant="outlined"
+																label={option}
+																{...getTagProps({ index })}
+															/>
+														))
+													}
+													renderInput={(params) => (
+														<TextField
+															{...params}
+															variant="filled"
+															label="Tags"
+															placeholder="What interests you?"
+															onKeyDown={(e) => {
+																if (e.code === "enter" && e.target.value) {
+																	setTags(input_tags.concat(e.target.value));
+																}
+															}}
+														/>
+													)}
+												/>
+											</Stack>
+										</Grid>
 
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            required
-                                            fullWidth
-                                            id="email"
-                                            label="Email Address"
-                                            name="email"
-                                            autoComplete="email"
-                                            value={input_email}
-                                            onChange={(e) =>
-                                                setEmail(e.target.value)
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            required
-                                            fullWidth
-                                            name="password"
-                                            label="Password"
-                                            type="password"
-                                            id="password"
-                                            autoComplete="new-password"
-                                            value={input_password}
-                                            onChange={(e) =>
-                                                setPassword(e.target.value)
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={checked}
-                                                    onChange={handleCheckChange}
-                                                    color="primary"
-                                                />
-                                            }
-                                            label="I agree with the terms and conditions"
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <LoadingButton
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    loading={makingRequest}
-                                    loadingPosition="end"
-                                    sx={{ mt: 3, mb: 2 }}
-                                    onClick={handleSubmit}
-                                >
-                                    Sign Up
-                                </LoadingButton>
-                                <Grid item>
-                                    <Link href="/login" variant="body2">
-                                        Already have an account? Login.
-                                        {LogIn}
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link
-                                        href="/termsConditions"
-                                        variant="body2"
-                                    >
-                                        Terms and conditions.
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link href="/privacyPolicy" variant="body2">
-                                        {PrivacyPolicy}
-                                        Privacy Policy.
-                                    </Link>
-                                </Grid>
-                            </Box>
-                        </Box>
-                        <Copyright sx={{ mt: 5 }} />
-                    </Container>
-                </form>
-            </ThemeProvider>
-        </LocalizationProvider>
-    );
+										<Grid item xs={12}>
+											<TextField
+												required
+												fullWidth
+												id="email"
+												label="Email Address"
+												name="email"
+												autoComplete="email"
+												value={input_email}
+												onChange={(e) => setEmail(e.target.value)}
+											/>
+										</Grid>
+										<Grid item xs={12}>
+											<TextField
+												required
+												fullWidth
+												name="password"
+												label="Password"
+												type="password"
+												id="password"
+												autoComplete="new-password"
+												value={input_password}
+												onChange={(e) => setPassword(e.target.value)}
+											/>
+										</Grid>
+										<Grid item xs={12}>
+											<FormControlLabel
+												control={
+													<Checkbox
+														checked={checked}
+														onChange={handleCheckChange}
+														color="primary"
+													/>
+												}
+												label="I agree with the terms and conditions"
+											/>
+										</Grid>
+									</Grid>
+									<LoadingButton
+										type="submit"
+										fullWidth
+										variant="contained"
+										loading={makingRequest}
+										loadingPosition="end"
+										sx={{ mt: 3, mb: 2 }}
+										onClick={handleSubmit}
+									>
+										Sign Up
+									</LoadingButton>
+									<Grid item>
+										<Link href="/login" variant="body2">
+											Already have an account? Login.
+											{LogIn}
+										</Link>
+									</Grid>
+									<Grid item>
+										<Link href="/termsConditions" variant="body2">
+											Terms and conditions.
+										</Link>
+									</Grid>
+									<Grid item>
+										<Link href="/privacyPolicy" variant="body2">
+											{PrivacyPolicy}
+											Privacy Policy.
+										</Link>
+									</Grid>
+								</Box>
+							</Box>
+							<Copyright sx={{ mt: 5 }} />
+						</Container>
+					</form>
+				</ThemeProvider>
+			</LocalizationProvider>
+		);
 }
 
 const savedTags = [

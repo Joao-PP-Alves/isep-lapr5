@@ -276,26 +276,28 @@ function DashboardContent() {
 							id="highlights-demo"
 							sx={{ width: 300 }}
 							options={sample}
-							getOptionLabel={(option) => option.name}
+							getOptionLabel={(option) => option.name || ""}
 							renderInput={(params) => (
 								<TextField {...params} label="Search Users" margin="normal" />
 							)}
 							renderOption={(props, option, { inputValue }) => {
 								const matches = match(option.name, inputValue);
-								const parts = parse(option.name, 0);
+								const parts = parse(option.name, matches);
 
 								return (
 									<li {...props}>
 										<div>
 											{parts.map((part, index) => (
-												<span
+												console.log(index),
+												{/*<span
 													key={index}
+
 													style={{
 														fontWeight: part.highlight ? 700 : 400,
 													}}
 												>
 													{part.text}
-												</span>
+												</span>*/}
 											))}
 										</div>
 									</li>
@@ -433,7 +435,7 @@ function DashboardContent() {
 										height: 240,
 									}}
 								>
-									<MinimalizedNetwork/>
+									<MinimalizedNetwork />
 								</Paper>
 							</Grid>
 							{/* Recent Deposits */}
@@ -457,9 +459,7 @@ function DashboardContent() {
 										display: "flex",
 										flexDirection: "column",
 									}}
-								>
-									
-								</Paper>
+								></Paper>
 							</Grid>
 						</Grid>
 						<Copyright sx={{ pt: 4 }} />
