@@ -245,6 +245,7 @@ const styles = (theme) => ({
   
     render() {
       const { classes, columns, rowHeight, headerHeight, ...tableProps } = this.props;
+      console.log(columns);
       return (
         <AutoSizer>
           {({ height, width }) => (

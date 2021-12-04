@@ -30,5 +30,7 @@ namespace DDDNetCore.Domain.Introductions
         Task<List<IntroductionDto>> GetPendentIntroductionsOnlyIntermediate(UserId id);
 
         Task<List<IntroductionDto>> GetPendentIntroductionsOnlyTargetUser(UserId id);
+
+        Task<List<IntroductionWithUsersNamesDto>> GetPendentIntroductionsWithUsernames(UserId id);
     }
 }
