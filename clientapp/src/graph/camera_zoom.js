@@ -1,130 +1,268 @@
-/** import graph from './graph';
-import React from 'react';
-import renderToCanvas from './renderToCanvas';
+import * as THREE from 'three';
+import { Vector4, Vector3 } from 'three';
+import Orientation from './orientation';
 
-let canvas = document.getElementById("rendererCanvas")
-let ctx = canvas.getContext('2d')
+/*
+ * parameters = {
+ *  view: String,
+ *  multipleViewsViewport: Vector4,
+ *  target: Vector3,
+ *  initialOrientation: Orientation,
+ *  orientationMin: Orientation,
+ *  orientationMax: Orientation,
+ *  initialDistance: Number,
+ *  distanceMin: Number,
+ *  distanceMax: Number,
+ *  initialZoom: Number,
+ *  zoomMin: Number,
+ *  zoomMax: Number,
+ *  initialFov: Number,
+ *  near: Number,
+ *  far: Number
+ * }
+ */
 
-let cameraOffset = { x: window.innerWidth/2, y: window.innerHeight/2 }
-let cameraZoom = 1
-let MAX_ZOOM = 5
-let MIN_ZOOM = 0.1
-let SCROLL_SENSITIVITY = 0.05
+export default class Camera {
 
-function centreView()
-{
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+
+    constructor(parameters, windowWidth, windowHeight) {
+        /*for (const [key, value] of Object.entries(parameters)) {
+            Object.defineProperty(this, key, { value: value, writable: true, configurable: true, enumerable: true });
+        }*/
+
+        this.view = parameters.view;
+        this.viewport = parameters.multipleViewsViewport.clone();
+        this.multipleViewsViewport = parameters.multipleViewsViewport;
+        this.target = parameters.target.clone();
+        this.orientationMin = parameters.orientationMin;
+        this.orientationMax = parameters.orientationMax;
+        this.distanceMin = parameters.distanceMin;
+        this.distanceMax = parameters.distanceMax;
+        this.zoomMin = parameters.zoomMin;
+        this.zoomMax = parameters.zoomMax;
+        this.initialOrientation = parameters.initialOrientation;
+        this.initialDistance = parameters.initialDistance;
+        this.initialZoom = parameters.initialZoom;
+        this.initialFov = parameters.initialFov;
+        this.near = parameters.near;
+        this.far = parameters.far;
     
-    // Translate to the canvas centre before zooming - so you'll always zoom on what you're looking directly at
-    ctx.translate( window.innerWidth / 2, window.innerHeight / 2 )
-    ctx.scale(cameraZoom, cameraZoom)
-    ctx.translate( -window.innerWidth / 2 + cameraOffset.x, -window.innerHeight / 2 + cameraOffset.y )
-    requestAnimationFrame(centreView)
-}
 
-// Gets the relevant location from a mouse or single touch event
-function getEventLocation(e)
-{
-    if (e.touches && e.touches.length === 1)
-    {
-        return { x:e.touches[0].clientX, y: e.touches[0].clientY }
+        // Compute half of the size of the target plane as a function of the camera's distance to the target and the field-of-view
+        this.initialHalfSize = Math.tan(THREE.MathUtils.degToRad(this.initialFov / 2.0)) * this.initialDistance;
+
+        // The player direction (expressed in degrees) is needed to compute the horizontal orientation of the first- and third-person view cameras
+        this.playerDirection = 0.0;
+
+        // Create two cameras (perspective and orthographic projection)
+        this.perspective = new THREE.PerspectiveCamera();
+        this.orthographic = new THREE.OrthographicCamera(0.0, 1.0, 1.0, 0.0, 0.0, 1.0);
+
+        this.setWindowSize(windowWidth, windowHeight);
+        this.initialize();
     }
-    else if (e.clientX && e.clientY)
-    {
-        return { x: e.clientX, y: e.clientY }        
-    }
-}
 
-let isDragging = false
-let dragStart = { x: 0, y: 0 }
+    /*
+     *        Y
+     *        |
+     *        O -- X
+     *       /
+     *      Z
+     */
 
-function onPointerDown(e)
-{
-    isDragging = true
-    dragStart.x = getEventLocation(e).x/cameraZoom - cameraOffset.x
-    dragStart.y = getEventLocation(e).y/cameraZoom - cameraOffset.y
-}
-
-function onPointerUp(e)
-{
-    isDragging = false
-    initialPinchDistance = null
-    lastZoom = cameraZoom
-}
-
-function onPointerMove(e)
-{
-    if (isDragging)
-    {
-        cameraOffset.x = getEventLocation(e).x/cameraZoom - dragStart.x
-        cameraOffset.y = getEventLocation(e).y/cameraZoom - dragStart.y
-    }
-}
-
-function handleTouch(e, singleTouchHandler)
-{
-    if ( e.touches.length === 1 )
-    {
-        singleTouchHandler(e)
-    }
-    else if (e.type === "touchmove" && e.touches.length === 2)
-    {
-        isDragging = false
-        handlePinch(e)
-    }
-}
-
-let initialPinchDistance = null
-let lastZoom = cameraZoom
-
-function handlePinch(e)
-{
-    e.preventDefault()
-    
-    let touch1 = { x: e.touches[0].clientX, y: e.touches[0].clientY }
-    let touch2 = { x: e.touches[1].clientX, y: e.touches[1].clientY }
-    
-    // This is distance squared, but no need for an expensive sqrt as it's only used in ratio
-    let currentDistance = (touch1.x - touch2.x)**2 + (touch1.y - touch2.y)**2
-    
-    if (initialPinchDistance === null)
-    {
-        initialPinchDistance = currentDistance
-    }
-    else
-    {
-        adjustZoom( null, currentDistance/initialPinchDistance )
-    }
-}
-
-function adjustZoom(zoomAmount, zoomFactor)
-{
-    if (!isDragging)
-    {
-        if (zoomAmount)
-        {
-            cameraZoom += zoomAmount
+    // Set the camera's position, orientation and target (positive Y-semiaxis up)
+    setViewingParameters() {
+        const orientation = new Orientation(this.orientation.h + this.playerDirection, this.orientation.v);
+        const cosH = Math.cos(THREE.MathUtils.degToRad(orientation.h));
+        const sinH = Math.sin(THREE.MathUtils.degToRad(orientation.h));
+        const cosV = Math.cos(THREE.MathUtils.degToRad(orientation.v));
+        const sinV = Math.sin(THREE.MathUtils.degToRad(orientation.v));
+        // Position
+        let positionX = this.target.x;
+        let positionY = this.target.y;
+        let positionZ = this.target.z;
+        if (this.view != 'first-person') {
+            positionX -= this.distance * sinH * cosV;
+            positionY -= this.distance * sinV;
+            positionZ -= this.distance * cosH * cosV;
         }
-        else if (zoomFactor)
-        {
-            console.log(zoomFactor)
-            cameraZoom = zoomFactor*lastZoom
+        this.perspective.position.set(positionX, positionY, positionZ);
+        this.orthographic.position.set(positionX, positionY, positionZ);
+        // Up vector
+        const upX = -sinH * sinV;
+        const upY = cosV;
+        const upZ = -cosH * sinV;
+        this.perspective.up.set(upX, upY, upZ);
+        this.orthographic.up.set(upX, upY, upZ);
+        // Target
+        const target = this.target.clone();
+        if (this.view == 'first-person') {
+            target.x += sinH * cosV;
+            target.y += sinV;
+            target.z += cosH * cosV;
         }
-        
-        cameraZoom = Math.min( cameraZoom, MAX_ZOOM )
-        cameraZoom = Math.max( cameraZoom, MIN_ZOOM )
-        
-        console.log(zoomAmount)
+        this.perspective.lookAt(target);
+        this.orthographic.lookAt(target);
+    }
+
+    setProjectionParameters() {
+        // Adjust the camera's field-of-view if needed; Set the left, right, top and bottom clipping planes
+        let fov, left, right, top, bottom;
+        if (this.aspectRatio < 1.0) {
+            fov = 2.0 * THREE.MathUtils.radToDeg(Math.atan(Math.tan(THREE.MathUtils.degToRad(this.initialFov / 2.0)) / this.aspectRatio));
+            right = this.initialHalfSize;
+            left = -right;
+            top = right / this.aspectRatio;
+            bottom = -top;
+        }
+        else {
+            fov = this.initialFov;
+            top = this.initialHalfSize;
+            bottom = -top;
+            right = top * this.aspectRatio;
+            left = -right;
+        }
+
+        // Perspective projection camera: the zoom effect is achieved by changing the value of the field-of-view; the PerspectiveCamera.zoom property does just that
+        this.perspective.fov = fov;
+        this.perspective.aspect = this.aspectRatio;
+        this.perspective.near = this.near;
+        this.perspective.far = this.far;
+        this.perspective.zoom = this.zoom;
+        this.perspective.updateProjectionMatrix();
+
+        // Orthographic projection camera: the zoom effect is achieved by changing the values of the left, right, top and bottom clipping planes; the OrthographicCamera.zoom property does just that
+        this.orthographic.left = left;
+        this.orthographic.right = right;
+        this.orthographic.top = top;
+        this.orthographic.bottom = bottom;
+        this.orthographic.near = this.near;
+        this.orthographic.far = this.far;
+        this.orthographic.zoom = this.zoom;
+        this.orthographic.updateProjectionMatrix();
+    }
+
+    setActiveProjection(projection) {
+        this.projection = projection;
+        if (this.projection != 'orthographic') {
+            this.object = this.perspective;
+        }
+        else {
+            this.object = this.orthographic;
+        }
+    }
+
+    initialize() {
+        this.orientation = this.initialOrientation.clone();
+        this.distance = this.initialDistance;
+        this.zoom = this.initialZoom;
+
+        // Set the viewing parameters (position, orientation and target)
+        this.setViewingParameters();
+
+        // Set the projection parameters (perspective: field-of-view, aspect ratio, near and far clipping planes; orthographic: left, right, top, bottom, near and far clipping planes)
+        this.setProjectionParameters();
+
+        // Set the default camera projection: mini-map: orthographic; remaining views: perspective
+        if (this.view != 'mini-map') {
+            this.setActiveProjection('perspective');
+        }
+        else {
+            this.setActiveProjection('orthographic');
+        }
+    }
+
+    getViewport() { // Converted from % to pixels
+        const windowMinSize = Math.min(this.windowWidth, this.windowHeight);
+        let x;
+        let y;
+        let width = this.viewport.width;
+        let height = this.viewport.height;
+        if (this.view != 'mini-map') {
+            x = this.viewport.x * (1.0 - this.viewport.width);
+            y = this.viewport.y * (1.0 - this.viewport.height);
+            if (this.windowWidth < this.windowHeight) {
+                x *= windowMinSize;
+                y *= this.windowHeight;
+                width *= windowMinSize;
+                height *= this.windowHeight;
+            }
+            else {
+                x *= this.windowWidth;
+                y *= windowMinSize;
+                width *= this.windowWidth;
+                height *= windowMinSize;
+            }
+        }
+        else {
+            width *= windowMinSize;
+            height *= windowMinSize;
+            x = this.viewport.x * (this.windowWidth - width);
+            y = this.viewport.y * (this.windowHeight - height);
+        }
+        return new THREE.Vector4(x, y, width, height);
+    }
+
+    setViewport(multipleViews) {
+        if (multipleViews) {
+            this.viewport = this.multipleViewsViewport.clone();
+        }
+        else {
+            this.viewport = new THREE.Vector4(0.0, 0.0, 1.0, 1.0);
+        }
+        const viewport = this.getViewport();
+        this.aspectRatio = viewport.width / viewport.height;
+        this.setProjectionParameters();
+    }
+
+    setWindowSize(windowWidth, windowHeight) {
+        this.windowWidth = windowWidth;
+        this.windowHeight = windowHeight;
+        const viewport = this.getViewport();
+        this.aspectRatio = viewport.width / viewport.height;
+    }
+
+    updateWindowSize(windowWidth, windowHeight) {
+        this.setWindowSize(windowWidth, windowHeight);
+        this.setProjectionParameters();
+    }
+
+    setTarget(target) {
+        this.target.copy(target);
+        this.setViewingParameters();
+    }
+
+    updateTarget(targetIncrement) {
+        this.setTarget(this.target.add(targetIncrement));
+    }
+
+    setOrientation(orientation) {
+        this.orientation.copy(orientation).clamp(this.orientationMin, this.orientationMax);
+        this.setViewingParameters();
+    }
+
+    updateOrientation(orientationIncrement) {
+        this.setOrientation(this.orientation.add(orientationIncrement));
+    }
+
+    setDistance(distance) {
+        this.distance = THREE.MathUtils.clamp(distance, this.distanceMin, this.distanceMax);
+        this.setViewingParameters();
+    }
+
+    updateDistance(distanceIncrement) {
+        this.setDistance(this.distance + distanceIncrement);
+    }
+
+    setZoom(zoom) {
+        this.zoom = THREE.MathUtils.clamp(zoom, this.zoomMin, this.zoomMax);
+        this.perspective.zoom = this.zoom;
+        this.perspective.updateProjectionMatrix();
+        this.orthographic.zoom = this.zoom;
+        this.orthographic.updateProjectionMatrix();
+    }
+
+    updateZoom(zoomIncrement) {
+        this.setZoom(this.zoom + zoomIncrement);
     }
 }
-
-canvas.addEventListener('mousedown', onPointerDown)
-canvas.addEventListener('touchstart', (e) => handleTouch(e, onPointerDown))
-canvas.addEventListener('mouseup', onPointerUp)
-canvas.addEventListener('touchend',  (e) => handleTouch(e, onPointerUp))
-canvas.addEventListener('mousemove', onPointerMove)
-canvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove))
-canvas.addEventListener( 'wheel', (e) => adjustZoom(e.deltaY*SCROLL_SENSITIVITY))
-
-centreView(); */

@@ -11,24 +11,13 @@ import * as THREE from 'three';
  
 
 export default class Node {
-    color;
-    radius;
-    user;
-    parent;
-    adjacents;
-    x; 
-    y;
-    angle;
-    angleRange;
-    depth;
-    center;
     constructor(parameters) {
         for (const [key, value] of Object.entries(parameters)) {
             Object.defineProperty(this, key, { value: value, writable: true, configurable: true, enumerable: true });
         }
 
         // Create the ball (a circle)
-        const geometry = new THREE.CircleGeometry(this.radius, 128);
+        const geometry = new THREE.CircleGeometry(this.radius, 4);
         const material = new THREE.MeshBasicMaterial({ color: this.color });
         this.object = new THREE.Mesh(geometry, material);
     }
@@ -38,9 +27,13 @@ export default class Node {
         this.object.position.set(this.center.x, this.center.y, this.center.z);
         scene.add(this.object);
     }
-
+    setNewColor(newColor){
+        const geometry = new THREE.CircleGeometry(this.radius, 4);
+        const material = new THREE.MeshBasicMaterial({ color: newColor });
+        this.object = new THREE.Mesh(geometry, material);
+    }
     addAdjacents(adjacentes){
-        this.adjacentes = adjacentes;
+        this.adjacents = adjacentes;
     }
 
     
