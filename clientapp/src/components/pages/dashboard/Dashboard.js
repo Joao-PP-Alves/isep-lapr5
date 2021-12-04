@@ -35,6 +35,9 @@ import parse from "autosuggest-highlight/parse";
 import { useState, useEffect } from "react";
 import MinimalizedNetwork from "./MinimalizedNetwork";
 import match from "autosuggest-highlight/match";
+import Links from "../../Links";
+import RequestConnection from "./RequestConnection";
+import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
 
 let rows = [];
 
@@ -192,9 +195,7 @@ function DashboardContent() {
 
 	const fetchUsers = async () => {
 		const data = await fetch(
-			//Links.MDR_URL() + "/api/connections/pendent/" + userId
-			//"https://localhost:5001/api/Users"
-			"https://21s5dd20socialgame.azurewebsites.net/api/Users"
+			Links.MDR_URL() + "Users"
 		);
 		const vsList = await data.json();
 		console.log(vsList);
@@ -215,18 +216,7 @@ function DashboardContent() {
 		sample.push(user)
 	}
 
-	/*function createData(name, email) {
-		return { name, email };
-	}*/
-
-	// push the information from sample to rows
-
 	rows = [];
-
-	/*for (let i = 0; i < searchedVS.length; i += 1) {
-		rows.push(createData(...sample[i]));
-		console.log(rows);
-	}*/
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
@@ -235,6 +225,8 @@ function DashboardContent() {
 	const [emotion] = React.useState("");
 	const [makingRequest, setMakingRequest] = useState(false);
 	const [input_emotion, setEmotion] = useState("");
+	const [connectionModal, setOpenConnectionModal] =React.useState(false);
+
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -251,7 +243,24 @@ function DashboardContent() {
 	const handleEmotionChange = (event) => {
 		setEmotion(event.target.value);
 	};
+	const handleUserClick = () =>{
+		setOpenConnectionModal(true);
+	};
+	const handleCloseConnectionModal = () => {
+		setOpenConnectionModal(false);
+	};
 
+	const style = {
+		position: "absolute",
+		top: "50%",
+		left: "50%",
+		transform: "translate(-50%, -50%)",
+		width: 400,
+		bgcolor: "background.paper",
+		border: "2px solid #000",
+		boxShadow: 24,
+		p: 4,
+	};
 
 	return (
 		<ThemeProvider theme={mdTheme}>
@@ -272,7 +281,6 @@ function DashboardContent() {
 						>
 							Dashboard
 						</Typography>
-
 						<Autocomplete
 							id="highlights-demo"
 							sx={{ width: 300 }}
@@ -289,26 +297,50 @@ function DashboardContent() {
 								return (
 									<li {...props}>
 										<div>
-											
-											{users.map((part, index) => (
-												console.log(part),
-												console.log(index),
-												<span
-													key={index}
-
-													style={{
-														fontWeight: part.highlight ? 700 : 400,
-													}}
-												>
-													{part.text}
-												</span>
-												))}
+											{users.map(
+												(part, index) => (
+													console.log(part),
+													console.log(index),
+													(
+														<span
+															key={index}
+															style={{
+																fontWeight: part.highlight ? 700 : 400,
+															}}
+														>
+															{part.text}
+														</span>
+													)
+												)
+											)}
 										</div>
 									</li>
 								);
 							}}
 						/>
-
+						{/*<IconButton
+							color="inherit"
+							id="accountButton"
+							aria-controls="demo-customized-menu"
+							aria-haspopup="true"
+							aria-expanded={open ? "true" : undefined}
+							variant="contained"
+							disableElevation
+							onClick={handleUserClick}
+						>
+							<ArrowForwardIosTwoToneIcon />
+							<Modal 
+								open={handleUserClick}>
+								
+							</Modal>
+						</IconButton>*/}
+						<RequestConnection
+							render={(open) => (
+								<IconButton onClick={open}>
+									<ArrowForwardIosTwoToneIcon />
+								</IconButton>
+							)}
+						/>
 						<IconButton
 							color="inherit"
 							id="accountButton"

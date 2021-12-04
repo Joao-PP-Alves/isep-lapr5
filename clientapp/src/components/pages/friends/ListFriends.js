@@ -328,7 +328,7 @@ function ListFriendsContent() {
   const fetchFriendships= async () => {
 
     const data = await fetch(
-      Links.MDR_URL() + "/api/users/friendships/" + userId
+      Links.MDR_URL() + "users/friendships/" + userId
     );
     const vsList = await data.json();
     console.log(vsList);

@@ -23,6 +23,7 @@ import LogIn from "./Login";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
+import Links from "../Links";
 
 function Copyright(props) {
     return (
@@ -143,7 +144,7 @@ export default function SignUp() {
         user.createTags();
 
         const response = fetch(
-            "https://21s5dd20socialgame.azurewebsites.net/api/Users",
+            Links.MDR_URL()+"Users",
 
             {
                 method: "POST",
