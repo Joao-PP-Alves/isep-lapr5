@@ -284,7 +284,7 @@ namespace DDDNetCore.Domain.Introductions
         /// <returns></returns>
         private string BuildRequest(String enabler, String target)
         {
-            var address = new StringBuilder("http://localhost:3001/shortpath?");
+            var address = new StringBuilder("https://vs-gate.dei.isep.ipp.pt:30176/shortpath?");
             address.Append("orig=").Append(enabler);
             address.Append('&');
 

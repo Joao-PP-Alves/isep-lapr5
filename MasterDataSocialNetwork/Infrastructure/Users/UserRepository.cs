@@ -65,7 +65,7 @@ namespace DDDNetCore.Infrastructure.Users
         }
         
         public Boolean checkIfFriends(UserId id, UserId id2){
-            var friendships = _context.Users.Find(id).friendsList;
+            var friendships = _context.Users.Where(x => id.Equals(x.Id)).FirstOrDefaultAsync().Result.friendsList;
             if (friendships == null){
                 return false;
             }
