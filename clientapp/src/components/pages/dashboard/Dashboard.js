@@ -207,17 +207,17 @@ function DashboardContent() {
 
 	for (var i = 0; i < searchedVS.length; i++) {
 		var obj = searchedVS[i];
-		sample.push([
-			obj.id,
-			obj.name,
-			//obj.requesterObject.name.text,
-			//obj.requesterObject.email.emailAddress,
-		]);
+		
+		const user = {
+            name: obj.name.text,
+            email: obj.email.emailAddress,
+        };
+		sample.push(user)
 	}
 
-	function createData(id, name) {
-		return { id, name };
-	}
+	/*function createData(name, email) {
+		return { name, email };
+	}*/
 
 	// push the information from sample to rows
 
@@ -283,14 +283,17 @@ function DashboardContent() {
 							)}
 							renderOption={(props, option, { inputValue }) => {
 								const matches = match(option.name, inputValue);
-								const parts = parse(option.name, matches);
+								const users = parse(option.name, matches);
+								console.log("users:" + users);
 
 								return (
 									<li {...props}>
 										<div>
-											{parts.map((part, index) => (
+											
+											{users.map((part, index) => (
+												console.log(part),
 												console.log(index),
-												{/*<span
+												<span
 													key={index}
 
 													style={{
@@ -298,8 +301,8 @@ function DashboardContent() {
 													}}
 												>
 													{part.text}
-												</span>*/}
-											))}
+												</span>
+												))}
 										</div>
 									</li>
 								);

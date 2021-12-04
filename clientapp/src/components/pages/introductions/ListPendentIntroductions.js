@@ -19,7 +19,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems} from '../dashboard/ListItems';
 import TableCell from '@mui/material/TableCell';
-import { AutoSizer, Column, Table } from 'react-virtualized';
+import Table from '@mui/material/Table';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 import clsx from 'clsx';
@@ -28,6 +28,14 @@ import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import { DataGrid } from "@mui/x-data-grid";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import TableContainer from '@mui/material/TableContainer';
+import TableBody from '@mui/material/TableBody';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Collapse from '@mui/material/Collapse';
+import axios from 'axios';  
 
 function Copyright(props) {
   return (
@@ -43,36 +51,7 @@ function Copyright(props) {
 }
 
 
-const rows = [
-	{ id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-	{ id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-	{ id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-	{ id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-	{ id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-	{ id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-	{ id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-	{ id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-	{ id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
-
-
-const columns = [
-	{ field: "id", headerName: "ID", width: 70 },
-	{ field: "firstName", headerName: "First name", width: 130 },
-	{ field: "description", headerName: "Description", width: 130 },
-	{
-		description: "This column has a value getter and is not sortable.",
-		sortable: false,
-		width: 160,
-		valueGetter: (params) =>
-			`${params.getValue(params.id, "firstName") || ""} ${
-				params.getValue(params.id, "lastName") || ""
-			}`,
-	},
-];
-
-
-
+const rows = [];
 
 const drawerWidth = 240;
 
@@ -122,159 +101,105 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-const styles = (theme) => ({
-    flexContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      boxSizing: 'border-box',
-    },
-    table: {
-      // temporary right-to-left patch, waiting for
-      // https://github.com/bvaughn/react-virtualized/issues/454
-      '& .ReactVirtualized__Table__headerRow': {
-        ...(theme.direction === 'rtl' && {
-          paddingLeft: '0 !important',
-        }),
-        ...(theme.direction !== 'rtl' && {
-          paddingRight: undefined,
-        }),
-      },
-    },
-    tableRow: {
-      cursor: 'pointer',
-    },
-    tableRowHover: {
-      '&:hover': {
-        backgroundColor: theme.palette.grey[200],
-      },
-    },
-    tableCell: {
-      flex: 1,
-    },
-    noClick: {
-      cursor: 'initial',
-    },
-  });
-  
-  class MuiVirtualizedTable extends React.PureComponent {
-    static defaultProps = {
-      headerHeight: 48,
-      rowHeight: 48,
-    };
-  
-    getRowClassName = ({ index }) => {
-      const { classes, onRowClick } = this.props;
-  
-      return clsx(classes.tableRow, classes.flexContainer, {
-        [classes.tableRowHover]: index !== -1 && onRowClick != null,
-      });
-    };
-  
-    cellRenderer = ({ cellData, columnIndex }) => {
-      const { columns, classes, rowHeight, onRowClick } = this.props;
-      return (
-        <TableCell
-          component="div"
-          className={clsx(classes.tableCell, classes.flexContainer, {
-            [classes.noClick]: onRowClick == null,
-          })}
-          variant="body"
-          style={{ height: rowHeight }}
-          align={
-            (columnIndex != null && columns[columnIndex].numeric) || false
-              ? 'right'
-              : 'left'
-          }
-        >
-          {cellData}
-        </TableCell>
-      );
-    };
-  
-    headerRenderer = ({ label, columnIndex }) => {
-      const { headerHeight, columns, classes } = this.props;
-  
-      return (
-        <TableCell
-          component="div"
-          className={clsx(classes.tableCell, classes.flexContainer, classes.noClick)}
-          variant="head"
-          style={{ height: headerHeight }}
-          align={columns[columnIndex].numeric || false ? 'right' : 'left'}
-        >
-          <span>{label}</span>
-        </TableCell>
-      );
-    };
-  
-    render() {
-      const { classes, columns, rowHeight, headerHeight, ...tableProps } = this.props;
-      return (
-        <AutoSizer>
-          {({ height, width }) => (
-            <Table
-              height={height}
-              width={width}
-              rowHeight={rowHeight}
-              gridStyle={{
-                direction: 'inherit',
-              }}
-              headerHeight={headerHeight}
-              className={classes.table}
-              {...tableProps}
-              rowClassName={this.getRowClassName}
-            >
-              {columns.map(({ dataKey, ...other }, index) => {
-                return (
-                  <Column
-                    key={dataKey}
-                    headerRenderer={(headerProps) =>
-                      this.headerRenderer({
-                        ...headerProps,
-                        columnIndex: index,
-                      })
-                    }
-                    className={classes.flexContainer}
-                    cellRenderer={this.cellRenderer}
-                    dataKey={dataKey}
-                    {...other}
-                  />
-                );
-              })}
-            </Table>
-          )}
-        </AutoSizer>
-      );
+const handleApprove = async (introId) => {
+  const response = await fetch(
+    Links.MDR_URL() + "/api/introductions/approve/" + introId,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: "",
     }
-  }
-  
-  MuiVirtualizedTable.propTypes = {
-    classes: PropTypes.object.isRequired,
-    columns: PropTypes.arrayOf(
-      PropTypes.shape({
-        dataKey: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-        numeric: PropTypes.bool,
-        width: PropTypes.number.isRequired,
-      }),
-    ).isRequired,
-    headerHeight: PropTypes.number,
-    onRowClick: PropTypes.func,
-    rowHeight: PropTypes.number,
-  };
+  )
+    .then((response) => response.json())
+    .then((json) => console.log(json));
+  alert("Introduction Approved!");
+}
+
+const handleReprove = async (introId) => {
+  console.log("reprovando");
+  const requesterData = await axios.put(
+    Links.MDR_URL() + "/api/introductions/reprove/" + introId
+  );
+  alert("Introduction Reproved!");
+}
+
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <React.Fragment>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell>{row.requester}</TableCell>
+        <TableCell>{row.enabler}</TableCell>
+        <TableCell>{row.targetUser}</TableCell>
+        <TableCell>{row.status}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Descriptions & Actions
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                </TableHead>
+                <TableBody>
+                    <TableRow>
+                      <Typography sx={{ mt: 4, mb: 2 }} variant="body2" component="div">
+                        Message To Enabler: {row.messageToEnabler}
+                      </Typography>
+                      <Typography sx={{ mt: 4, mb: 2 }} variant="body2" component="div">
+                        Message To Target User: {row.messageToTargetUser}
+                      </Typography>
+                      
+                      <Typography sx={{ mt: 4, mb: 2 }} variant="body2" component="div">
+                        Message From Enabler to Target User: {row.messageFromEnablerToTargetUser}
+                      </Typography>
+                    </TableRow>
+                    <Button variant="contained" color="success" onClick={() => {handleApprove(row.id)}}>Approve</Button>
+                    <Button variant="outlined" color="error" sx={{ml:2}} onClick={() => {handleReprove(row.id)}}>Reprove</Button>
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
+
+Row.propTypes = {
+  row: PropTypes.shape({
+    
+  }).isRequired,
+};
   
   const defaultTheme = createTheme();
-  const VirtualizedTable = withStyles(styles, { defaultTheme })(MuiVirtualizedTable);
   
 
 function EditProfileContent() {
   const [open, setOpen] = React.useState(true);
+
+  //get logged user
+  const userId = localStorage.getItem('loggedInUser');
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
   useEffect(() => {
-    //search();
+    search();
   }, []);
 
   const [searchedVS, setSearchedVS] = useState([]);
@@ -287,7 +212,7 @@ function search() {
 
     const data = await fetch(
 			//mudar o id para uma parâmetro passado!
-			"https://21s5dd20socialgame.azurewebsites.net/api/Introductions"
+			Links.MDR_URL() + "/api/introductions/pendentWithNames/" + userId
 		);
     const vsList = await data.json();
     console.log(vsList);
@@ -302,22 +227,30 @@ function search() {
   for (var i = 0; i < searchedVS.length; i++){
     var obj = searchedVS[i];
     console.log(obj);
-    sample.push([obj.id,obj.requester.value,"a"]);
+    sample.push([obj.id,obj.requesterName,obj.enablerName,obj.targetUserName,obj.decisionStatus,
+    obj.messageToIntermediate.text,obj.messageToTargetUser.text,
+    obj.messageFromIntermediateToTargetUser === null ? "" : obj.messageFromIntermediateToTargetUser.text]);
   }
 
-  function createData(number, id, requester, description) {
-    return { number, id, requester, description };
+  function createData(id,requester,enabler,targetUser,status,messageToEnabler,messageToTargetUser,messageFromEnablerToTargetUser) {
+    return {
+      id,
+      requester,
+      enabler,
+      targetUser,
+      status,
+      messageToEnabler,
+      messageToTargetUser,
+      messageFromEnablerToTargetUser
+    };
   }
 
   // push the information from sample to rows
 
-  const rows = [
-    {id: "1", firstName: "Davide", description: "ola"},
-    {id: "2", firstName: "Sara", description: "ola"}
-  ];
+  const rows = [];
 
   for (let i = 0; i < searchedVS.length; i += 1) {
-    rows.push(createData(i, ...sample[i]));
+    rows.push(createData( ...sample[i]));
   }
 
   //TODO ia aqui!
@@ -402,13 +335,24 @@ function search() {
 									width: 1150,
 								}}
 							>
-								<DataGrid
-									rows={rows}
-									columns={columns}
-									pageSize={5}
-									rowsPerPageOptions={[5]}
-									checkboxSelection
-								/>
+								<TableContainer component={Paper}>
+                  <Table aria-label="collapsible table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell />
+                        <TableCell>Requester</TableCell>
+                        <TableCell>Enabler</TableCell>
+                        <TableCell>Target User</TableCell>
+                        <TableCell>Status</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rows.map((row) => (
+                      <Row key={row.name} row={row} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
 							</Paper>
 						</Grid>
 						<Copyright sx={{ pt: 4 }} />

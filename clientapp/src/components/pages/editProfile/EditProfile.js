@@ -31,6 +31,11 @@ import { useState } from "react";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
+import Autocomplete from "@mui/material/Autocomplete";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 
 function Copyright(props) {
@@ -153,6 +158,9 @@ function EditProfileContent() {
 	const [input_emotion, setEmotion] = useState("");
 	const [makingRequest, setMakingRequest] = useState(false);
 
+	const [openSnackBar, setOpenSnackBar] = React.useState(false);
+	const [openSnackBarError, setOpenSnackBarError] = React.useState(false);
+
 	const handleEmotionChange = (event) => {
 		setEmotion(event.target.value);
 	};
@@ -173,6 +181,14 @@ function EditProfileContent() {
 	setAnchorEl(null);
 	};
 
+	const handleCloseError = (event, reason) => {
+		setOpenSnackBarError(false);
+	};
+
+	const Alert = React.forwardRef(function Alert(props, ref) {
+		return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+	});
+
 	function handleSave(event) {
 		event.preventDefault();
 		console.log("Emotional state:", input_emotion);
@@ -184,6 +200,8 @@ function EditProfileContent() {
 			input_lastName,
 			"Email:",
 			input_email,
+			"Tags:",
+			input_tags,
 			"Password:",
 			input_password,
 			"PhoneNumber:",
@@ -213,7 +231,11 @@ function EditProfileContent() {
 		};
 
 		const user_tag = {
-			name: input_tags,
+			name: "",
+		};
+
+		const user_tags = {
+			tags: [user_tag],
 		};
 
 		const user_emotionalState ={
@@ -223,13 +245,23 @@ function EditProfileContent() {
 		const user = {
 			name: user_name,
 			email: user_email,
-			/* tags: [user_tag],*/
+			tags: [user_tag],
+			createTags() {
+				input_tags.forEach((element) => {
+					const user_tag = {
+						name: element,
+					};
+					this.tags.push(user_tag);
+				});
+				this.tags.shift();
+			},
 			phoneNumber: user_phoneNumber,
 			emotionalState: user_emotionalState,
-			friendsList: []
+			friendsList: [],
 		};
 		console.log(JSON.stringify(user));
 
+		user.createTags();
 		const response = fetch(
 			"https://localhost:5001/api/Users/0f277d33-df08-4954-bd3b-26adb739927d",
 			//"https://21s5dd20socialgame.azurewebsites.net/api/Users/0f277d33-df08-4954-bd3b-26adb739927d" /*falta pôr um id de um user*/,
@@ -239,19 +271,53 @@ function EditProfileContent() {
 				body: JSON.stringify(user),
 			}
 		)
-			.then((response) => response.json())
-			.then((json) => console.log(json));
+			.then((response) => {
+                response.json();
+                if (!response.ok) {
+                    return null;
+                } else {
+                    setOpenSnackBar(true);
+                }
+                setMakingRequest(false);
+            })
+            .then((json) => console.log(json))
 
-		if (!response.ok) {
-			setMakingRequest(false);
-			return null;
-		} else {
-			console.log("User updated!");
+            .catch((err) => {
+                setOpenSnackBarError(true);
+                setMakingRequest(false);
+            });
 		}
-	}
+
+	 const handleDelete = (chipToDelete) => () => {
+			setTags((chips) => input_tags.filter((chip) => chip !== chipToDelete));
+		};
 
   return (
 		<LocalizationProvider dateAdapter={AdapterDateFns}>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={openSnackBar}
+				autoHideDuration={1000}
+				onClose={handleClose}
+			>
+				<Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+					User Updated Successfully!
+				</Alert>
+			</Snackbar>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={openSnackBarError}
+				autoHideDuration={1500}
+				onClose={handleCloseError}
+			>
+				<Alert
+					onClose={handleCloseError}
+					severity="error"
+					sx={{ width: "100%" }}
+				>
+					Failed To Update User!
+				</Alert>
+			</Snackbar>
 			<ThemeProvider theme={mdTheme}>
 				<Box sx={{ display: "flex" }}>
 					<CssBaseline />
@@ -393,10 +459,42 @@ function EditProfileContent() {
 													value={input_email}
 													onChange={(e) => setEmail(e.target.value)}
 												/>
-
 											</Grid>
-											<Grid item xs ={12} sm={6}>
-												{/* pôr aqui a cena para as tags */}
+											<Grid item xs={12} sm={6}>
+												<Stack spacing={3} sx={{ width: 500 }}>
+													<Autocomplete
+														multiple
+														id="tags-filled"
+														options={savedTags.map((option) => option.name)}
+														freeSolo
+														value={input_tags}
+														onChange={(e, newval, reason) => {
+															setTags(newval);
+														}}
+														renderTags={(value, getTagProps) =>
+															value.map((option, index) => (
+																<Chip
+																	variant="outlined"
+																	label={option}
+																	{...getTagProps({ index })}
+																/>
+															))
+														}
+														renderInput={(params) => (
+															<TextField
+																{...params}
+																variant="filled"
+																label="Tags"
+																placeholder="What interests you?"
+																onKeyDown={(e) => {
+																	if (e.code === "enter" && e.target.value) {
+																		setTags(input_tags.concat(e.target.value));
+																	}
+																}}
+															/>
+														)}
+													/>
+												</Stack>
 											</Grid>
 											<Grid item xs={12} sm={4}>
 												<FormControl sx={{ minWidth: 80 }}>
@@ -526,6 +624,13 @@ function EditProfileContent() {
 		</LocalizationProvider>
 	);
 }
+
+const savedTags = [
+	{ name: "isep" },
+	{ name: "react" },
+	{ name: "informática" },
+];
+
 
 export default function EditProfile() {
   return <EditProfileContent />;
