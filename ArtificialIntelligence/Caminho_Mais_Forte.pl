@@ -1,7 +1,5 @@
 :- module(caminho_mais_forte, [dfsLength/4,
 								plan_maxlig/4]).
-%Determinar o caminho mais forte (maximiza o somat�rio das for�as de
-% liga��o) para determinado utilizador
 
 :-dynamic melhor_sol_maxlig/2.
 
@@ -21,9 +19,6 @@ plan_maxlig(Orig,Dest,LCaminho_maxlig,LCaminho_length):-
 		retract(melhor_sol_maxlig(LCaminho_maxlig,LCaminho_length)),
 		get_time(Tf),
 		T is Tf-Ti.
-		
-
-
 
 melhor_caminho_maxlig(Orig,Dest):- asserta(melhor_sol_maxlig(_,-9999)),
 		dfsLength(Orig,Dest,LCaminho,Len),

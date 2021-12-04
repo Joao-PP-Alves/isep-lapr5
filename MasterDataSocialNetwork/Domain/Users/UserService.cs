@@ -12,11 +12,12 @@ namespace DDDNetCore.Domain.Users
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
-
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo)
+        private readonly IFriendshipService _friendshipService;
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService)
         {
             _unitOfWork = unitOfWork;
             _repo = repo;
+            _friendshipService = friendshipService;
         }
 
 
@@ -393,49 +394,40 @@ namespace DDDNetCore.Domain.Users
             }
             else
             {
-                var network = GetMyFriends(userId, new Network<UserDto, FriendshipDto>(false), param);
                 toReturn.Add(new UserPerspectiveDto(user.Id.Value, user.Name.text, null, null, null));
-                transforma(new List<UserPerspectiveDto>(), network.Result, toReturn);
+                transforma(param, new List<UserPerspectiveDto>(), toReturn);
+                return toReturn;
             }
-
-            return toReturn;
         }
 
-        private List<UserPerspectiveDto> transforma(List<UserPerspectiveDto> auxList,
-            Network<UserDto, FriendshipDto> network,
+        private async Task<List<UserPerspectiveDto>> transforma(int param, List<UserPerspectiveDto> auxList,
             List<UserPerspectiveDto> toReturn)
         {
-            if (auxList.Count.Equals(network.Vertices().Count))
+            if (param == 0)
             {
                 return toReturn;
             }
             else
             {
-                foreach (var usergraph in network.Vertices())
+                foreach (var user in toReturn)
                 {
-                    foreach (var userList in toReturn)
+                    if (!auxList.Contains(user))
                     {
-                        if (usergraph.Id.ToString().Equals(userList.userId))
+                        auxList.Add(user);
+                        var friendsList = await _friendshipService.GetByUserIdWithFriend(new UserId(user.userId));
+                        foreach (var friend in friendsList)
                         {
-                            if (!auxList.Contains(userList))
-                            {
-                                foreach (var vertices in network.adjVertices(usergraph))
-                                {
-                                    var edge = network.GetEdge(usergraph, vertices);
-                                    var userToAdd = new UserPerspectiveDto(vertices.Id.ToString(), vertices.name.text,
-                                        usergraph.Id.ToString(), edge.element.connection_strength.value,
-                                        edge.element.relationship_strength.value);
-                                    toReturn.Add(userToAdd);
-                                    auxList.Add(userToAdd);
-                                    transforma(auxList, network, toReturn);
-                                }
-                            }
+                            var newUser = new UserPerspectiveDto(friend.friend.Value, friend.friendObject.Name.text,
+                                user.userId, friend.connection_strength.value,
+                                friend.relationship_strength.value);
+                            toReturn.Add(newUser);
                         }
+                        
                     }
                 }
-
-                return toReturn;
+                transforma(param - 1, auxList, toReturn);
             }
+            return null;
         }
 
         /// <summary>

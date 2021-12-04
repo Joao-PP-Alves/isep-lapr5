@@ -14,22 +14,13 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { mainListItems } from "./ListItems";
-import Chart from "./Chart";
-import Deposits from "./Deposits";
-import Orders from "./Orders";
+import FriendsSuggestions from "./FriendsSuggestions";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
-import EditIcon from "@mui/icons-material/Edit";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import Landing from "../landing_page/LandingPage";
 import Stack from "@mui/material/Stack";
 import AutoAwesomeTwoToneIcon from '@mui/icons-material/AutoAwesomeTwoTone';
 import LogoutTwoToneIcon from "@mui/icons-material/LogoutTwoTone";
@@ -38,11 +29,11 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import FormHelperText from "@mui/material/FormHelperText";
-import axios from "axios";
-import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import parse from "autosuggest-highlight/parse";
+import { useState, useEffect } from "react";
+import MinimalizedNetwork from "./MinimalizedNetwork";
 import match from "autosuggest-highlight/match";
 
 let rows = [];
@@ -180,58 +171,71 @@ const StyledMenu = styled((props) => (
 }));
 
 function DashboardContent() {
+	//----------------------------------------- FETCH DOS USERS TODOS DO SISTEMA PARA BARRA DE PESQUISA ------------------------
+	//get logged user
+	const userId = localStorage.getItem("loggedInUser");
+
+	const [open2, setOpen2] = React.useState(true);
+	const toggleDrawer = () => {
+		setOpen(!open2);
+	};
+
+	useEffect(() => {
+		search();
+	}, []);
+
+	const [searchedVS, setSearchedVS] = useState([]);
+
+	function search() {
+		fetchUsers();
+	}
+
+	const fetchUsers = async () => {
+		const data = await fetch(
+			//Links.MDR_URL() + "/api/connections/pendent/" + userId
+			//"https://localhost:5001/api/Users"
+			"https://21s5dd20socialgame.azurewebsites.net/api/Users"
+		);
+		const vsList = await data.json();
+		console.log(vsList);
+		setSearchedVS(vsList);
+	};
+
+	// transform json array to array sample[]
+
+	let sample = [];
+
+	for (var i = 0; i < searchedVS.length; i++) {
+		var obj = searchedVS[i];
+		sample.push([
+			obj.id,
+			obj.name,
+			//obj.requesterObject.name.text,
+			//obj.requesterObject.email.emailAddress,
+		]);
+	}
+
+	function createData(id, name) {
+		return { id, name };
+	}
+
+	// push the information from sample to rows
+
+	rows = [];
+
+	/*for (let i = 0; i < searchedVS.length; i += 1) {
+		rows.push(createData(...sample[i]));
+		console.log(rows);
+	}*/
+
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
-    const [setOpen] = React.useState(true);
-    const [openModal, setOpenModal] = React.useState(false);
+	const [setOpen] = React.useState(true);
+	const [openModal, setOpenModal] = React.useState(false);
 	const [emotion] = React.useState("");
 	const [makingRequest, setMakingRequest] = useState(false);
 	const [input_emotion, setEmotion] = useState("");
- 
-	const [searchedVS, setSearchedVS] = useState([]);
-	const rows = [];
 
-	  function search() {
-			fetchUsers();
-		}
-
-		const fetchUsers = async () => {
-			const data = await fetch(
-				//Links.MDR_URL() + "/api/connections/pendent/" + userId
-				"https://localhost:5001/api/Users/" /*+ userId*/
-			);
-			const vsList = await data.json();
-			console.log(vsList);
-			setSearchedVS(vsList);
-		};
-
-		// transform json array to array sample[]
-
-		let sample = [];
-
-		for (var i = 0; i < searchedVS.length; i++) {
-			var obj = searchedVS[i];
-			sample.push([
-				obj.requesterObject.name.text,
-			]);
-		}
-
-		function createData(id, requester, requester_email, description) {
-			return { id, requester, requester_email, description };
-		}
-
-		// push the information from sample to rows
-
-		rows = [];
-
-		for (let i = 0; i < searchedVS.length; i += 1) {
-			rows.push(createData(...sample[i]));
-		}
-	
-
-	const toggleDrawer = () => {
-        setOpen(!open);
-    };
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -248,256 +252,227 @@ function DashboardContent() {
 		setEmotion(event.target.value);
 	};
 
-	function handleSave(event){
-		event.preventDefault();
-		console.log("Emotional state:", input_emotion);
 
-		const user_emotion = {
-			emotion: input_emotion,
-		};
-
-		const user = {
-			emotionalState: user_emotion,
-		};
-
-		console.log(JSON.stringify(user));
-		const response = fetch(
-			"https://21s5dd20socialgame.azurewebsites.net/api/Users/0f277d33-df08-4954-bd3b-26adb739927d" /*falta pôr um id de um user*/,
-			{
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(user),
-			}
-		)
-			.then((response) => response.json())
-			.then((json) => console.log(json));
-
-		if (!response.ok) {
-			setMakingRequest(false);
-			return null;
-		} else {
-			console.log("User updated!");
-		}
-	}
-
-    return (
-			<ThemeProvider theme={mdTheme}>
-				<Box sx={{ display: "flex" }}>
-					<CssBaseline />
-					<AppBar position="absolute" open={open}>
-						<Toolbar
-							sx={{
-								pr: "24px", // keep right padding when drawer closed
-							}}
-						>
-							<Typography
-								component="h1"
-								variant="h6"
-								color="inherit"
-								noWrap
-								sx={{ flexGrow: 1 }}
-							>
-								Dashboard
-							</Typography>
-
-							<Autocomplete
-								id="highlights-demo"
-								sx={{ width: 300 }}
-								options={rows}
-								getOptionLabel={(option) => option.name}
-								renderInput={(params) => (
-									<TextField {...params} label="Search Users" margin="normal" />
-								)}
-								renderOption={(props, option, { inputValue }) => {
-									const matches = match(option.name, inputValue);
-									const parts = parse(option.name, 0);
-
-									return (
-										<li {...props}>
-											<div>
-												{parts.map((part, index) => (
-													<span
-														key={index}
-														style={{
-															fontWeight: part.highlight ? 700 : 400,
-														}}
-													>
-														{part.text}
-													</span>
-												))}
-											</div>
-										</li>
-									);
-								}}
-							/>
-
-							<IconButton
-								color="inherit"
-								id="accountButton"
-								aria-controls="demo-customized-menu"
-								aria-haspopup="true"
-								aria-expanded={open ? "true" : undefined}
-								variant="contained"
-								disableElevation
-								onClick={handleClick}
-							>
-								<Badge badgeContent={4} color="secondary">
-									<AccountCircleTwoToneIcon />
-								</Badge>
-							</IconButton>
-							<StyledMenu
-								id="accountButton"
-								MenuListProps={{
-									"aria-labelledby": "accountButton",
-								}}
-								anchorEl={anchorEl}
-								open={open}
-								onClose={handleClose}
-							>
-								<Stack spacing={2}>
-									<Button href="/" disableRipple>
-										<LogoutTwoToneIcon />
-										Logout
-									</Button>
-									<Button
-										disableRipple
-										type="button"
-										class="btn btn-info btn-lg"
-										data-toggle="modal"
-										data-target="#myModal"
-										onClick={handleOpenModal}
-									>
-										<AutoAwesomeTwoToneIcon />
-										Change my mood
-									</Button>
-
-									<Modal
-										hideBackdrop
-										open={open}
-										onClose={handleOpenModal}
-										aria-labelledby="child-modal-title"
-										aria-describedby="child-modal-description"
-									>
-										<Box sx={style}>
-											<Typography
-												id="modal-modal-title"
-												variant="h6"
-												component="h2"
-											>
-												Change my emotional state
-											</Typography>
-											<Stack>
-												<FormControl sx={{ minWidth: 80 }}>
-													<InputLabel id="demo-simple-select-autowidth-label">
-														Emotional State
-													</InputLabel>
-													<Select
-														labelId="demo-simple-select-autowidth-label"
-														id="demo-simple-select-autowidth"
-														value={emotion}
-														onChange={handleEmotionChange}
-														autoWidth
-														label="Emotional State"
-													>
-														<MenuItem value="">
-															<em>None</em>
-														</MenuItem>
-														<MenuItem value={10}>Twenty</MenuItem>
-														<MenuItem value={21}>Twenty one</MenuItem>
-														<MenuItem value={22}>
-															Twenty one and a half
-														</MenuItem>
-													</Select>
-													<FormHelperText>
-														Tell me how are you feeling.
-													</FormHelperText>
-												</FormControl>
-											</Stack>
-											<Button onClick={handleClose}>Close</Button>
-											<Button onClick={handleSave}>Save Changes</Button>
-										</Box>
-									</Modal>
-								</Stack>
-							</StyledMenu>
-						</Toolbar>
-					</AppBar>
-					<Drawer variant="permanent" open={open}>
-						<Toolbar
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "flex-end",
-								px: [1],
-							}}
-						>
-							<IconButton onClick={toggleDrawer}>
-								<ChevronLeftIcon />
-							</IconButton>
-						</Toolbar>
-						<Divider />
-						<List>{mainListItems}</List>
-						<Divider />
-					</Drawer>
-					<Box
-						component="main"
+	return (
+		<ThemeProvider theme={mdTheme}>
+			<Box sx={{ display: "flex" }}>
+				<CssBaseline />
+				<AppBar position="absolute" open={open}>
+					<Toolbar
 						sx={{
-							backgroundColor: (theme) =>
-								theme.palette.mode === "light"
-									? theme.palette.grey[100]
-									: theme.palette.grey[900],
-							flexGrow: 1,
-							height: "100vh",
-							overflow: "auto",
+							pr: "24px", // keep right padding when drawer closed
 						}}
 					>
-						<Toolbar />
-						<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-							<Grid container spacing={3}>
-								{/* Chart */}
-								<Grid item xs={12} md={8} lg={9}>
-									<Paper
-										sx={{
-											p: 2,
-											display: "flex",
-											flexDirection: "column",
-											height: 240,
-										}}
-									>
-										<Chart />
-									</Paper>
-								</Grid>
-								{/* Recent Deposits */}
-								<Grid item xs={12} md={4} lg={3}>
-									<Paper
-										sx={{
-											p: 2,
-											display: "flex",
-											flexDirection: "column",
-											height: 240,
-										}}
-									>
-										<Deposits />
-									</Paper>
-								</Grid>
-								{/* Recent Orders */}
-								<Grid item xs={12}>
-									<Paper
-										sx={{
-											p: 2,
-											display: "flex",
-											flexDirection: "column",
-										}}
-									>
-										<Orders />
-									</Paper>
-								</Grid>
+						<Typography
+							component="h1"
+							variant="h6"
+							color="inherit"
+							noWrap
+							sx={{ flexGrow: 1 }}
+						>
+							Dashboard
+						</Typography>
+
+						<Autocomplete
+							id="highlights-demo"
+							sx={{ width: 300 }}
+							options={sample}
+							getOptionLabel={(option) => option.name || ""}
+							renderInput={(params) => (
+								<TextField {...params} label="Search Users" margin="normal" />
+							)}
+							renderOption={(props, option, { inputValue }) => {
+								const matches = match(option.name, inputValue);
+								const users = parse(option.name, matches);
+								console.log("users:" + users);
+
+								return (
+									<li {...props}>
+										<div>
+
+											
+											{users.map((part, index) => (
+												console.log(part),
+												console.log(index),
+												<span
+													key={index}
+
+													style={{
+														fontWeight: part.highlight ? 700 : 400,
+													}}
+												>
+													{part.text}
+												</span>
+												))}
+										</div>
+									</li>
+								);
+							}}
+						/>
+
+						<IconButton
+							color="inherit"
+							id="accountButton"
+							aria-controls="demo-customized-menu"
+							aria-haspopup="true"
+							aria-expanded={open ? "true" : undefined}
+							variant="contained"
+							disableElevation
+							onClick={handleClick}
+						>
+							<Badge badgeContent={4} color="secondary">
+								<AccountCircleTwoToneIcon />
+							</Badge>
+						</IconButton>
+						<StyledMenu
+							id="accountButton"
+							MenuListProps={{
+								"aria-labelledby": "accountButton",
+							}}
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+						>
+							<Stack spacing={2}>
+								<Button href="/" disableRipple>
+									<LogoutTwoToneIcon />
+									Logout
+								</Button>
+								<Button
+									disableRipple
+									type="button"
+									class="btn btn-info btn-lg"
+									data-toggle="modal"
+									data-target="#myModal"
+									onClick={handleOpenModal}
+								>
+									<AutoAwesomeTwoToneIcon />
+									Change my mood
+								</Button>
+
+								<Modal
+									hideBackdrop
+									open={open}
+									onClose={handleOpenModal}
+									aria-labelledby="child-modal-title"
+									aria-describedby="child-modal-description"
+								>
+									<Box sx={style}>
+										<Typography
+											id="modal-modal-title"
+											variant="h6"
+											component="h2"
+										>
+											Change my emotional state
+										</Typography>
+										<Stack>
+											<FormControl sx={{ minWidth: 80 }}>
+												<InputLabel id="demo-simple-select-autowidth-label">
+													Emotional State
+												</InputLabel>
+												<Select
+													labelId="demo-simple-select-autowidth-label"
+													id="demo-simple-select-autowidth"
+													value={emotion}
+													onChange={handleEmotionChange}
+													autoWidth
+													label="Emotional State"
+												>
+													<MenuItem value="">
+														<em>None</em>
+													</MenuItem>
+													<MenuItem value={10}>Twenty</MenuItem>
+													<MenuItem value={21}>Twenty one</MenuItem>
+													<MenuItem value={22}>Twenty one and a half</MenuItem>
+												</Select>
+												<FormHelperText>
+													Tell me how are you feeling.
+												</FormHelperText>
+											</FormControl>
+										</Stack>
+										<Button onClick={handleModalClose}>Close</Button>
+										{/*<Button onClick={handleSave}>Save Changes</Button>*/}
+									</Box>
+								</Modal>
+							</Stack>
+						</StyledMenu>
+					</Toolbar>
+				</AppBar>
+				<Drawer variant="permanent" open={open}>
+					<Toolbar
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "flex-end",
+							px: [1],
+						}}
+					>
+						<IconButton onClick={toggleDrawer}>
+							<ChevronLeftIcon />
+						</IconButton>
+					</Toolbar>
+					<Divider />
+					<List>{mainListItems}</List>
+					<Divider />
+				</Drawer>
+				<Box
+					component="main"
+					sx={{
+						backgroundColor: (theme) =>
+							theme.palette.mode === "light"
+								? theme.palette.grey[100]
+								: theme.palette.grey[900],
+						flexGrow: 1,
+						height: "100vh",
+						overflow: "auto",
+					}}
+				>
+					<Toolbar />
+					<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+						<Grid container spacing={3}>
+							{/* Chart */}
+							<Grid item xs={12} md={8} lg={9}>
+								<Paper
+									sx={{
+										p: 2,
+										display: "flex",
+										flexDirection: "column",
+										height: 240,
+									}}
+								>
+									<MinimalizedNetwork />
+								</Paper>
 							</Grid>
-							<Copyright sx={{ pt: 4 }} />
-						</Container>
-					</Box>
+							{/* Recent Deposits */}
+							<Grid item xs={12} md={4} lg={3}>
+								<Paper
+									sx={{
+										p: 2,
+										display: "flex",
+										flexDirection: "column",
+										height: 240,
+									}}
+								>
+									<FriendsSuggestions />
+								</Paper>
+							</Grid>
+							{/* Recent Orders */}
+							<Grid item xs={12}>
+								<Paper
+									sx={{
+										p: 2,
+										display: "flex",
+										flexDirection: "column",
+									}}
+								></Paper>
+							</Grid>
+						</Grid>
+						<Copyright sx={{ pt: 4 }} />
+					</Container>
 				</Box>
-			</ThemeProvider>
-		);
+			</Box>
+		</ThemeProvider>
+	);
 }
 
 export default function Dashboard() {
