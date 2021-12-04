@@ -4,7 +4,6 @@ import Links from "../components/Links";
 import * as THREE from 'three';
 import Edge from './edge';
 import Node from './node';
-import renderToCanvas from './renderToCanvas';
 import camera_zoom from './camera_zoom';
 import Orientation from './orientation';
 import { camera_const } from './camera_const';
@@ -140,6 +139,8 @@ export default class Graph {
         this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 100);
         const controls = new OrbitControls( this.camera, this.renderer.domElement );
         controls.enableRotate = false;
+        controls.maxDistance  = 100;
+        controls.minDistance  = 5;
 
 
         this.camera.position.set(0, 0, 100);
@@ -346,7 +347,6 @@ export default class Graph {
         });
 
         const viewportTop = this.topViewCamera.getViewport();
-        viewportTop.initialZoom = 0.1;
         this.renderer.setViewport(viewportTop.x, viewportTop.y, viewportTop.width, viewportTop.height);
         this.renderer.setScissor(viewportTop.x, viewportTop.y, viewportTop.width, viewportTop.height);
         this.renderer.setScissorTest(true);
