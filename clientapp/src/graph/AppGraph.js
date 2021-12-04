@@ -18,8 +18,14 @@ class AppGraphContent extends React.Component {
         this.graph = new Graph(canvas);
 
         // Init any event listeners
-        window.addEventListener('mousemove', this.mouseMove);
+        window.addEventListener('wheel', this.mouseWheel);
         window.addEventListener('resize', this.handleResize);
+        window.addEventListener('mousedown', this.onPointerDown);
+        window.addEventListener('touchstart', (e) => this.handleTouch(e, this.onPointerDown))
+        window.addEventListener('mouseup', this.onPointerUp)
+        window.addEventListener('touchend',  (e) => this.handleTouch(e, this.onPointerUp))
+        window.addEventListener('mousemove', this.onPointerMove)
+        window.addEventListener('touchmove', (e) => this.handleTouch(e, this.onPointerMove))
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -30,13 +36,38 @@ class AppGraphContent extends React.Component {
 
 
     // ******************* EVENT LISTENERS ******************* //
-    mouseMove = (event) => {
-        this.graph.onMouseMove();
+    mouseWheel = (event) => {
+        this.graph.onMouseWheel();
     }
 
     handleResize = () => {
         this.graph.onWindowResize(window.innerWidth, window.innerHeight);
     };
+
+    onPointerDown = () => {
+        this.graph.onPointerDown();
+    }
+
+    handleTouch = (e) => {
+        this.graph.handleTouch(e, this.onPointerDown);
+    }
+
+    handleTouch = (e) => {
+      this.graph.handleTouch(e, this.onPointerUp);
+  }
+
+  handleTouch = (e) => {
+    this.graph.handleTouch(e, this.onPointerMove);
+}
+
+    onPointerUp = () => {
+      this.graph.onPointerUp();
+    }
+
+    onPointerMove = () => {
+      this.graph.onPointerMove();
+    }
+
 
     render() {
         return (
