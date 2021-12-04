@@ -5,7 +5,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
 import axios from 'axios';
 import Links from '../../Links';
 
@@ -23,7 +22,7 @@ export default function AlertDialogSlide({connectionId,render}) {
 
   const handleAccept = async () => {
     const requesterData = await axios.put(
-        Links.MDR_URL() + "/api/connections/accept/" + connectionId.id
+        Links.MDR_URL() + "connections/accept/" + connectionId.id
       );
       handleClose();
       alert("Connection Accepted!");
@@ -32,7 +31,7 @@ export default function AlertDialogSlide({connectionId,render}) {
 
   const handleDecline = async () => {
     const requesterData = await axios.put(
-        Links.MDR_URL() + "/api/connections/decline/" + connectionId.id
+        Links.MDR_URL() + "connections/decline/" + connectionId.id
       );
       handleClose();
       alert("Connection Declined!");

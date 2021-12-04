@@ -36,7 +36,7 @@ import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-
+import Links from "../../Links";
 
 function Copyright(props) {
   return (
@@ -263,8 +263,7 @@ function EditProfileContent() {
 
 		user.createTags();
 		const response = fetch(
-			"https://localhost:5001/api/Users/0f277d33-df08-4954-bd3b-26adb739927d",
-			//"https://21s5dd20socialgame.azurewebsites.net/api/Users/0f277d33-df08-4954-bd3b-26adb739927d" /*falta pôr um id de um user*/,
+			Links.MDR_URL()+"Users/0f277d33-df08-4954-bd3b-26adb739927d",
 			{
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
