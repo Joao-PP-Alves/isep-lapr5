@@ -44,6 +44,9 @@ import Links from "../../Links";
 import RequestConnection from "./RequestConnection";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import SelectInput from "@mui/material/Select/SelectInput";
 
 function Copyright(props) {
 	return (
@@ -197,6 +200,12 @@ function DashboardContent() {
 	const [emotion, setEmotion] = React.useState("");
 	const [makingRequest, setMakingRequest] = useState(false);
 	const [connectionModal, setOpenConnectionModal] = React.useState(false);
+	const [targetName] = React.useState("");
+
+	const [openSnackBar, setOpenSnackBar] = React.useState(false);
+	const [openSnackBarError, setOpenSnackBarError] = React.useState(false);
+
+	const [inputValue, setinputValue] = useState("");
 
 	const toggleDrawer = () => {
 		setOpen(!open);
@@ -224,6 +233,20 @@ function DashboardContent() {
 		setOpenConnectionModal(false);
 	};
 
+	const handleCloseError = (event, reason) => {
+		setOpenSnackBarError(false);
+	};
+
+	function defineUser(inputValue){
+		console.log("inputValue:"+inputValue);
+		targetName = inputValue;
+		console.log("targetName:" + targetName);
+	}
+
+	const Alert = React.forwardRef(function Alert(props, ref) {
+		return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+	});
+
 	const style = {
 		position: "absolute",
 		top: "50%",
@@ -238,6 +261,20 @@ function DashboardContent() {
 
 	return (
 		<ThemeProvider theme={mdTheme}>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={openSnackBarError}
+				autoHideDuration={1500}
+				onClose={handleCloseError}
+			>
+				<Alert
+					onClose={handleCloseError}
+					severity="error"
+					sx={{ width: "100%" }}
+				>
+					You must select an user in the search bar!
+				</Alert>
+			</Snackbar>
 			<Box sx={{ display: "flex" }}>
 				<CssBaseline />
 				<AppBar position="absolute" open={open}>
@@ -268,18 +305,19 @@ function DashboardContent() {
 							Dashboard
 						</Typography>
 						<Autocomplete
+						
 							id="highlights-demo"
 							sx={{ width: 300 }}
 							options={sample}
 							getOptionLabel={(option) => option.name || ""}
 							renderInput={(params) => (
-								<TextField {...params} label="Search Users" margin="normal" />
+								<TextField {...params} label="Search Users" margin="normal"  onChange={e => setinputValue(e.target.value)}/>
 							)}
 							renderOption={(props, option, { inputValue }) => {
 								const matches = match(option.name, inputValue);
 								const users = parse(option.name, matches);
+								console.log(inputValue);
 								console.log("users:" + users);
-
 								return (
 									<li {...props}>
 										<div>
@@ -311,6 +349,8 @@ function DashboardContent() {
 									<ArrowForwardIosTwoToneIcon />
 								</IconButton>
 							)}
+							targetName = {inputValue}
+							requesterId = {userId}
 						/>
 						<IconButton
 							color="inherit"

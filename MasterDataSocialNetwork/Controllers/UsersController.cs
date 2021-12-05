@@ -291,7 +291,7 @@ namespace DDDNetCore.Controllers
 
         //GET: api/Users/GetFriendsSuggestion/1
         [HttpGet("GetFriendsSuggestion/{id}")]
-        public async Task<ActionResult<IEnumerable<UserId>>> GetFriendsSuggestion(Guid id)
+        public async Task<ActionResult<List<UserDto>>> GetFriendsSuggestion(Guid id)
         {
             var user = await _service.GetByIdAsync(new UserId(id));
             if (user == null)

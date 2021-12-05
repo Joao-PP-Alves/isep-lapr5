@@ -20,7 +20,7 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<int> NewFriendship(FriendshipDto friendshipDto);
 
-        public List<UserId> ReturnFriendsSuggestionList(UserId userId);
+        public List<User> ReturnFriendsSuggestionList(UserId userId);
 
         Friendship GetFriendshipAsync(UserId id, FriendshipId friendshipId);
     }
