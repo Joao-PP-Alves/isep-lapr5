@@ -8,104 +8,79 @@ import Links from "../../Links";
 import { useState, useEffect } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Container from '@mui/material/Container';
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export default function RequestConnection({ requesterId, targetName, render }) {
-	console.log(requesterId + " " + targetName);
+	console.log("Requester Id = " + requesterId);
+	console.log("Target Name = " + targetName);
 	const [open, setOpen] = React.useState(false);
 
-    const [setRequesterEmail] = useState("");
-    const [target_id, setTargetId] = useState("");
-    const [input_description, setDescription] = useState("");
+	const [setRequesterEmail] = useState("");
+	const [input_description, setDescription] = useState("");
 
-    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+	const [openSnackBar, setOpenSnackBar] = React.useState(false);
 	const [openSnackBarError, setOpenSnackBarError] = React.useState(false);
 
-    const [makingRequest, setMakingRequest] = useState(false);
-	const [target, setTarget] = useState("");
+	const [makingRequest, setMakingRequest] = useState(false);
+	const [targetId,setTargetId] = useState("");
 
 
-	const handleClickOpen = () => {
+	const handleClickOpen = async () => {
+		getByNameTarget();
 		setOpen(true);
+
 	};
 
 	const handleClose = () => {
 		setOpen(false);
 	};
 
-    const handleCloseError = (event, reason) => {
-			setOpenSnackBarError(false);
+	const handleCloseError = (event, reason) => {
+		setOpenSnackBarError(false);
 	};
 
-    const connection_description={
-        text: input_description,
-    };
+	const connection_description = {
+		text: input_description,
+	};
 
-    const connection = {
-			requester: requesterId,
-            targetUser: target,
-            description: connection_description,
-			decision: "0",
-    };
+	const getByNameTarget = async () => {
+		const response2 = await fetch(Links.MDR_URL() + "users/ByName/" + targetName);
 
-	/*useEffect(() => {
-		getByNameTarget();
-	}, []);*/
-
-	function getByNameTarget(targetName) {
-		console.log("está aqui por cima " + targetName);
-		setMakingRequest(true);
-		console.log("está aqui " + targetName);
-
-		const response = async () => {
-			const response2 = fetch(Links.MDR_URL() + "users/ByName/" +targetName);
-			console.log("RESPONSE 2: "+response2);
-			const response3 = await response2.json();
-			console.log("RESPONSE 3:"+response3);
-			setTarget(response2.id);
-			console.log("TARGET AQUI:"+target);
-			console.log(response2);
+		const response3 = await response2.json().then((data) => {
+			var obj = data[0];
+			setTargetId(obj.id);
+			console.log(targetId);
 		}
-			response();
-		console.log(target);
+		);
 	}
 
 
 
-	 function handleSendRequest(event) {
-		 	setTarget(getByNameTarget(targetName));
-			event.preventDefault();
-			setMakingRequest(true);
-			console.log("requester:"+connection.requester);
-			console.log("target:"+connection.targetUser);
-			const response = fetch(
-				Links.MDR_URL() + "Connections",
+	function handleSendRequest(event) {
+		event.preventDefault();
+		setMakingRequest(true);
+		console.log(targetId);
+		getByNameTarget();
+		console.log("{\"requester\": {\"value\":\"" + requesterId + "\"},\"targetUser\":{\"value\":\"" + targetId + "\"},\"description\": {\"text\":\"" + input_description + "\"}}");
+		const response = fetch(
+			Links.MDR_URL() + "Connections",
 
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(connection),
-				}
-			)
-				.then((response) => {
-					response.json();
-					if (!response.ok) {
-						return null;
-					} else {
-					    setOpenSnackBar(true);
-					}
-					setMakingRequest(false);
-				})
-				.then((json) => console.log(json))
-
-				.catch((err) => {
-					setOpenSnackBarError(true);
-					setMakingRequest(false);
-				});
-		}
+			{
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: "{\"requester\": {\"value\":\"" + requesterId + "\"},\"targetUser\":{\"value\":\"" + targetId + "\"},\"description\": {\"text\":\"" + input_description + "\"}}",
+			}
+		);
+		console.log(response);
+		handleClose();
+		alert("Done!");
+	}
 
 
 	return (
@@ -143,9 +118,19 @@ export default function RequestConnection({ requesterId, targetName, render }) {
 			>
 				<DialogTitle>{"Request Connection"}</DialogTitle>
 				<DialogContent>
-					{"Do you wanto to send a friendship request to " +
-						targetName  + "?"}
+					{"Do you want to send a friendship request to " +
+						targetName + "?"}
 				</DialogContent>
+				<Container sx={{ mf: 50}}>
+					<TextareaAutosize
+						aria-label="Description"
+						minRows={3}
+						maxRows={5}
+						onChange={(e) => setDescription(e.target.value)}
+						placeholder="Description to target"
+						style={{ width: 450, }}
+					/>
+				</Container>
 				<DialogActions>
 					<Button onClick={handleSendRequest}>Request</Button>
 					<Button variant="outlined" onClick={handleClose}>
