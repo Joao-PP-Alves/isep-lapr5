@@ -16,9 +16,8 @@ suggestConnections(User, Level, Sugestions):-
         no(User,_,ListTags),
         verifySemantic(ListTags,TagResult),                                       
         getUsers(User, Level, UsersList), 
-            %%aqui ver como se passa lista
         filterSugestionsByTag(TagResult, UsersList, List),
-        possiblePath(User,List,List,Sugestions).   
+        possiblePath(User,List,Sugestions).   
 
 %verificar a semantica das tags do user
 
@@ -73,13 +72,16 @@ hasTag(TagsList, []):-false.
 hasTag(TagsList, [H|T]):-member(H,TagsList),!;hasTag(TagsList,T).
 
 %verifica se é possível chegar aos nodes passando somente por nodes que tenham tags em comum
-possiblePath(User,[],_,_).
+ %%% falta fazer este
+ possiblePath(User,[],[]):-!.
+ possiblePath(User, [H|T], [H|Result]):-
+    no(H,Name,_), no(User, UserName, _),
+    intermediary(Name, UserName, Cam), length(Cam,R),
+    R>0
+    ->(possiblePath(User,T, Result))
+     ;(possiblePath(User,T, Result)).
 
-possiblePath(User,[H|T],L,Result):-
-    dfs(User,H,Cam), union(Cam,T,Temp), length(Temp,V1),length(L,V2),
-    (V1==V2), (possiblePath(User,T, L, [H|Result]),!; possiblePath(User,T,L,Result)).
 
-%%junta 2 listas e remove elementos repetidos
-joinLists([],L,L).
-joinLists([X|L],L1,LU):-member(X,L1),!,joinLists(L,L1,LU).
-joinLists([X|L],L1,[X|LU]):-joinLists(L,L1,LU).
+intermediary(Orig, Dest, Cam):- dfs(Orig, Dest, Cam)
+                                ->true
+                                    ;Cam = [].
