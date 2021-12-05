@@ -78,7 +78,7 @@ export default function AlertDialogSlide({ requesterEmail, targetEmail, render }
 				});
 		}
 
-        const requester = {
+        /*const requester = {
 			name: obj.name.text,
 			email: obj.email.emailAddress,
             id: obj.id,
@@ -88,17 +88,17 @@ export default function AlertDialogSlide({ requesterEmail, targetEmail, render }
 			name: obj.name.text,
 			email: obj.email.emailAddress,
 			id: obj.id,
-		};
+		};*/
 
         function getByEmailRequester(requesterEmail){
             setMakingRequest(true);
 
             const response = fetch(
-                Links.MDR_URL() + "users/ByEmail/"+email, 
+                Links.MDR_URL() + "users/ByEmail/"/*+email*/, 
                 {
 					method: "GET",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(requester),
+					body: JSON.stringify(/*requester*/),
 				}
             ).then((response) => {
                 response.json();
@@ -119,10 +119,10 @@ export default function AlertDialogSlide({ requesterEmail, targetEmail, render }
         function getByEmailTarget(targetEmail) {
 			setMakingRequest(true);
 
-			const response = fetch(Links.MDR_URL() + "users/ByEmail/" + email, {
+			const response = fetch(Links.MDR_URL() + "users/ByEmail/" /*+ email*/, {
 				method: "GET",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(requester),
+				body: JSON.stringify(/*requester*/),
 			})
 				.then((response) => {
 					response.json();
