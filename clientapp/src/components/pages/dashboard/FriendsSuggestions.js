@@ -10,6 +10,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import ListItemButton from '@mui/material/ListItemButton';
+import MakeIntroductionDialog from './MakeIntroductionDialog';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -100,12 +101,15 @@ export default function FriendsSuggestions() {
             key={value.id}
             disablePadding
           >
-            <ListItemButton>
+            <MakeIntroductionDialog 
+            render={(open) => (
+              <ListItemButton onClick={open}>
               <ListItemAvatar>
                 <Avatar/>
               </ListItemAvatar>
               <ListItemText id={labelId} primary={value.name} />
             </ListItemButton>
+            )}/>
           </ListItem>
         );
       })}
