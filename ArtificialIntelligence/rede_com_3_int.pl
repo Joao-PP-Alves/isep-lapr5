@@ -9,6 +9,7 @@ no(31,maria,[natureza,pintura,musica,moda,porto]).
 no(32,anabela,[natureza,cinema,musica,tecnologia,porto]).
 no(33,andre,[natureza,carros,futebol,coimbra]).
 no(200,sara,[natureza,moda,musica,sw,coimbra]).
+
 ligacao(1,11,10).
 ligacao(11,1,8).
 ligacao(1,12,2).

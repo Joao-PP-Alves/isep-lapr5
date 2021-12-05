@@ -6,7 +6,7 @@
 :- compile('tag_semantic.pl').
 
 % loads knowledge base
-:- compile('rede.pl').
+:- compile('rede_com_4_int.pl').
 
 %:-compile('rede_com_1_int.pl');
 
