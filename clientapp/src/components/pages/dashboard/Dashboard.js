@@ -1,5 +1,10 @@
 import * as React from "react";
-import { styled, createTheme, ThemeProvider, alpha } from "@mui/material/styles";
+import {
+	styled,
+	createTheme,
+	ThemeProvider,
+	alpha,
+} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -22,7 +27,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import Stack from "@mui/material/Stack";
-import AutoAwesomeTwoToneIcon from '@mui/icons-material/AutoAwesomeTwoTone';
+import AutoAwesomeTwoToneIcon from "@mui/icons-material/AutoAwesomeTwoTone";
 import LogoutTwoToneIcon from "@mui/icons-material/LogoutTwoTone";
 import Modal from "@mui/material/Modal";
 import InputLabel from "@mui/material/InputLabel";
@@ -37,95 +42,71 @@ import MinimalizedNetwork from "./MinimalizedNetwork";
 import match from "autosuggest-highlight/match";
 import Links from "../../Links";
 import RequestConnection from "./RequestConnection";
+import MenuIcon from "@mui/icons-material/Menu";
 import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
 
-let rows = [];
-
-
 function Copyright(props) {
-    return (
-        <Typography
-            variant="body2"
-            color="text.secondary"
-            align="center"
-            {...props}
-        >
-            {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{" "}
-            {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
+	return (
+		<Typography
+			variant="body2"
+			color="text.secondary"
+			align="center"
+			{...props}
+		>
+			{"Copyright © "}
+			<Link color="inherit" href="https://mui.com/">
+				Your Website
+			</Link>{" "}
+			{new Date().getFullYear()}
+			{"."}
+		</Typography>
+	);
 }
-
-const style = {
-	position: "absolute",
-	top: "50%",
-	left: "50%",
-	transform: "translate(-50%, -50%)",
-	width: 400,
-	bgcolor: "background.paper",
-	border: "2px solid #000",
-	boxShadow: 24,
-	p: 4,
-};
 
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== "open",
+	shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(["width", "margin"], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
+	zIndex: theme.zIndex.drawer + 1,
+	transition: theme.transitions.create(["width", "margin"], {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.leavingScreen,
+	}),
+	...(open && {
+		marginLeft: drawerWidth,
+		width: `calc(100% - ${drawerWidth}px)`,
+		transition: theme.transitions.create(["width", "margin"], {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.enteringScreen,
+		}),
+	}),
 }));
 
-const top100Films = [
-	{ title: "The Shawshank Redemption", year: 1994 },
-	{ title: "The Godfather", year: 1972 },
-	{ title: "The Godfather: Part II", year: 1974 },
-	{ title: "The Dark Knight", year: 2008 },
-	{ title: "12 Angry Men", year: 1957 },
-	{ title: "Schindler's List", year: 1993 },
-	{ title: "Pulp Fiction", year: 1994 },
-]
-
 const Drawer = styled(MuiDrawer, {
-    shouldForwardProp: (prop) => prop !== "open",
+	shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-    "& .MuiDrawer-paper": {
-        position: "relative",
-        whiteSpace: "nowrap",
-        width: drawerWidth,
-        transition: theme.transitions.create("width", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        boxSizing: "border-box",
-        ...(!open && {
-            overflowX: "hidden",
-            transition: theme.transitions.create("width", {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
-            width: theme.spacing(7),
-            [theme.breakpoints.up("sm")]: {
-                width: theme.spacing(9),
-            },
-        }),
-    },
+	"& .MuiDrawer-paper": {
+		position: "relative",
+		whiteSpace: "nowrap",
+		width: drawerWidth,
+		transition: theme.transitions.create("width", {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.enteringScreen,
+		}),
+		boxSizing: "border-box",
+		...(!open && {
+			overflowX: "hidden",
+			transition: theme.transitions.create("width", {
+				easing: theme.transitions.easing.sharp,
+				duration: theme.transitions.duration.leavingScreen,
+			}),
+			width: theme.spacing(7),
+			[theme.breakpoints.up("sm")]: {
+				width: theme.spacing(9),
+			},
+		}),
+	},
 }));
 
 const mdTheme = createTheme();
@@ -178,11 +159,6 @@ function DashboardContent() {
 	//get logged user
 	const userId = localStorage.getItem("loggedInUser");
 
-	const [open2, setOpen2] = React.useState(true);
-	const toggleDrawer = () => {
-		setOpen(!open2);
-	};
-
 	useEffect(() => {
 		search();
 	}, []);
@@ -194,9 +170,7 @@ function DashboardContent() {
 	}
 
 	const fetchUsers = async () => {
-		const data = await fetch(
-			Links.MDR_URL() + "Users"
-		);
+		const data = await fetch(Links.MDR_URL() + "Users");
 		const vsList = await data.json();
 		console.log(vsList);
 		setSearchedVS(vsList);
@@ -208,25 +182,25 @@ function DashboardContent() {
 
 	for (var i = 0; i < searchedVS.length; i++) {
 		var obj = searchedVS[i];
-		
+
 		const user = {
-            name: obj.name.text,
-            email: obj.email.emailAddress,
-        };
-		sample.push(user)
+			name: obj.name.text,
+			email: obj.email.emailAddress,
+		};
+		sample.push(user);
 	}
 
-	rows = [];
-
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const open = Boolean(anchorEl);
-	const [setOpen] = React.useState(true);
+	const [open, setOpen] = React.useState(true);
+	const [openAccount, setOpenAccount] = useState(false);
 	const [openModal, setOpenModal] = React.useState(false);
-	const [emotion] = React.useState("");
+	const [emotion, setEmotion] = React.useState("");
 	const [makingRequest, setMakingRequest] = useState(false);
-	const [input_emotion, setEmotion] = useState("");
-	const [connectionModal, setOpenConnectionModal] =React.useState(false);
+	const [connectionModal, setOpenConnectionModal] = React.useState(false);
 
+	const toggleDrawer = () => {
+		setOpen(!open);
+	};
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -243,7 +217,7 @@ function DashboardContent() {
 	const handleEmotionChange = (event) => {
 		setEmotion(event.target.value);
 	};
-	const handleUserClick = () =>{
+	const handleUserClick = () => {
 		setOpenConnectionModal(true);
 	};
 	const handleCloseConnectionModal = () => {
@@ -272,6 +246,18 @@ function DashboardContent() {
 							pr: "24px", // keep right padding when drawer closed
 						}}
 					>
+						<IconButton
+							edge="start"
+							color="inherit"
+							aria-label="open drawer"
+							onClick={toggleDrawer}
+							sx={{
+								marginRight: "36px",
+								...(open && { display: "none" }),
+							}}
+						>
+							<MenuIcon />
+						</IconButton>
 						<Typography
 							component="h1"
 							variant="h6"
@@ -318,7 +304,7 @@ function DashboardContent() {
 								);
 							}}
 						/>
-						
+
 						<RequestConnection
 							render={(open) => (
 								<IconButton onClick={open}>
@@ -346,7 +332,7 @@ function DashboardContent() {
 								"aria-labelledby": "accountButton",
 							}}
 							anchorEl={anchorEl}
-							open={open}
+							open={anchorEl}
 							onClose={handleClose}
 						>
 							<Stack spacing={2}>
@@ -368,7 +354,7 @@ function DashboardContent() {
 
 								<Modal
 									hideBackdrop
-									open={open}
+									open={openModal}
 									onClose={handleOpenModal}
 									aria-labelledby="child-modal-title"
 									aria-describedby="child-modal-description"
@@ -394,12 +380,24 @@ function DashboardContent() {
 													autoWidth
 													label="Emotional State"
 												>
-													<MenuItem value="">
-														<em>None</em>
+													<MenuItem value="esperança">
+														<em>Esperança</em>
 													</MenuItem>
-													<MenuItem value={10}>Twenty</MenuItem>
-													<MenuItem value={21}>Twenty one</MenuItem>
-													<MenuItem value={22}>Twenty one and a half</MenuItem>
+													<MenuItem value="felicidade">
+														<em>Felicidade</em>
+													</MenuItem>
+													<MenuItem value="tristeza">
+														<em>Tristeza</em>
+													</MenuItem>
+													<MenuItem value="raiva">
+														<em>Raiva</em>
+													</MenuItem>
+													<MenuItem value="stress">
+														<em>Stress</em>
+													</MenuItem>
+													<MenuItem value="medo">
+														<em>Medo</em>
+													</MenuItem>
 												</Select>
 												<FormHelperText>
 													Tell me how are you feeling.
@@ -407,7 +405,7 @@ function DashboardContent() {
 											</FormControl>
 										</Stack>
 										<Button onClick={handleModalClose}>Close</Button>
-										{/*<Button onClick={handleSave}>Save Changes</Button>*/}
+										<Button onClick={handleModalClose}>Save Changes</Button>
 									</Box>
 								</Modal>
 							</Stack>
@@ -492,5 +490,5 @@ function DashboardContent() {
 }
 
 export default function Dashboard() {
-    return <DashboardContent />;
+	return <DashboardContent />;
 }

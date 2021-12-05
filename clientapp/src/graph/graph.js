@@ -18,20 +18,11 @@ function createData(id, name, parent, forcaLigacao, forcaRelacao) {
     return { id, name, parent, forcaLigacao, forcaRelacao };
 }
 
+const userId = localStorage.getItem('loggedInUser');
+
 let colors = [];
 
-function populateRows() {
-    rows.push(createData("1", "Ferndando", null, "3", "10"));
-    rows.push(createData("2", "Ferndanda", "1", "4", "10"));
-    rows.push(createData("3", "Ricardo", "1", "5", "10"));
-    rows.push(createData("4", "Luísa", "1", "6", "10"));
-    rows.push(createData("5", "Lurdes", "1", "7", "10"));
-    rows.push(createData("6", "Raquel", "2", "8", "10"));
-    rows.push(createData("7", "Olavo", "2", "9", "10"));
-    rows.push(createData("8", "Rajesh", "6", "10", "10"));
-    rows.push(createData("9", "Rita", "3", "11", "10"));
-    rows.push(createData("10", "Rute", "4", "12", "10"));
-    rows.push(createData("11", "Diogo", "4", "13", "10"));
+const populateRows = async () =>  {
     colors.push(0xff0000);
     colors.push(0x00ff00);
     colors.push(0x0000ff);
@@ -42,74 +33,63 @@ function populateRows() {
     colors.push(0x0f0f0f);
     colors.push(0x0fff0f);
     colors.push(0xfff0dd);
+    // DATA GET FROM MASTER DATA API
+    await fetchUsers();
+    sampleToRows();
+
+    /* BEFORE DATA BASE
+    rows.push(createData("1", "Ferndando", null, "3", "10"));
+    rows.push(createData("2", "Ferndanda", "1", "4", "10"));
+    rows.push(createData("3", "Ricardo", "1", "5", "10"));
+    rows.push(createData("4", "Luísa", "1", "6", "10"));
+    rows.push(createData("5", "Lurdes", "1", "7", "10"));
+    rows.push(createData("6", "Raquel", "2", "8", "10"));
+    rows.push(createData("7", "Olavo", "2", "9", "10"));
+    rows.push(createData("8", "Rajesh", "6", "10", "10"));
+    rows.push(createData("9", "Rita", "3", "11", "10"));
+    rows.push(createData("10", "Rute", "4", "12", "10"));
+    rows.push(createData("11", "Diogo", "4", "13", "10"));**/
 }
 
-/** function ListMyFriendsContent() {
+let searchedVS = [];
+const fetchUsers = async () => {
+    const data = await fetch(
+        Links.MDR_URL() + "users/MyPerspective/" + userId + '/' + 3
+    );
+    const vsList = await data.json();
+    searchedVS = vsList;
 
-    
-    const userId = localStorage.getItem('loggedInUser');
+    fillSample();
+};
 
-    const [open, setOpen] = React.useState(true);
-    const toggleDrawer = () => {
-      setOpen(!open);
-    };
-  
-    useEffect(() => {
-      search();
-    }, []);
+let sample = [];
 
-    function search() {
-        getData();
+function fillSample(){
+    for (var i = 0; i < searchedVS.length; i++) {
+        var obj = searchedVS[i];
+
+        try {
+            sample.push([obj.userId,obj.userName,obj.parentId,obj.connectionStrength,obj.relationshipStrength]);
+        } catch {
+            sample.push([obj.userId,obj.userName,obj.parentId,obj.connectionStrength,obj.relationshipStrength]);
+        }
     }
-
-    const [searchedVS, setSearchedVS] = useState([]);
-    const getData= async () => {
-        
-        const data = await fetch(
-            Links.MDR_URL() + "/api/users/getPrespective/" + userId + '/' + 3
-        );
-        const vsList = await data.json();
-        console.log(vsList);
-        setSearchedVS(vsList);
-    };
-    let sample = [];
-
-for (var i = 0; i < searchedVS.length; i++){
-  var obj = searchedVS[i];
-  console.log(obj);
-  
-try{
-  sample.push([obj.userId,obj.userName,obj.parentId,obj.connectionStrength,obj.relationshipStrength]);
-}catch{
-  sample.push([obj.userId,obj.userName,obj.parentId,obj.connectionStrength,obj.relationshipStrength]);
-}
-}
-
-function createData( id, name,parent ,forcaLigacao, forcaRelacao) {
-  return { id, name,parent ,forcaLigacao, forcaRelacao};
 }
 
 
 // push the information from sample to rows
 
 rows = [];
+const sampleToRows = () => {
+    for (let i = 0; i < searchedVS.length; i += 1) {
+        rows.push(createData(...sample[i]));
+    }
+}
 
-for (let i = 0; i < searchedVS.length; i += 1) {
-  rows.push(createData(...sample[i]));
-}
-}
-*/
-function returnRows() {
-    populateRows();
+const returnRows = async() => {
+    await populateRows();
     return rows;
 }
-
-/** function ListFriends() {
-    return <ListMyFriendsContent />;
-}
-*/
-
-
 
 export default class Graph {
 
@@ -137,18 +117,18 @@ export default class Graph {
 
         var aspectRatio = window.innerWidth / window.innerHeight;
         this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 100);
-        const controls = new OrbitControls( this.camera, this.renderer.domElement );
+        const controls = new OrbitControls(this.camera, this.renderer.domElement);
         controls.enableRotate = false;
-        controls.maxDistance  = 100;
-        controls.minDistance  = 5;
+        controls.maxDistance = 100;
+        controls.minDistance = 5;
 
 
         this.camera.position.set(0, 0, 100);
         controls.update();
-        
+
         this.scene.add(this.camera);
 
-        
+
 
         this.cameraMinimap = new THREE.PerspectiveCamera(
             90, window.innerWidth / window.innerHeight, 0.1, 100
@@ -161,15 +141,15 @@ export default class Graph {
         this.light.position.z = 100;
         this.scene.add(this.light);
 
-        //const canvas = document.createElement('graphCanvas');
-
-        var dtos = returnRows();
-
-        this.createNodes(dtos);
+        var dtos = returnRows().then((response) => {
+        this.createNodes(response);
         var lvl = 0;
         this.addNodesToScene(this.rootNode, lvl);
 
-        this.addEdgesToScene(this.nodes, dtos);
+        this.addEdgesToScene(this.nodes, response);
+        }
+
+        );
 
         this.miniMapCameraParameters = merge(true, camera_const, { view: 'mini-map', multipleViewsViewport: new THREE.Vector4(1,0.04,0.4,0.2), initialOrientation: new Orientation(180.0, 0.0), initialZoom: 0.7 });
         this.miniMapCamera = new camera_zoom(this.miniMapCameraParameters, window.innerWidth, window.innerHeight);
@@ -177,7 +157,6 @@ export default class Graph {
         this.topViewCameraParameters = merge(true, camera_const, { view: 'top', initialOrientation: new Orientation(0.0, -90.0), initialZoom: 0.7 });
         this.topViewCamera = new camera_zoom(this.topViewCameraParameters, window.innerWidth, window.innerHeight);
         this.update();
-        //this.renderer.render(this.scene,this.camera);
     }
 
     getCanvas() {
@@ -256,54 +235,7 @@ export default class Graph {
         });
     }
 
-
-    //getData() { 
-    // Anda Inês, trabalha AQUIIII
-    // O que está aqui não deve interessar
-    /** let users = [];
-
-    for (var i = 0; i < searchedVS.length; i++) {
-        var obj = searchedVS[i];
-        fetchUser(obj.requester.value);
-        users.push([obj.id, requesterName, requesterEmail, obj.description.text]);
-    }
-
-    function createData(id, requester, requester_email, description) {
-        return { friendshipId , id, requester, requester_email, description };
-    }
-
-    const rows = [];
-
-    for (let i = 0; i < searchedVS.length; i += 1) {
-        rows.push(createData(...users[i]));
-    }
-
-    let root;
-    let nodes = [];
-    users.forEach(element => {
-        if (element.id === this.userRequesterId){
-            var node = new Node({
-                color : 0x00ff00,
-                radius : 3,
-                user : element,
-                parent : 'undefined',
-                x : 0.0,
-                y : 0.0
-            }, this.scene);
-            root = node;
-            nodes.push(node);
-        }
-    });
-
-    let edges = [];
-    
-    this.addDataToScene(users, rows, root); 
-}*/
-
-
-
     addNodesToScene(node, lvl) {
-
         if (node.parent === null) {
             node.setNewColor(colors[lvl]);
             node.initialize(this.scene);
