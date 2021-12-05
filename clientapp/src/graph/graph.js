@@ -151,7 +151,7 @@ export default class Graph {
 
         );
 
-        this.miniMapCameraParameters = merge(true, camera_const, { view: 'mini-map', multipleViewsViewport: new THREE.Vector4(0.99, 0.03, 0.3, 0.3), initialOrientation: new Orientation(180.0, 0.0), initialZoom: 0.7 });
+        this.miniMapCameraParameters = merge(true, camera_const, { view: 'mini-map', multipleViewsViewport: new THREE.Vector4(1,0.04,0.4,0.2), initialOrientation: new Orientation(180.0, 0.0), initialZoom: 0.7 });
         this.miniMapCamera = new camera_zoom(this.miniMapCameraParameters, window.innerWidth, window.innerHeight);
 
         this.topViewCameraParameters = merge(true, camera_const, { view: 'top', initialOrientation: new Orientation(0.0, -90.0), initialZoom: 0.7 });

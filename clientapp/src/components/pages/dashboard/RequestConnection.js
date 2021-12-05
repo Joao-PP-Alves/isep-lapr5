@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Links from "../../Links";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
@@ -13,18 +13,20 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function AlertDialogSlide({ friendshipId, render }) {
+export default function RequestConnection({ requesterId, targetName, render }) {
+	console.log(requesterId + " " + targetName);
 	const [open, setOpen] = React.useState(false);
 
-    const [input_requester_name, setRequesterName] = useState("");
-    const [input_target_name, setTargetName] = useState("");
+    const [setRequesterEmail] = useState("");
+    const [target_id, setTargetId] = useState("");
     const [input_description, setDescription] = useState("");
-    const [input_decision, setDecision] = useState("");
 
     const [openSnackBar, setOpenSnackBar] = React.useState(false);
 	const [openSnackBarError, setOpenSnackBarError] = React.useState(false);
 
     const [makingRequest, setMakingRequest] = useState(false);
+	const [target, setTarget] = useState("");
+
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -38,33 +40,47 @@ export default function AlertDialogSlide({ friendshipId, render }) {
 			setOpenSnackBarError(false);
 	};
 
-    const requester_name={
-        text: input_requester_name,
-    };
-
-    const target_name={
-        text: input_target_name,
-    };
-
     const connection_description={
         text: input_description,
     };
 
-    const connection_decision = {
-
-    };
-
     const connection = {
-        requesterName: requester_name,
-        targetName: target_name,
-        description: connection_description,
-        decision: connection_decision,
+			requester: requesterId,
+            targetUser: target,
+            description: connection_description,
+			decision: "0",
     };
+
+	/*useEffect(() => {
+		getByNameTarget();
+	}, []);*/
+
+	function getByNameTarget(targetName) {
+		console.log("está aqui por cima " + targetName);
+		setMakingRequest(true);
+		console.log("está aqui " + targetName);
+
+		const response = async () => {
+			const response2 = fetch(Links.MDR_URL() + "users/ByName/" +targetName);
+			console.log("RESPONSE 2: "+response2);
+			const response3 = await response2.json();
+			console.log("RESPONSE 3:"+response3);
+			setTarget(response2.id);
+			console.log("TARGET AQUI:"+target);
+			console.log(response2);
+		}
+			response();
+		console.log(target);
+	}
+
+
 
 	 function handleSendRequest(event) {
+		 	setTarget(getByNameTarget(targetName));
 			event.preventDefault();
 			setMakingRequest(true);
-
+			console.log("requester:"+connection.requester);
+			console.log("target:"+connection.targetUser);
 			const response = fetch(
 				Links.MDR_URL() + "Connections",
 
@@ -79,8 +95,7 @@ export default function AlertDialogSlide({ friendshipId, render }) {
 					if (!response.ok) {
 						return null;
 					} else {
-						setOpenSnackBar(true);
-
+					    setOpenSnackBar(true);
 					}
 					setMakingRequest(false);
 				})
@@ -91,6 +106,7 @@ export default function AlertDialogSlide({ friendshipId, render }) {
 					setMakingRequest(false);
 				});
 		}
+
 
 	return (
 		<div>
@@ -128,7 +144,7 @@ export default function AlertDialogSlide({ friendshipId, render }) {
 				<DialogTitle>{"Request Connection"}</DialogTitle>
 				<DialogContent>
 					{"Do you wanto to send a friendship request to " +
-						/* pôr aqui o parâmetro-nome*/ "?"}
+						targetName  + "?"}
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleSendRequest}>Request</Button>

@@ -25,6 +25,8 @@ namespace MasterDataSocialNetworkTest.Domain.Users
         private static TestContext _testContext;
         public Mock<IUnitOfWork> unitOfWork;
         public Mock<IUserRepository> repo;
+
+        public Mock<IFriendshipService> fs;
         public UserService service;
 
 
@@ -34,7 +36,8 @@ namespace MasterDataSocialNetworkTest.Domain.Users
         {
             unitOfWork = new Mock<IUnitOfWork>();
             repo = new Mock<IUserRepository>();
-            service = new UserService(unitOfWork.Object, repo.Object);
+            fs = new Mock<IFriendshipService>();
+            service = new UserService(unitOfWork.Object, repo.Object, fs.Object);
         }
 
         [TestCleanup]

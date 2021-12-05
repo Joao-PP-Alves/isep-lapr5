@@ -18,7 +18,7 @@ export default class Edge{
         points.push( new THREE.Vector3( this.parent.x, this.parent.y, 0) );
         points.push( new THREE.Vector3( this.friend.x, this.friend.y, 0 ) );
 
-        const material = new THREE.LineBasicMaterial( { color: 0x777777, linewidth : this.ligacao * this.relacao * 1000 } );
+        const material = new THREE.LineBasicMaterial( { color: 0x777777, linewidth : this.ligacao} );
         
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         const line = new THREE.Line( geometry, material );
