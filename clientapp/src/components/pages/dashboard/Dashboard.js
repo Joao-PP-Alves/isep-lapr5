@@ -318,22 +318,7 @@ function DashboardContent() {
 								);
 							}}
 						/>
-						{/*<IconButton
-							color="inherit"
-							id="accountButton"
-							aria-controls="demo-customized-menu"
-							aria-haspopup="true"
-							aria-expanded={open ? "true" : undefined}
-							variant="contained"
-							disableElevation
-							onClick={handleUserClick}
-						>
-							<ArrowForwardIosTwoToneIcon />
-							<Modal 
-								open={handleUserClick}>
-								
-							</Modal>
-						</IconButton>*/}
+						
 						<RequestConnection
 							render={(open) => (
 								<IconButton onClick={open}>
