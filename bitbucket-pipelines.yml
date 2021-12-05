@@ -16,15 +16,10 @@ pipelines:
           script:
             - cd MasterDataSocialNetwork
             - dotnet build
-            - cd clientapp
+            - cd ../clientapp
             - npm run build
       - step:
           name: Test
           script:
             - cd MasterDataSocialNetworkTest
             - dotnet test
-      -step:
-          name: SPA
-          script:
-            -cd clientapp
-            -npm run build
