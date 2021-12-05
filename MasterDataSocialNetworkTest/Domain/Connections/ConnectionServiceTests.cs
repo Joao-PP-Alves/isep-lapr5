@@ -36,6 +36,8 @@ namespace MasterDataSocialNetworkTest.Domain.Connections
 
         public FriendshipService friendshipService;
 
+        public Mock<IFriendshipService> fs;
+
         public MissionService missionService;
 
         [TestInitialize]
@@ -44,8 +46,9 @@ namespace MasterDataSocialNetworkTest.Domain.Connections
             unitOfWork = new Mock<IUnitOfWork>();
             repoUsers = new Mock<IUserRepository>();
             repoMissions = new Mock<IMissionRepository>();
+            fs = new Mock<IFriendshipService>();
             repoConnections = new Mock<IConnectionRepository>();
-            userService = new UserService(unitOfWork.Object, repoUsers.Object);
+            userService = new UserService(unitOfWork.Object, repoUsers.Object,fs.Object);
             friendshipService = new FriendshipService(unitOfWork.Object, repoUsers.Object);
             missionService = new MissionService(unitOfWork.Object, repoMissions.Object);
             service = new ConnectionService(unitOfWork.Object, repoConnections.Object, repoUsers.Object, userService, friendshipService, missionService);
