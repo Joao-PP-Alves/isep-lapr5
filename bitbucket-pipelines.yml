@@ -16,9 +16,6 @@ pipelines:
           script:
             - cd MasterDataSocialNetwork
             - dotnet build
-            - cd ../clientapp
-            - npm install
-            - npm run build
       - step:
           name: Test
           script:
