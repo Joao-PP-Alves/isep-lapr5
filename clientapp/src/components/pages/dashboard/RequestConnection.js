@@ -13,13 +13,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function AlertDialogSlide({ friendshipId, render }) {
+export default function AlertDialogSlide({ requesterEmail, targetEmail, render }) {
 	const [open, setOpen] = React.useState(false);
 
-    const [input_requester_name, setRequesterName] = useState("");
-    const [input_target_name, setTargetName] = useState("");
+    const [setRequesterEmail] = useState("");
+    const [setTargetEmail] = useState("");
     const [input_description, setDescription] = useState("");
-    const [input_decision, setDecision] = useState("");
 
     const [openSnackBar, setOpenSnackBar] = React.useState(false);
 	const [openSnackBarError, setOpenSnackBarError] = React.useState(false);
@@ -38,27 +37,15 @@ export default function AlertDialogSlide({ friendshipId, render }) {
 			setOpenSnackBarError(false);
 	};
 
-    const requester_name={
-        text: input_requester_name,
-    };
-
-    const target_name={
-        text: input_target_name,
-    };
-
     const connection_description={
         text: input_description,
     };
 
-    const connection_decision = {
-
-    };
-
     const connection = {
-        requesterName: requester_name,
-        targetName: target_name,
+        requester_Email: requesterEmail,
+        target_Email: targetEmail,
         description: connection_description,
-        decision: connection_decision,
+        decision: "0",
     };
 
 	 function handleSendRequest(event) {
@@ -79,8 +66,7 @@ export default function AlertDialogSlide({ friendshipId, render }) {
 					if (!response.ok) {
 						return null;
 					} else {
-						setOpenSnackBar(true);
-
+					    setOpenSnackBar(true);
 					}
 					setMakingRequest(false);
 				})
@@ -91,6 +77,69 @@ export default function AlertDialogSlide({ friendshipId, render }) {
 					setMakingRequest(false);
 				});
 		}
+
+        /*const requester = {
+			name: obj.name.text,
+			email: obj.email.emailAddress,
+            id: obj.id,
+		};
+
+        const target = {
+			name: obj.name.text,
+			email: obj.email.emailAddress,
+			id: obj.id,
+		};*/
+
+        function getByEmailRequester(requesterEmail){
+            setMakingRequest(true);
+
+            const response = fetch(
+                Links.MDR_URL() + "users/ByEmail/"/*+email*/, 
+                {
+					method: "GET",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(/*requester*/),
+				}
+            ).then((response) => {
+                response.json();
+                if(!response.ok) {
+                    return null;
+                } else {
+                    setOpenSnackBar(true);
+                }
+                setMakingRequest(false);
+            })
+            .then((json) => console.log(json))
+            .catch((err) => {
+                setOpenSnackBarError(true);
+                setMakingRequest(false);
+            });
+        }
+
+        function getByEmailTarget(targetEmail) {
+			setMakingRequest(true);
+
+			const response = fetch(Links.MDR_URL() + "users/ByEmail/" /*+ email*/, {
+				method: "GET",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(/*requester*/),
+			})
+				.then((response) => {
+					response.json();
+					if (!response.ok) {
+						return null;
+					} else {
+				setOpenSnackBar(true);
+					}
+				setMakingRequest(false);
+					})
+					.then((json) => console.log(json))
+					.catch((err) => {
+						setOpenSnackBarError(true);
+						setMakingRequest(false);
+					});
+		}
+
 
 	return (
 		<div>
@@ -127,8 +176,8 @@ export default function AlertDialogSlide({ friendshipId, render }) {
 			>
 				<DialogTitle>{"Request Connection"}</DialogTitle>
 				<DialogContent>
-					{"Do you wanto to send a friendship request to " +
-						/* pôr aqui o parâmetro-nome*/ "?"}
+					{"Do you wanto to send a friendship request to " /*+
+						targetName */+ "?"}
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleSendRequest}>Request</Button>
