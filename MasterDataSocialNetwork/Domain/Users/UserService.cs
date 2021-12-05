@@ -344,7 +344,7 @@ namespace DDDNetCore.Domain.Users
                 user.emotionalState, user.EmotionTime);
         }
 
-        public async Task<List<UserId>> GetFriendsSuggestionForNewUsers(UserId id)
+        public async Task<List<UserDto>> GetFriendsSuggestionForNewUsers(UserId id)
         {
             var user = await _repo.GetByIdAsync(id);
             if (user == null)
@@ -353,7 +353,13 @@ namespace DDDNetCore.Domain.Users
             }
 
             var friends = _repo.ReturnFriendsSuggestionList(user.Id);
-            return friends;
+            List<UserDto> listDto = friends.ConvertAll(user =>
+                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate,
+                    user.tags,
+                    user.emotionalState,
+                    user.EmotionTime)); ;
+
+            return listDto;
         }
 
         /// <summary>
@@ -423,7 +429,7 @@ namespace DDDNetCore.Domain.Users
                                 friend.relationship_strength.value);
                             toReturn.Add(newUser);
                         }
-                        
+
                     }
                 }
                 transforma(param - 1, auxList, toReturn);
@@ -432,23 +438,23 @@ namespace DDDNetCore.Domain.Users
         }
 
         /// <summary>
-            /// Checks if a user exists
-            /// </summary>
-            /// <param name="userId"></param>
-            /// <exception cref="Exception"></exception>
-            private async Task checkUserIdAsync(UserId userId)
-            {
-                var user = await _repo.GetByIdAsync(userId);
-                if (user == null)
-                    throw new Exception("The provided user does not exist");
-            }
+        /// Checks if a user exists
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <exception cref="Exception"></exception>
+        private async Task checkUserIdAsync(UserId userId)
+        {
+            var user = await _repo.GetByIdAsync(userId);
+            if (user == null)
+                throw new Exception("The provided user does not exist");
+        }
 
-            public async Task checkIfTwoUsersAreFriends(UserId user1, UserId user2)
+        public async Task checkIfTwoUsersAreFriends(UserId user1, UserId user2)
+        {
+            if (_repo.checkIfFriends(user1, user2))
             {
-                if (_repo.checkIfFriends(user1, user2))
-                {
-                    throw new BusinessRuleValidationException("Users are already friends.");
-                }
+                throw new BusinessRuleValidationException("Users are already friends.");
             }
         }
     }
+}

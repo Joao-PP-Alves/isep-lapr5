@@ -22,7 +22,7 @@ namespace DDDNetCore.Domain.Users{
         public Task<UserDto> DeleteAsync(UserId id);
         public Task<UserDto> UpdateEmotionalStateAsync(UserDto dto);
         public Task<UserDto> ConvertToDto(User user);
-        public Task<List<UserId>> GetFriendsSuggestionForNewUsers(UserId id);
+        public Task<List<UserDto>> GetFriendsSuggestionForNewUsers(UserId id);
         public Task<List<UserDto>> GetPossibleIntroductionTargets(UserId myId, UserId friendId);
         public Task<Network<UserDto, FriendshipDto>> GetMyFriends(UserId id, Network<UserDto, FriendshipDto> friendsNet, int level);
         Task<FriendshipDto> NewFriendship(CreatingFriendshipDto dto);

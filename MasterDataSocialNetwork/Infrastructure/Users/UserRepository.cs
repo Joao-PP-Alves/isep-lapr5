@@ -40,9 +40,9 @@ namespace DDDNetCore.Infrastructure.Users
         /// </summary>
         /// <param name="userId"></param>
         /// <returns> UserId list </returns>
-        public List<UserId> ReturnFriendsSuggestionList(UserId userId)
+        public List<User> ReturnFriendsSuggestionList(UserId userId)
         {
-            List<UserId> friendsList = new List<UserId>();
+            List<User> friendsList = new List<User>();
             var tag = GetTagList(userId).Result;
             var possibleFriends = GetUsersWithTheirTags().Result;
             foreach (User u in possibleFriends)
@@ -53,9 +53,9 @@ namespace DDDNetCore.Infrastructure.Users
                     {
                         foreach (Tag usertag in u.tags)
                         {
-                            if (ut.name.Equals(usertag.name) && !(friendsList.Contains(u.Id)))
+                            if (ut.name.Equals(usertag.name) && !(friendsList.Contains(u)))
                             {
-                                friendsList.Add(u.Id);
+                                friendsList.Add(u);
                             }
                         }
                     }
@@ -88,31 +88,15 @@ namespace DDDNetCore.Infrastructure.Users
         public async Task<List<User>> GetByTags(List<Tag> list){
             List<User> listUsers = new List<User>();
             var listPossibleUsers = GetUsersWithTheirTags().Result;
-            foreach (var item in list)
-            {
-                var listAux = new List<User>();
                
                 foreach (var itemThis in listPossibleUsers)
                 {
-                    foreach (var itemTag in itemThis.tags)
-                    {
-                        if (itemTag.name.Equals(item.name)){
-                            listAux.Add(itemThis);
-                        }
+                    var c = list.Intersect(itemThis.tags);
+                    if(c.Count() > 0){
+                        listUsers.Add(itemThis);
                     }
                 }
-                //= await ((DbSet<User>)base.getContext()).Where(x => x.tags.Contains(item)).ToListAsync();
-                if (listUsers.Count > 0){
-                    foreach (var item2 in listAux)
-                    {
-                        if (!listUsers.Contains(item2)){
-                            listUsers.Add(item2);
-                        }
-                    }
-                } else {
-                    listUsers.AddRange(listAux);
-                }
-            }
+             
             return listUsers;
         }
 

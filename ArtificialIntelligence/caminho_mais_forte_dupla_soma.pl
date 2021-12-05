@@ -24,7 +24,7 @@ plan_maxlig2(Orig,Dest,LCaminho_maxlig,LCaminho_length,N):-
 		write('Tempo de geracao da solucao:'),write(T),nl.
 
 
-melhor_caminho_maxlig2(Orig,Dest):- asserta(melhor_sol_maxlig2(_,-9999)),asserta(conta_sol(0))
+melhor_caminho_maxlig2(Orig,Dest):- asserta(melhor_sol_maxlig2(_,-9999)),asserta(conta_sol(0)),
 		dfsLengthDouble(Orig,Dest,LCaminho,Len),
 		atualiza_melhor_maxlig2(LCaminho,Len),
 		fail.

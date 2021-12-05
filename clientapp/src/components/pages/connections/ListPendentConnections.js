@@ -25,6 +25,7 @@ import { withStyles } from '@mui/styles';
 import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 import AlertDialogSlide from './AlertDialogSlide';
+import Links from '../../Links';
 
 let rows = [];
 
@@ -317,7 +318,7 @@ function ListPendentConnectionsContent() {
 
   const fetchPendentConnections= async () => {
 
-    const data = await fetch(
+    const data = await fetch(Links.MDR_URL() + "connections/pendent/" + userId
 		);
     const vsList = await data.json();
     console.log(vsList);
