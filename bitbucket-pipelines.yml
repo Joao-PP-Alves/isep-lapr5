@@ -17,7 +17,7 @@ pipelines:
             - cd MasterDataSocialNetwork
             - dotnet build
             - cd ../clientapp
-            - dotnet build
+            - react-scripts build
       - step:
           name: Test
           script:
