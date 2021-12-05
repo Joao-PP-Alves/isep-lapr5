@@ -21,3 +21,8 @@ pipelines:
           script:
             - cd MasterDataSocialNetworkTest
             - dotnet test
+      -step:
+          name: SPA
+          script:
+            -cd clientapp
+            -npm run build
