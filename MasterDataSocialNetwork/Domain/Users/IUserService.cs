@@ -29,6 +29,7 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<List<UserPerspectiveDto>> MyPerspective(UserId userId, int param);
 
-        Task checkIfTwoUsersAreFriends(UserId user1,UserId user2);
+        public Task<bool> checkIfTwoUsersAreFriends(UserId user1,UserId user2);
+        
     }
 }

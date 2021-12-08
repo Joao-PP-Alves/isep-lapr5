@@ -449,12 +449,13 @@ namespace DDDNetCore.Domain.Users
                 throw new Exception("The provided user does not exist");
         }
 
-        public async Task checkIfTwoUsersAreFriends(UserId user1, UserId user2)
+        public async Task<bool> checkIfTwoUsersAreFriends(UserId user1, UserId user2)
         {
             if (_repo.checkIfFriends(user1, user2))
             {
-                throw new BusinessRuleValidationException("Users are already friends.");
+                return true;
             }
+            return false;
         }
     }
 }
