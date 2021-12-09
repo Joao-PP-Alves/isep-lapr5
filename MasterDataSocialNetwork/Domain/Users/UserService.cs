@@ -457,5 +457,15 @@ namespace DDDNetCore.Domain.Users
             }
             return false;
         }
+
+        public Task<List<Tag>> checkToAddTag(List<string> tags)
+        {
+            foreach (var tag in tags)
+            {
+                
+            }
+
+            return null;
+        }
     }
 }

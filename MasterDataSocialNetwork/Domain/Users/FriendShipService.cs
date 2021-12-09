@@ -89,13 +89,5 @@ namespace DDDNetCore.Domain.Users {
 
             await this._unitOfWork.CommitAsync();
         }
-
-        /* public async void UpdateFriendsList(FriendshipDto dto, Guid id)
-        {
-            var user = _repoUser.GetByIdAsync(new UserId(id)).Result;
-            user.friendsList.Add(new Friendship(dto.friend, dto.requester, dto.connection_strength,dto.relationship_strength,dto.friendshipTag));
-        } */
-        
-       // public async Task<Dictionary<int, List<UserDto>>> friendShipLevelMap(int level, Dictionary<int, >)
     }
 }

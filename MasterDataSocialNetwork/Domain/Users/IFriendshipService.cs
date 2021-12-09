@@ -8,10 +8,6 @@ using System;
 namespace DDDNetCore.Domain.Users{
 
     public interface IFriendshipService{
-        public Task<List<FriendshipDto>> GetByUserId(UserId userId);
-        public Task<Dictionary<int, List<UserDto>>> createMap(int level);
-        public Task<FriendshipDto> ConvertToDto(Friendship friendship);
-        public void UpdateFriendsList(FriendshipDto dto, Guid id);
 
         Task createFriends(UserId requesterId, UserId friendId, TagId friendTag);
 
