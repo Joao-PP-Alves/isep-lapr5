@@ -6,12 +6,6 @@
                                     friendsoffriends/2,
                                     filterSugestionsByTag/3]).
 
-
-
-
-%%sugere amigos com base nas tags em comum e nas conexões em comum, tendo em conta n níveis
-
-%%DEPOIS MUDAR ISTO PARA FAZER SÓ A PARTIR DO USER E NÃO COM TAGSLIST E CONNECTIONS
 suggestConnections(User, Level, Sugestions):-
         no(User,_,ListTags),
         verifySemantic(ListTags,TagResult),                                       
@@ -19,13 +13,9 @@ suggestConnections(User, Level, Sugestions):-
         filterSugestionsByTag(TagResult, UsersList, List),
         possiblePath(User,List,Sugestions).   
 
-%verificar a semantica das tags do user
-
 verifySemantic(L,L2):-verifySemantic(L,[],L2).
 verifySemantic([],L,L):-!.
 verifySemantic([H|T],L,L2):-tag(H,Lista),verifySemantic(T,[[H|Lista]|L],L2),!;verifySemantic(T,[H|L],L2).
-
-%%retorna uma lista com os users que se encontram até n níveis
 
 getUsers(User,0,L):-!,
 	no(_,User,_),
@@ -53,10 +43,6 @@ friendsoffriends([],[]):-!.
 friendsoffriends([H|T],LR):-
 	directConnections(H,L),
 	friendsoffriends(T,L2),union(L,L2,LR).
-  
-
-
-%%pesquisa de users para sugerir com base nas tags 
 
 filterSugestionsByTag(L,U,R):- filterSugestionsByTag(L,U,[],R).
 
@@ -71,8 +57,6 @@ checkTag(TagsList, User):-
 hasTag(TagsList, []):-false.
 hasTag(TagsList, [H|T]):-member(H,TagsList),!;hasTag(TagsList,T).
 
-%verifica se é possível chegar aos nodes passando somente por nodes que tenham tags em comum
- %%% falta fazer este
  possiblePath(User,[],[]):-!.
  possiblePath(User, [H|T], [H|Result]):-
     no(H,Name,_), no(User, UserName, _),

@@ -1,8 +1,9 @@
 
 retornarUsersComXTagsEmComum(Param,ListaTags,ListaCombTags,ListaUserTags,ListaUsers,Result):-
+findall(no(_,X,ListaTags),
     length(ListaTags,Q),                                                                    
     Param =< Q,                                                                             
-    todasCombinacoes(Param,ListaTags,ListaCombTags),                                       
+    todasCombinacoes(Param,ListaTags,ListaCombTags)),                                       
     listarTodosUsers(ListaUserTags,ListaUsers),                                             
     retornarUsers(ListaCombTags, ListaCombTags, ListaUserTags, ListaUsers, Result).                     
     
