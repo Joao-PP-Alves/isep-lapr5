@@ -8,11 +8,11 @@ dfsLength(Orig,Dest,Cam,Len):-dfs2Length(Orig,Dest,[Orig],Cam,Len).
 
 dfs2Length(Dest,Dest,LA,Cam,0):-!,reverse(LA,Cam).
 dfs2Length(Act,Dest,LA,Cam,Len):-no(NAct,Act,_),
-        (ligacao(NAct,NX,Len1)),
+        (ligacao(NAct,NX,Len1,Len3)),
         no(NX,X,_),
         \+ member(X,LA),
         dfs2Length(X,Dest,[X|LA],Cam,Len2),
-        Len is Len2 + Len1.
+        Len is Len2 + Len1 + Len3.
 
 plan_maxlig(Orig,Dest,LCaminho_maxlig,LCaminho_length,N):-
 		get_time(Ti),
