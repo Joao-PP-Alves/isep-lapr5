@@ -143,7 +143,7 @@ namespace DDDNetCore.Domain.Connections
 
             var connection = await _repo.GetByIdAsync(new ConnectionId(connectionId));
 
-            await friendshipService.createFriends(connection.requester, connection.targetUser);
+            await friendshipService.createFriends(connection.requester, connection.targetUser,null);
 
             connection.acceptConnection();
 

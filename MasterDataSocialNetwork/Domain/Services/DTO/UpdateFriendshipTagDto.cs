@@ -10,9 +10,9 @@ namespace DDDNetCore.Domain.Services.DTO
     public class UpdateFriendshipTagDto
     {
         public Guid Id { get; set; }
-        public String tag { get; set; }
+        public Guid tag { get; set; }
 
-        public UpdateFriendshipTagDto(Guid Id, String tag)
+        public UpdateFriendshipTagDto(Guid Id, Guid tag)
         {
             this.Id = Id;
             this.tag = tag;

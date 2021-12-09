@@ -198,7 +198,7 @@ namespace DDDNetCore.Domain.Users
             {
                 foreach (string item in listStrings)
                 {
-                    Tag tagConfirmation = new Tag(item);
+                    Tag tagConfirmation = new Tag(new Name(item));
                     listTags.Add(tagConfirmation);
                 }
             }

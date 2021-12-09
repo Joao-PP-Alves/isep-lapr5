@@ -18,9 +18,9 @@ namespace DDDNetCore.Domain.Services.DTO
         
         public UserId requester { get; set; }
 
-        public Tag friendshipTag { get; set; }
+        public TagId friendshipTag { get; set; }
 
-        public FriendshipDto(Guid Id, ConnectionStrength connection_strength, RelationshipStrength relationship_strength, UserId friend, UserId requester, Tag friendshipTag)
+        public FriendshipDto(Guid Id, ConnectionStrength connection_strength, RelationshipStrength relationship_strength, UserId friend, UserId requester, TagId friendshipTag)
         {
             this.Id = Id;
             this.connection_strength = connection_strength;
