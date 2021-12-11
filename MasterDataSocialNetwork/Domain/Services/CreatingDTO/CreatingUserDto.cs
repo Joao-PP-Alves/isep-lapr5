@@ -11,6 +11,7 @@ namespace DDDNetCore.Domain.Services.CreatingDTO{
         public List<Tag> tags {get; set;}
         
         public LifeDate birthDate { get; set; }
+        
 
         public CreatingUserDto(Name name, Email email, Password password, PhoneNumber phoneNumber, List<Tag> tags, LifeDate birthDate){
             this.name = name;
@@ -19,6 +20,9 @@ namespace DDDNetCore.Domain.Services.CreatingDTO{
             this.phoneNumber = phoneNumber;
             this.tags=tags;
             this.birthDate = birthDate;
+            
         }
+
+        
     }
 }
