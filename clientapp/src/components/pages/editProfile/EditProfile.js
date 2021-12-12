@@ -145,8 +145,8 @@ const mdTheme = createTheme();
 
 function EditProfileContent() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const open = Boolean(anchorEl);
-	const [setOpen] = React.useState(true);
+	//const open = Boolean(!anchorEl);
+	const [open, setOpen] = React.useState(true);
 	const [emotion] = React.useState('');
 	const [input_email, setEmail] = useState("");
 	const [input_password, setPassword] = useState("");
@@ -366,7 +366,7 @@ function EditProfileContent() {
 									"aria-labelledby": "accountButton",
 								}}
 								anchorEl={anchorEl}
-								open={open}
+								open={anchorEl}
 								onClose={handleClose}
 							>
 								<Button href="/" disableRipple>
