@@ -20,9 +20,9 @@ namespace DDDNetCore.Domain.Services.DTO{
         public Decision decision {get; set;}
 
         // change to value objects from user
-        public User requesterObject {get; set;}
+        public UserNameEmailDto requesterObject {get; set;}
 
-        public ConnectionWithRequesterDto(Guid id, UserId requester, UserId targetUser, Description description, Decision decision, User requesterObject){
+        public ConnectionWithRequesterDto(Guid id, UserId requester, UserId targetUser, Description description, Decision decision, UserNameEmailDto requesterObject){
             this.id = id;
             this.requester = requester;
             this.targetUser = targetUser;
@@ -31,7 +31,7 @@ namespace DDDNetCore.Domain.Services.DTO{
             this.requesterObject = requesterObject;
         }
 
-        public ConnectionWithRequesterDto(Guid id, UserId requester, UserId targetUser, Description description, Decision decision,MissionId missionId, User requesterObject){
+        public ConnectionWithRequesterDto(Guid id, UserId requester, UserId targetUser, Description description, Decision decision,MissionId missionId, UserNameEmailDto requesterObject){
             this.id = id;
             this.requester = requester;
             this.targetUser = targetUser;

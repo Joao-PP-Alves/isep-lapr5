@@ -36,11 +36,15 @@ namespace DDDNetCore.Domain.Connections
         {
             var list = await _repo.getPendentConnections(id);
 
-            //var requester = await _repoUser.GetByIdAsync();
+            var listDto = new List<ConnectionWithRequesterDto>();
 
-            List<ConnectionWithRequesterDto> listDto = list.ConvertAll(intro =>
-                new ConnectionWithRequesterDto(intro.Id.AsGuid(), intro.requester, intro.targetUser, intro.description,
-                    intro.decision,_repoUser.GetByIdAsync(intro.requester).Result));
+            foreach(Connection connection in list){
+
+                var requester = _repoUser.GetByIdAsync(connection.requester).Result;
+
+                listDto.Add(new ConnectionWithRequesterDto(connection.Id.AsGuid(),connection.requester,connection.targetUser
+                ,connection.description,connection.decision,new UserNameEmailDto(requester.Name,requester.Email)));
+            }
 
             return listDto;
         }
