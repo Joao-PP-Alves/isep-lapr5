@@ -3,6 +3,7 @@ using DDDNetCore.Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System;
+using DDDNetCore.Domain.Services;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
@@ -35,13 +36,13 @@ namespace DDDNetCore.Controllers
 
         //GET: api/users/ByEmail/j@gmail.com
         [HttpGet("ByEmail/{email}")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetByEmail(string email)
+        public async Task<ActionResult<UserDto>> GetByEmail(string email)
         {
-            List<UserDto> users;
+            UserDto  user;
             try
             {
-                users = await _service.GetByEmail(email);
-                if (users == null)
+                user = await _service.GetByEmail(email);
+                if (user == null)
                 {
                     return NotFound();
                 }
@@ -51,7 +52,7 @@ namespace DDDNetCore.Controllers
                 return BadRequest();
             }
 
-            return users;
+            return user;
         }
 
         //GET: api/users/ByEmail/j
@@ -194,6 +195,22 @@ namespace DDDNetCore.Controllers
             catch (BusinessRuleValidationException ex)
             {
                 return BadRequest(new {Message = ex.Message});
+            }
+        }
+        
+        // POST: api/Users/login
+        [HttpPost("login")]
+        public async Task<ActionResult<UserDto>> Login(LoginDTO dto)
+        {
+            try
+            {
+                var user = await _service.Login(dto);
+
+                return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
+            }
+            catch (BusinessRuleValidationException ex)
+            {
+                return Forbid();
             }
         }
 
