@@ -9,12 +9,13 @@ dfsLength_safest_oneWay(Orig,Dest,Min,Cam,Len):-dfs2Length_safest_oneWay(Orig,De
 dfs2Length_safest_oneWay(Dest,Dest,_,LA,Cam,0):-!,reverse(LA,Cam).
 dfs2Length_safest_oneWay(Act,Dest,Min,LA,Cam,Len):-
 	no(NAct,Act,_),
-	ligacao(NAct,NX,Len1),
+	ligacao(NAct,NX,Len1,Len3),
 	Len1 > Min,
+	Len3 > Min,
     no(NX,X,_),
 	\+ member(X,LA),
 	dfs2Length_safest_oneWay(X,Dest,Min,[X|LA],Cam,Len2),
-    Len is Len2 + Len1.
+    Len is Len2 + Len1 + Len3.
 
 
 plan_safestlig_oneWay(Orig,Dest,Min,LCaminho_maxlig,LCaminho_length,NS):-

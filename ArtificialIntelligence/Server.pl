@@ -1,6 +1,6 @@
 %Base de conhecimento
 :- dynamic no/3.
-:- dynamic ligacao/3.
+:- dynamic ligacao/4.
 
 
 % Bibliotecas 

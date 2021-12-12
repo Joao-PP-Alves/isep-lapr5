@@ -125,17 +125,20 @@ namespace DDDNetCore.Domain.Connections
             await checkUserIdAsync(dto.requester);
             await checkUserIdAsync(dto.targetUser);
             // checks if the users are already friends
-            await userService.checkIfTwoUsersAreFriends(dto.requester, dto.targetUser);
+            Connection connection;
+            if (!(await userService.checkIfTwoUsersAreFriends(dto.requester, dto.targetUser)))
+            {
+                connection = new Connection(dto.requester, dto.targetUser, dto.description);
+                await _repo.AddAsync(connection);
+                await _unitOfWork.CommitAsync();
+                return new ConnectionDto(connection.Id.AsGuid(), connection.requester, connection.targetUser, connection.description,
+                                                                connection.decision);
+            }
+            else
+            {
+                throw new BusinessRuleValidationException("Users are already friends.");
+            }
             
-            
-            var connection = new Connection(dto.requester, dto.targetUser, dto.description);
-
-
-            await _repo.AddAsync(connection);
-            await _unitOfWork.CommitAsync();
-
-            return new ConnectionDto(connection.Id.AsGuid(), connection.requester, connection.targetUser, connection.description,
-                connection.decision);
         }
 
         public async Task<ConnectionDto> Accept(Guid connectionId)
@@ -144,7 +147,7 @@ namespace DDDNetCore.Domain.Connections
 
             var connection = await _repo.GetByIdAsync(new ConnectionId(connectionId));
 
-            await friendshipService.createFriends(connection.requester, connection.targetUser);
+            await friendshipService.createFriends(connection.requester, connection.targetUser,null);
 
             connection.acceptConnection();
 

@@ -63,9 +63,9 @@ namespace DDDNetCore.Domain.Users {
 
         }
 
-        public async Task<FriendshipDto> UpdateFriendshipTag(Guid userId, Guid friendshipId, String tag){
+        public async Task<FriendshipDto> UpdateFriendshipTag(Guid userId, Guid friendshipId, Guid tag){
             var friendship = _repoUser.GetFriendshipAsync(new UserId(userId), new FriendshipId(friendshipId));
-            friendship.ChangeFriendshipTag(new Tag(tag));
+            friendship.ChangeFriendshipTag(new TagId(tag));
 
             await this._unitOfWork.CommitAsync();
             return new FriendshipDto(friendship.Id.AsGuid(),friendship.connection_strength,friendship.relationship_strength,friendship.friend,friendship.requester,friendship.friendshipTag);
@@ -77,25 +77,17 @@ namespace DDDNetCore.Domain.Users {
             throw new NotImplementedException();
         }
 
-        public async Task createFriends(UserId requesterId, UserId friendId){
+        public async Task createFriends(UserId requesterId, UserId friendId, TagId friendTag){
             var requester = await _repoUser.GetByIdAsync(requesterId);
             var friend = await _repoUser.GetByIdAsync(friendId);
 
-            Friendship friendship1 = new Friendship(friendId,requesterId);
-            Friendship friendship2 = new Friendship(requesterId,requesterId);
+            Friendship friendship1 = new Friendship(friendId,requesterId,friendTag);
+            Friendship friendship2 = new Friendship(requesterId,friendId,friendTag);
 
             requester.AddFriendship(friendship1);
             friend.AddFriendship(friendship2);
 
             await this._unitOfWork.CommitAsync();
         }
-
-        /* public async void UpdateFriendsList(FriendshipDto dto, Guid id)
-        {
-            var user = _repoUser.GetByIdAsync(new UserId(id)).Result;
-            user.friendsList.Add(new Friendship(dto.friend, dto.requester, dto.connection_strength,dto.relationship_strength,dto.friendshipTag));
-        } */
-        
-       // public async Task<Dictionary<int, List<UserDto>>> friendShipLevelMap(int level, Dictionary<int, >)
     }
 }

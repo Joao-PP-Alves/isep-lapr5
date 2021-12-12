@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DDDNetCore.Domain.Services;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Network;
+using Microsoft.AspNetCore.Http;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -18,6 +20,20 @@ namespace DDDNetCore.Domain.Users
             _unitOfWork = unitOfWork;
             _repo = repo;
             _friendshipService = friendshipService;
+        }
+
+        public async Task<UserLoginDTO> Login(LoginDTO dto)
+        {
+            
+            var user = await _repo.checkCredentials(dto.email.EmailAddress, dto.password.Value);
+
+            if (user == null)
+            {
+                return null;
+            }
+            
+            return new UserLoginDTO(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber,
+                user.BirthDate, user.tags);
         }
 
 
@@ -126,7 +142,7 @@ namespace DDDNetCore.Domain.Users
                 user.emotionalState, user.EmotionTime);
         }
 
-        public async Task<List<UserDto>> GetByEmail(string email)
+        public async Task<UserDto> GetByEmail(string email)
         {
             try
             {
@@ -137,25 +153,18 @@ namespace DDDNetCore.Domain.Users
                 throw new Exception("The provided email is invalid");
             }
 
-            var list = await _repo.GetByEmail(email);
+            var user = await _repo.GetByEmail(email);
 
-            if (list == null)
+            if (user == null)
             {
                 return null;
             }
 
-            foreach (var user in list)
-            {
-                user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            }
-
-            List<UserDto> listDto = list.ConvertAll(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate,
-                    user.tags,
-                    user.emotionalState,
-                    user.EmotionTime));
-
-            return listDto;
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate,
+                user.tags,
+                user.emotionalState,
+                user.EmotionTime);
         }
 
         public async Task<List<UserDto>> GetByName(string name)
@@ -198,7 +207,7 @@ namespace DDDNetCore.Domain.Users
             {
                 foreach (string item in listStrings)
                 {
-                    Tag tagConfirmation = new Tag(item);
+                    Tag tagConfirmation = new Tag(new Name(item));
                     listTags.Add(tagConfirmation);
                 }
             }
@@ -227,6 +236,9 @@ namespace DDDNetCore.Domain.Users
 
             return listDto;
         }
+
+        
+
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
@@ -449,12 +461,23 @@ namespace DDDNetCore.Domain.Users
                 throw new Exception("The provided user does not exist");
         }
 
-        public async Task checkIfTwoUsersAreFriends(UserId user1, UserId user2)
+        public async Task<bool> checkIfTwoUsersAreFriends(UserId user1, UserId user2)
         {
             if (_repo.checkIfFriends(user1, user2))
             {
-                throw new BusinessRuleValidationException("Users are already friends.");
+                return true;
             }
+            return false;
+        }
+
+        public Task<List<Tag>> checkToAddTag(List<string> tags)
+        {
+            foreach (var tag in tags)
+            {
+                
+            }
+
+            return null;
         }
     }
 }
