@@ -12,10 +12,12 @@ using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Infrastructure.Connections;
 using DDDNetCore.Domain.Introductions;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Infrastructure.Missions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using DDDNetCore.Infrastructure.Shared;
+using DDDNetCore.Infrastructure.Tags;
 
 // jdbc:sqlserver://vs398.dei.isep.ipp.pt\MYSQLSERVER:1433
 namespace DDDNetCore
@@ -43,7 +45,7 @@ namespace DDDNetCore
                 });
             });
 
-            services.AddDbContext<DDDNetCoreDbContext>(opt =>
+            services.AddDbContext<DddNetCoreDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                     .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
             ConfigureMyServices(services);
@@ -83,6 +85,9 @@ namespace DDDNetCore
 
             services.AddTransient<IUserRepository,UserRepository>();
             services.AddTransient<IUserService,UserService>();
+            
+            services.AddTransient<ITagRepository,TagRepository>();
+            services.AddTransient<ITagService,TagService>();
 
             services.AddTransient<IMissionRepository,MissionRepository>();
             services.AddTransient<IMissionService,MissionService>();
@@ -94,8 +99,6 @@ namespace DDDNetCore
             services.AddTransient<IIntroductionService,IntroductionService>();
 
             services.AddTransient<IFriendshipService,FriendshipService>();
-
-            services.AddTransient<ITagService, TagService>();
         }
     }
 }

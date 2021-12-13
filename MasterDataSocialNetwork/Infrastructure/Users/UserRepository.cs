@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Infrastructure.Shared;
 using Microsoft.AspNetCore.Razor.Language;
@@ -15,15 +16,15 @@ namespace DDDNetCore.Infrastructure.Users
 
     public class UserRepository : BaseRepository<User, UserId>, IUserRepository
     {
-        private readonly DDDNetCoreDbContext _context;
+        private readonly DddNetCoreDbContext _context;
 
-        public UserRepository(DDDNetCoreDbContext context) : base(context.Users)
+        public UserRepository(DddNetCoreDbContext context) : base(context.Users)
         {
             _context = context;
             
         }
 
-        public async Task<List<Tag>> GetTagList(UserId id)
+        public async Task<ICollection<Tag>> GetTagList(UserId id)
         {
             return _context.Users.Find(id).tags;
         }
@@ -84,7 +85,7 @@ namespace DDDNetCore.Infrastructure.Users
         public async Task<List<User>> GetByName(string name){
             return await ((DbSet<User>)base.getContext()).Where(x => name.Equals(x.Name.text)).ToListAsync();
         }
-
+        
         public async Task<List<User>> GetByTags(List<Tag> list){
             List<User> listUsers = new List<User>();
             var listPossibleUsers = GetUsersWithTheirTags().Result;

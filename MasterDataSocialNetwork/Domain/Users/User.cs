@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Tags;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -23,7 +24,7 @@ namespace DDDNetCore.Domain.Users
         // [Required]
         public PhoneNumber PhoneNumber { get; set; }
 
-        public List<Tag> tags { get; set; }
+        public ICollection<Tag> tags { get; set; }
 
         public EmotionalState emotionalState { get; set; }
         
@@ -41,7 +42,7 @@ namespace DDDNetCore.Domain.Users
             Active = true;
         }
 
-        public User(Name name, Email email, Password password, PhoneNumber phoneNumber, LifeDate birthDate, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
+        public User(Name name, Email email, Password password, PhoneNumber phoneNumber, LifeDate birthDate, ICollection<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
         {
             Id = new UserId(Guid.NewGuid());
             Name = name;
@@ -56,7 +57,7 @@ namespace DDDNetCore.Domain.Users
             Active = true;
         }
 
-        public User(Name name, Email email, List<Friendship> friendsList, Password password, LifeDate birthDate, PhoneNumber phoneNumber, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
+        public User(Name name, Email email, List<Friendship> friendsList, Password password, LifeDate birthDate, PhoneNumber phoneNumber, ICollection<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime)
         {
             Id = new UserId(Guid.NewGuid());
             Name = name;
@@ -71,7 +72,7 @@ namespace DDDNetCore.Domain.Users
             Active = true;
         }
 
-        public User(Name name, Email email,  Password password, PhoneNumber phoneNumber, LifeDate birthDate, List<Tag> tags)
+        public User(Name name, Email email,  Password password, PhoneNumber phoneNumber, LifeDate birthDate, ICollection<Tag> tags)
         {
             Id = new UserId(Guid.NewGuid());
             Name = name;
@@ -113,7 +114,7 @@ namespace DDDNetCore.Domain.Users
         }
 
 
-        public void ChangeTags(List<Tag> tags)
+        public void ChangeTags(ICollection<Tag> tags)
         {
             if (!Active)
             {

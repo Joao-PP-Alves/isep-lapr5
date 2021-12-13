@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Network;
 
 namespace DDDNetCore.Domain.Users
@@ -13,6 +14,7 @@ namespace DDDNetCore.Domain.Users
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
         private readonly IFriendshipService _friendshipService;
+        private readonly ITagRepository _tagRepository;
         public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService)
         {
             _unitOfWork = unitOfWork;
@@ -230,7 +232,21 @@ namespace DDDNetCore.Domain.Users
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, dto.tags);
+            var tagList = new List<Tag>();
+            foreach (Tag t in dto.tags)
+            {
+                var tag = await this._tagRepository.GetByName(t.name.text);
+
+                if (_tagRepository.GetByIdAsync(tag.Id) != null)
+                {
+                    tagList.Add(tag);
+                }
+                else
+                {
+                    tagList.Add(new Tag(t.name));
+                }
+            }
+            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, tagList);
             await _repo.AddAsync(user);
             await _unitOfWork.CommitAsync();
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));

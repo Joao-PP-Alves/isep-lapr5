@@ -2,14 +2,14 @@
 using DDDNetCore.Domain.Shared;
 using Newtonsoft.Json;
 
-namespace DDDNetCore.Domain.Users
+namespace DDDNetCore.Domain.Tags
 {
     public class TagId : EntityId
     {
         [JsonConstructor]
         public TagId(Guid value) : base(value){}
 
-        public TagId(string value) : base(value){
+        public TagId(String value) : base(value){
         }
 
         override

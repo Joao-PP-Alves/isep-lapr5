@@ -1,13 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Users;
 
-namespace DDDNetCore.Domain.Users
+namespace DDDNetCore.Domain.Tags
 {
-    public class Tag : Entity<TagId>
+    public class Tag : Entity<TagId>, IAggregateRoot
     {
         public Name name { get; private set; }
         
+        public ICollection<User> usersList { get; set; }
+
         public bool Active { get; set; }
 
         public Tag()
@@ -19,7 +23,7 @@ namespace DDDNetCore.Domain.Users
         {
             if (name != null)
             {
-                this.Id = new TagId(Guid.NewGuid());
+                this.Id = new TagId(new Guid());
                 this.name = name;
                 this.Active = true;
             }else{
@@ -49,6 +53,19 @@ namespace DDDNetCore.Domain.Users
         public void deactivate()
         {
             
+        }
+
+        public void ChangeTagName(Name name)
+        {
+            if (!Active)
+            {
+                return; 
+            }
+            if (name == null)
+            {
+                return; //se o email for nulo, mantém o mesmo
+            }
+            this.name = name;;
         }
     }
 }

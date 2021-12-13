@@ -10,7 +10,7 @@ namespace DDDNetCore.Infrastructure.Provider
     {
         public void AddDBContext(IServiceCollection service, IConfiguration configuration)
         {
-            service.AddDbContext<DDDNetCoreDbContext>(options =>
+            service.AddDbContext<DddNetCoreDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
                     .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>()); 
         }

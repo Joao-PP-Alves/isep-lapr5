@@ -10,7 +10,7 @@ namespace DDDNetCore.Infrastructure.Introductions
 {
     public class IntroductionRepository : BaseRepository<Introduction, IntroductionId>, IIntroductionRepository
     {
-        public IntroductionRepository(DDDNetCoreDbContext context): base(context.Introductions){
+        public IntroductionRepository(DddNetCoreDbContext context): base(context.Introductions){
             
         } 
 

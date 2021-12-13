@@ -1,4 +1,5 @@
 using DDDNetCore.Domain.Users;
+using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,7 +16,7 @@ namespace DDDNetCore.Infrastructure.Users{
             builder.OwnsOne(b => b.Password);
             builder.OwnsOne(b => b.EmotionTime);
             builder.OwnsOne(b => b.BirthDate);
-            builder.OwnsMany(b => b.tags);
+            builder.HasMany(b => b.tags);
             builder.HasMany(b => b.friendsList).WithOne()
                 .HasForeignKey(f => f.requester);
 

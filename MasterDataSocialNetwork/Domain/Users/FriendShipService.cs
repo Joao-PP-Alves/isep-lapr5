@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
+using DDDNetCore.Domain.Tags;
 
 namespace DDDNetCore.Domain.Users {
     public class FriendshipService : IFriendshipService {

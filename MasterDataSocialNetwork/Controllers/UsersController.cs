@@ -187,6 +187,7 @@ namespace DDDNetCore.Controllers
         {
             try
             {
+                
                 var user = await _service.AddAsync(dto);
 
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);

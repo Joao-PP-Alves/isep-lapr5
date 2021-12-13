@@ -1,4 +1,5 @@
 using DDDNetCore.Domain.Missions;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Domain.Users;
 
 namespace DDDNetCore.Domain.Services.CreatingDTO

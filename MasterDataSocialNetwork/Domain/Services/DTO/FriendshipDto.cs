@@ -4,6 +4,7 @@ using DDDNetCore.Domain.Users;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
+using DDDNetCore.Domain.Tags;
 
 namespace DDDNetCore.Domain.Services.DTO
 {

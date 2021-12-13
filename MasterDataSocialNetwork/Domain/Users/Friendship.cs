@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Tags;
 
 namespace DDDNetCore.Domain.Users
 {
