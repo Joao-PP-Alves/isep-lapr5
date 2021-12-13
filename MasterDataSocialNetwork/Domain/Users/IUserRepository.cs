@@ -13,8 +13,9 @@ namespace DDDNetCore.Domain.Users{
 
         public Boolean checkIfNotFriends(UserId id, UserId id2);
 
-        public Task<List<User>> GetByEmail(string email);
+        public Task<User> GetByEmail(string email);
 
+        public Task<User> checkCredentials(string email, string password);
         public Task<List<User>> GetByName(string name);
 
         public Task<List<User>> GetByTags(List<Tag> list);

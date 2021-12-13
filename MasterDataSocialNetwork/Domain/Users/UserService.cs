@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DDDNetCore.Domain.Services;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Tags;
 using DDDNetCore.Network;
+using System.Text;
+using Microsoft.AspNetCore.Http;
+using Flurl.Http;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -20,6 +24,24 @@ namespace DDDNetCore.Domain.Users
             _unitOfWork = unitOfWork;
             _repo = repo;
             _friendshipService = friendshipService;
+        }
+
+        public async Task<UserLoginDTO> Login(LoginDTO dto)
+        {
+            
+            var user = await _repo.checkCredentials(dto.email.EmailAddress, dto.password.Value);
+
+            if (user == null)
+            {
+                user = await _repo.GetByEmail(dto.email.EmailAddress);
+                if (user == null)
+                {
+                    throw new Exception();
+                }
+            }
+            
+            return new UserLoginDTO(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber,
+                user.BirthDate, user.tags);
         }
 
 
@@ -128,7 +150,7 @@ namespace DDDNetCore.Domain.Users
                 user.emotionalState, user.EmotionTime);
         }
 
-        public async Task<List<UserDto>> GetByEmail(string email)
+        public async Task<UserDto> GetByEmail(string email)
         {
             try
             {
@@ -139,25 +161,18 @@ namespace DDDNetCore.Domain.Users
                 throw new Exception("The provided email is invalid");
             }
 
-            var list = await _repo.GetByEmail(email);
+            var user = await _repo.GetByEmail(email);
 
-            if (list == null)
+            if (user == null)
             {
                 return null;
             }
 
-            foreach (var user in list)
-            {
-                user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
-            }
-
-            List<UserDto> listDto = list.ConvertAll(user =>
-                new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber, user.BirthDate,
-                    user.tags,
-                    user.emotionalState,
-                    user.EmotionTime));
-
-            return listDto;
+            return new UserDto(user.Id.AsGuid(), user.Name, user.Email, user.friendsList, user.PhoneNumber,
+                user.BirthDate,
+                user.tags,
+                user.emotionalState,
+                user.EmotionTime);
         }
 
         public async Task<List<UserDto>> GetByName(string name)
@@ -482,6 +497,29 @@ namespace DDDNetCore.Domain.Users
             }
 
             return null;
+        }
+        public async Task<NSizeResponseDTO> GetNetworkSize(NetworkNSizeDTO dto){
+
+            if (dto.N > 3 || dto.N < 0){
+                throw new BusinessRuleValidationException("Level must be between 0 and 3.");
+            }
+
+            var address = new StringBuilder(Constants.URL_Prolog);
+            address.Append("/networksize?");
+            address.Append("user=").Append(dto.UserEmail);
+            address.Append("&level=").Append(dto.N);
+            var response = await address.ToString().GetStringAsync();
+            var array = response.ToCharArray(0,response.Length);
+            address.Clear();
+            foreach (var chare in array)
+            {
+                if (chare >= 48 && chare <= 57){
+                    address.Append(chare);
+                }
+            }
+            NSizeResponseDTO dtoR = new NSizeResponseDTO(Int32.Parse(address.ToString()));
+            
+            return dtoR;
         }
     }
 }

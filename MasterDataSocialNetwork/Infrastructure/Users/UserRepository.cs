@@ -78,8 +78,13 @@ namespace DDDNetCore.Infrastructure.Users
             return (!checkIfFriends(id,id2));
         }
 
-        public async Task<List<User>> GetByEmail(string email){
-            return await ((DbSet<User>)base.getContext()).Where(x => email.Equals(x.Email.EmailAddress)).ToListAsync();
+        public async Task<User> GetByEmail(string email){
+            return await _context.Users.Where(x => email.Equals(x.Email.EmailAddress)).FirstOrDefaultAsync();
+        }
+
+        public async Task<User> checkCredentials(string email, string password)
+        {
+            return await _context.Users.Where(u =>u.Email.EmailAddress.Equals(email)).Where(u=>u.Password.Value.Equals(password)).FirstOrDefaultAsync();
         }
 
         public async Task<List<User>> GetByName(string name){

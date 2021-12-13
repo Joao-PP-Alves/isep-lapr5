@@ -145,8 +145,8 @@ const mdTheme = createTheme();
 
 function EditProfileContent() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const open = Boolean(anchorEl);
-	const [setOpen] = React.useState(true);
+	//const open = Boolean(!anchorEl);
+	const [open, setOpen] = React.useState(true);
 	const [emotion] = React.useState('');
 	const [input_email, setEmail] = useState("");
 	const [input_password, setPassword] = useState("");
@@ -263,7 +263,7 @@ function EditProfileContent() {
 
 		user.createTags();
 		const response = fetch(
-			Links.MDR_URL()+"Users/0f277d33-df08-4954-bd3b-26adb739927d",
+			Links.MDR_URL() + "Users/" + localStorage.getItem("loggedInUser"),
 			{
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
@@ -271,20 +271,20 @@ function EditProfileContent() {
 			}
 		)
 			.then((response) => {
-                response.json();
-                if (!response.ok) {
-                    return null;
-                } else {
-                    setOpenSnackBar(true);
-                }
-                setMakingRequest(false);
-            })
-            .then((json) => console.log(json))
+				response.json();
+				if (!response.ok) {
+					return null;
+				} else {
+					setOpenSnackBar(true);
+				}
+				setMakingRequest(false);
+			})
+			.then((json) => console.log(json))
 
-            .catch((err) => {
-                setOpenSnackBarError(true);
-                setMakingRequest(false);
-            });
+			.catch((err) => {
+				setOpenSnackBarError(true);
+				setMakingRequest(false);
+			});
 		}
 
 	 const handleDelete = (chipToDelete) => () => {
@@ -366,7 +366,7 @@ function EditProfileContent() {
 									"aria-labelledby": "accountButton",
 								}}
 								anchorEl={anchorEl}
-								open={open}
+								open={anchorEl}
 								onClose={handleClose}
 							>
 								<Button href="/" disableRipple>

@@ -101,15 +101,14 @@ adicionar_friendships(Friendships,Id) :- parse_friendships(Friendships,Id).
 parse_friendships([],_).
 parse_friendships([H|Data],Id) :- (
     Strength = H.get(connection_strength),
+    Rel_Strength = H.get(relationship_strength),
     Friend = H.get(friend),
-    %Requester = H.get(requester),
-    \+ atom(Strength),
     Strength_value = Strength.get(value),
-	number_codes(Strength_number,Strength_value),
+    Rel_Strength_value = Rel_Strength.get(value),
     Friend_value = Friend.get(value),
     Requester_value = Id,
-    \+ligacao(Requester_value, Friend_value, Strength_number)
-    -> assertz(ligacao(Requester_value, Friend_value, Strength_number)),
+    \+ligacao(Requester_value, Friend_value, Strength_value, Rel_Strength_value)
+    -> assertz(ligacao(Requester_value, Friend_value, Strength_value, Rel_Strength_value)),
     parse_friendships(Data,Id)) ; parse_friendships(Data,Id).
 
 
