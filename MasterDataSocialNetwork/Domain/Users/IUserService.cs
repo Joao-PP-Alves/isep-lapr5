@@ -39,5 +39,7 @@ namespace DDDNetCore.Domain.Users{
         
         public Task<List<Tag>> checkToAddTag(List<String> tags);
 
+        Task<List<LeaderboardUserNetworkSizeDto>> GetLeaderBoardNetworkSize(int N);
+
     }
 }

@@ -10,6 +10,7 @@ using DDDNetCore.Network;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Flurl.Http;
+using System.Linq;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -520,6 +521,21 @@ namespace DDDNetCore.Domain.Users
             NSizeResponseDTO dtoR = new NSizeResponseDTO(Int32.Parse(address.ToString()));
             
             return dtoR;
+        }
+
+        public async Task<List<LeaderboardUserNetworkSizeDto>> GetLeaderBoardNetworkSize(int N){
+            var listUsers = _repo.GetAllAsync().Result;
+
+            List<LeaderboardUserNetworkSizeDto> listDto = new List<LeaderboardUserNetworkSizeDto>();
+
+            foreach(User user in listUsers){
+                var networkSizeUser = GetNetworkSize(new NetworkNSizeDTO(user.Email.EmailAddress,N)).Result;
+                listDto.Add(new LeaderboardUserNetworkSizeDto(user.Name.text,networkSizeUser.Size));
+            }
+
+            List<LeaderboardUserNetworkSizeDto> listDtoOrdered = listDto.OrderBy(o => o.Size).ToList();
+
+            return listDtoOrdered;
         }
     }
 }
