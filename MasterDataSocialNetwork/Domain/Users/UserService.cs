@@ -29,7 +29,11 @@ namespace DDDNetCore.Domain.Users
 
             if (user == null)
             {
-                return null;
+                user = await _repo.GetByEmail(dto.email.EmailAddress);
+                if (user == null)
+                {
+                    throw new Exception();
+                }
             }
             
             return new UserLoginDTO(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber,

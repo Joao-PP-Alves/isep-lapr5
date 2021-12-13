@@ -206,6 +206,11 @@ namespace DDDNetCore.Controllers
             {
                 var user = await _service.Login(dto);
 
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
             }
             catch (BusinessRuleValidationException ex)
