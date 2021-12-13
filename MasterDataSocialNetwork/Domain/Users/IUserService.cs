@@ -4,6 +4,7 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using System;
+using DDDNetCore.Domain.Services;
 using DDDNetCore.Network;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +14,11 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<List<UserDto>> GetAllAsync();
         public Task<UserDto> GetByIdAsync(UserId id);
-        public Task<List<UserDto>> GetByEmail(string email);
+        public Task<UserDto> GetByEmail(string email);
         public Task<List<UserDto>> GetByName(string name);
         public Task<List<UserDto>> GetByTags(string tags);
+        public Task<UserLoginDTO> Login(LoginDTO dto);
+        
         public Task<UserDto> AddAsync(CreatingUserDto dto);
         public Task<UserDto> UpdateProfileAsync(UserDto dto);
         public Task<UserDto> InactivateAsync(UserId id);
@@ -33,5 +36,7 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<NSizeResponseDTO> GetNetworkSize(NetworkNSizeDTO dto);
         
+        public Task<List<Tag>> checkToAddTag(List<String> tags);
+
     }
 }

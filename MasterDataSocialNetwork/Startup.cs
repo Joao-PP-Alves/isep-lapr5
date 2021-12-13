@@ -94,6 +94,8 @@ namespace DDDNetCore
             services.AddTransient<IIntroductionService,IntroductionService>();
 
             services.AddTransient<IFriendshipService,FriendshipService>();
+
+            services.AddTransient<ITagService, TagService>();
         }
     }
 }

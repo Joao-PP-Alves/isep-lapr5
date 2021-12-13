@@ -22,6 +22,7 @@ import Link from "@mui/material/Link";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { mainListItems } from "./ListItems";
 import FriendsSuggestions from "./FriendsSuggestions";
+import NetworkStats from "./NetworkStats";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -482,8 +483,10 @@ function DashboardContent() {
 					}}
 				>
 					<Toolbar />
-					<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+					<Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
+						
 						<Grid container spacing={3}>
+							
 							{/* Chart */}
 							<Grid item xs={12} md={8} lg={9}>
 								<Paper
@@ -491,7 +494,7 @@ function DashboardContent() {
 										p: 2,
 										display: "flex",
 										flexDirection: "column",
-										height: 240,
+										height: 530,
 									}}
 								>
 									<MinimalizedNetwork />
@@ -504,7 +507,7 @@ function DashboardContent() {
 										p: 2,
 										display: "flex",
 										flexDirection: "column",
-										height: 240,
+										height: 530,
 									}}
 								>
 									<FriendsSuggestions />
@@ -517,11 +520,22 @@ function DashboardContent() {
 										p: 2,
 										display: "flex",
 										flexDirection: "column",
+										height: 255,
 									}}
-								></Paper>
+									
+								>
+
+									
+
+
+
+									<NetworkStats></NetworkStats>
+								</Paper>
 							</Grid>
 						</Grid>
-						<Copyright sx={{ pt: 4 }} />
+						
+						{/* <Copyright sx={{ pt: 4 }} /> */}
+						
 					</Container>
 				</Box>
 			</Box>

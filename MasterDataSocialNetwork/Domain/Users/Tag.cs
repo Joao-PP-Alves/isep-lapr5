@@ -4,19 +4,24 @@ using DDDNetCore.Domain.Shared;
 
 namespace DDDNetCore.Domain.Users
 {
-    public class Tag : IValueObject
+    public class Tag : Entity<TagId>
     {
-        public string name { get; set; }
+        public Name name { get; private set; }
+        
+        public bool Active { get; set; }
 
         public Tag()
         {
+            this.Active = true;
         }
 
-        public Tag(string name)
+        public Tag(Name name)
         {
             if (name != null)
             {
+                this.Id = new TagId(Guid.NewGuid());
                 this.name = name;
+                this.Active = true;
             }else{
                 throw new BusinessRuleValidationException("Tag cannot be null.");
             }
@@ -24,7 +29,7 @@ namespace DDDNetCore.Domain.Users
 
         public override string ToString()
         {
-            return name;
+            return name.text;
         }
         
         public override bool Equals(Object obj)
@@ -39,6 +44,11 @@ namespace DDDNetCore.Domain.Users
         public override int GetHashCode()
         {
             throw new NotImplementedException();
+        }
+
+        public void deactivate()
+        {
+            
         }
     }
 }
