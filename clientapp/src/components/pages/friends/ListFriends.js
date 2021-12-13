@@ -309,6 +309,7 @@ function ListFriendsContent() {
 
   //get logged user
   const userId = localStorage.getItem('loggedInUser');
+  console.log(userId);
 
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
@@ -345,6 +346,7 @@ function ListFriendsContent() {
 	console.log(obj);
     
   try{
+    
     sample.push([obj.id,userId,obj.friendObject.name.text,obj.friendObject.email.emailAddress,obj.relationship_strength.value,obj.connection_strength.value,obj.friendshipTag.name]);
   }catch{
     sample.push([obj.id,userId,obj.friendObject.name.text,obj.friendObject.email.emailAddress,obj.relationship_strength.value,obj.connection_strength.value,""]);

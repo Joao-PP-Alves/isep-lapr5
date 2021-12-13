@@ -27,6 +27,8 @@ import EditProfile from './components/pages/editProfile/EditProfile';
 import ListFriends from './components/pages/friends/ListFriends';
 import ListPendentIntroductions from './components/pages/introductions/ListPendentIntroductions';
 import AppGraph from './graph/AppGraph';
+import history from './history';
+
 //import { Navbar } from 'react-bootstrap';
 
 
@@ -44,7 +46,7 @@ function App() {
   </div>*/
 
    <>
-  <Router>
+  <Router history={history}>
     <Switch>
 
 
