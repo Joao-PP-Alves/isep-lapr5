@@ -357,5 +357,27 @@ namespace DDDNetCore.Controllers
             {
                 return BadRequest(new {Message = ex.Message});
             }
-        }    }
+        }
+
+        // GET: api/Users/NetworkNSizeDTO
+        [HttpGet("NetworkNSizeDTO")]
+        public async Task<ActionResult<NSizeResponseDTO>> GetNetowrkSize(NetworkNSizeDTO dto)
+        {
+            try
+            {
+                var tamanho = await _service.GetNetworkSize(dto);
+
+                if (tamanho == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tamanho);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
+        }    
+    }
 }
