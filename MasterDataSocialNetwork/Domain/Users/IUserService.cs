@@ -34,6 +34,8 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<bool> checkIfTwoUsersAreFriends(UserId user1,UserId user2);
 
+        public Task<NSizeResponseDTO> GetNetworkSize(NetworkNSizeDTO dto);
+        
         public Task<List<Tag>> checkToAddTag(List<String> tags);
 
     }

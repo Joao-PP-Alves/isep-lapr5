@@ -6,7 +6,9 @@ using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Network;
+using System.Text;
 using Microsoft.AspNetCore.Http;
+using Flurl.Http;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -482,6 +484,29 @@ namespace DDDNetCore.Domain.Users
             }
 
             return null;
+        }
+        public async Task<NSizeResponseDTO> GetNetworkSize(NetworkNSizeDTO dto){
+
+            if (dto.N > 3 || dto.N < 0){
+                throw new BusinessRuleValidationException("Level must be between 0 and 3.");
+            }
+
+            var address = new StringBuilder(Constants.URL_Prolog);
+            address.Append("/networksize?");
+            address.Append("user=").Append(dto.UserEmail);
+            address.Append("&level=").Append(dto.N);
+            var response = await address.ToString().GetStringAsync();
+            var array = response.ToCharArray(0,response.Length);
+            address.Clear();
+            foreach (var chare in array)
+            {
+                if (chare >= 48 && chare <= 57){
+                    address.Append(chare);
+                }
+            }
+            NSizeResponseDTO dtoR = new NSizeResponseDTO(Int32.Parse(address.ToString()));
+            
+            return dtoR;
         }
     }
 }
