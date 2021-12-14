@@ -549,7 +549,7 @@ namespace DDDNetCore.Domain.Users
             List<LeaderboardUserNetworkSizeDto> listDto = new List<LeaderboardUserNetworkSizeDto>();
 
             foreach(User user in listUsers){
-                var networkSizeUser = GetNetworkSize(new NetworkNSizeDTO(user.Email.EmailAddress,N)).Result;
+                var networkSizeUser = GetNetworkSize(user.Id,N).Result;
                 listDto.Add(new LeaderboardUserNetworkSizeDto(user.Name.text,networkSizeUser.Size));
             }
 
