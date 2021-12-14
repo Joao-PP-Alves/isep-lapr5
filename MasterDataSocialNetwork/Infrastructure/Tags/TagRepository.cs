@@ -17,7 +17,7 @@ namespace DDDNetCore.Infrastructure.Tags
             _context = context;
         }
         
-        public Task<Tag> GetByIdAsync(TagId id)
+        public new Task<Tag> GetByIdAsync(TagId id)
         {
             return _context.Tags.Where(tag => tag.Id == id).FirstOrDefaultAsync();
         }

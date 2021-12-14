@@ -83,11 +83,11 @@ namespace DDDNetCore
         {
             services.AddTransient<IUnitOfWork,UnitOfWork>();
 
-            services.AddTransient<IUserRepository,UserRepository>();
-            services.AddTransient<IUserService,UserService>();
-            
             services.AddTransient<ITagRepository,TagRepository>();
             services.AddTransient<ITagService,TagService>();
+            
+            services.AddTransient<IUserRepository,UserRepository>();
+            services.AddTransient<IUserService,UserService>();
 
             services.AddTransient<IMissionRepository,MissionRepository>();
             services.AddTransient<IMissionService,MissionService>();

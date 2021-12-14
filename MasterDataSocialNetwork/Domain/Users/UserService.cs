@@ -20,11 +20,12 @@ namespace DDDNetCore.Domain.Users
         private readonly IUserRepository _repo;
         private readonly IFriendshipService _friendshipService;
         private readonly ITagRepository _tagRepository;
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService)
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService, ITagRepository tagRepo)
         {
             _unitOfWork = unitOfWork;
             _repo = repo;
             _friendshipService = friendshipService;
+            _tagRepository = tagRepo;
         }
 
         public async Task<UserLoginDTO> Login(LoginDTO dto)

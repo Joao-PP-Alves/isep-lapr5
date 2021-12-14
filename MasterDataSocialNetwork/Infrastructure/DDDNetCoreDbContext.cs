@@ -39,8 +39,6 @@ namespace DDDNetCore.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("LAPR5");
-            
-            
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TagEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FriendshipEntityTypeConfiguration());

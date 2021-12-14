@@ -1,5 +1,4 @@
 ﻿using DDDNetCore.Domain.Tags;
-using DDDNetCore.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +9,8 @@ namespace DDDNetCore.Infrastructure.Tags
         public void Configure(EntityTypeBuilder<Tag> builder)
         {
             builder.HasKey(tag => tag.Id);
-            builder.HasMany(tag => tag.usersList).WithMany(u => u.tags);
+            builder.OwnsOne(tag => tag.name);
+            builder.HasMany(tag => tag.usersList);
         }
     }
 }

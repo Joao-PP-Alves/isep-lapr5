@@ -12,15 +12,13 @@ namespace DDDNetCore.Domain.Tags
     {
        private readonly IUnitOfWork _unitOfWork;
         private readonly ITagRepository _repo;
+        private readonly ITagService _tagService;
 
-        private readonly ITagRepository _repoCat;
-        private ITagService _tagServiceImplementation;
-
-        public TagService(IUnitOfWork unitOfWork, ITagRepository repo, ITagRepository repoCategories)
+        public TagService(IUnitOfWork unitOfWork, ITagRepository repo, ITagService tagService)
         {
             this._unitOfWork = unitOfWork;
             this._repo = repo;
-            this._repoCat = repoCategories;
+            this._tagService = tagService;
         }
 
         public async Task<List<TagDto>> GetAllAsync()
@@ -45,7 +43,7 @@ namespace DDDNetCore.Domain.Tags
 
         public Task<List<TagDto>> GetByNameAsync(TagId id)
         {
-            return _tagServiceImplementation.GetByNameAsync(id);
+            return _tagService.GetByNameAsync(id);
         }
 
         public async Task<TagDto> GetByNameAsync(String name)

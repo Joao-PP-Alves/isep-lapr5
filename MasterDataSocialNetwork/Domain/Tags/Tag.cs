@@ -25,6 +25,7 @@ namespace DDDNetCore.Domain.Tags
             {
                 this.Id = new TagId(new Guid());
                 this.name = name;
+                this.usersList = new List<User>();
                 this.Active = true;
             }else{
                 throw new BusinessRuleValidationException("Tag cannot be null.");
