@@ -11,7 +11,7 @@ namespace DDDNetCore.Infrastructure.Provider
 
         public void AddDBContext(IServiceCollection service, IConfiguration configuration)
         {
-            service.AddDbContext<DDDNetCoreDbContext>(opt =>
+            service.AddDbContext<DddNetCoreDbContext>(opt =>
                 opt.UseInMemoryDatabase("DDDNetCoreContext")
                     .ReplaceService<IValueConverterSelector, StronglyEntityIdValueConverterSelector>());
         }

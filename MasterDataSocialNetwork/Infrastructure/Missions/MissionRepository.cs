@@ -5,7 +5,7 @@ namespace DDDNetCore.Infrastructure.Missions {
 
     public class MissionRepository : BaseRepository<Mission, MissionId>, IMissionRepository
     {
-       public MissionRepository(DDDNetCoreDbContext context) : base(context.Missions)
+       public MissionRepository(DddNetCoreDbContext context) : base(context.Missions)
         {
             
         } 

@@ -299,6 +299,7 @@ const styles = (theme) => ({
 function ListPendentConnectionsContent() {
 
   //get logged user
+  //const userId = "be31c3c0-7b0f-4985-ba66-ebe1fb9ca60b";
   const userId = localStorage.getItem('loggedInUser');
 
   const [open, setOpen] = React.useState(true);

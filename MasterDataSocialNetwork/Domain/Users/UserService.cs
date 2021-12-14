@@ -5,11 +5,13 @@ using DDDNetCore.Domain.Services;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Network;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Flurl.Http;
 using System.Drawing;
+using System.Linq;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -18,11 +20,13 @@ namespace DDDNetCore.Domain.Users
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
         private readonly IFriendshipService _friendshipService;
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService)
+        private readonly ITagRepository _tagRepository;
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService, ITagRepository tagRepo)
         {
             _unitOfWork = unitOfWork;
             _repo = repo;
             _friendshipService = friendshipService;
+            _tagRepository = tagRepo;
         }
 
         public async Task<UserLoginDTO> Login(LoginDTO dto)
@@ -32,7 +36,11 @@ namespace DDDNetCore.Domain.Users
 
             if (user == null)
             {
-                return null;
+                user = await _repo.GetByEmail(dto.email.EmailAddress);
+                if (user == null)
+                {
+                    throw new Exception();
+                }
             }
             
             return new UserLoginDTO(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber,
@@ -240,12 +248,23 @@ namespace DDDNetCore.Domain.Users
             return listDto;
         }
 
-        
-
-
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, dto.tags);
+            var tagList = new List<Tag>();
+            foreach (Tag t in dto.tags)
+            {
+                var tag = await this._tagRepository.GetByName(t.name.text);
+
+                if (_tagRepository.GetByIdAsync(tag.Id) != null)
+                {
+                    tagList.Add(tag);
+                }
+                else
+                {
+                    tagList.Add(new Tag(t.name));
+                }
+            }
+            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, tagList);
             await _repo.AddAsync(user);
             await _unitOfWork.CommitAsync();
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
@@ -522,6 +541,21 @@ namespace DDDNetCore.Domain.Users
                 responseDto.Size = responseDto.Size -1;
 
             return responseDto;
+        }
+        
+        public async Task<List<LeaderboardUserNetworkSizeDto>> GetLeaderBoardNetworkSize(int N){
+            var listUsers = _repo.GetAllAsync().Result;
+
+            List<LeaderboardUserNetworkSizeDto> listDto = new List<LeaderboardUserNetworkSizeDto>();
+
+            foreach(User user in listUsers){
+                var networkSizeUser = GetNetworkSize(new NetworkNSizeDTO(user.Email.EmailAddress,N)).Result;
+                listDto.Add(new LeaderboardUserNetworkSizeDto(user.Name.text,networkSizeUser.Size));
+            }
+
+            List<LeaderboardUserNetworkSizeDto> listDtoOrdered = listDto.OrderBy(o => o.Size).ToList();
+
+            return listDtoOrdered;
         }
     }
 }

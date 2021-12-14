@@ -188,6 +188,7 @@ namespace DDDNetCore.Controllers
         {
             try
             {
+                
                 var user = await _service.AddAsync(dto);
 
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
@@ -205,6 +206,11 @@ namespace DDDNetCore.Controllers
             try
             {
                 var user = await _service.Login(dto);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
 
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
             }
@@ -418,5 +424,26 @@ namespace DDDNetCore.Controllers
                return BadRequest(new {Message = ex.Message});
             }
         }    
+
+        // GET: api/Users/NetworkNSizeDTO
+        [HttpGet("LeaderboardNetworkSize/{N}")]
+        public async Task<ActionResult<List<LeaderboardUserNetworkSizeDto>>> GetLeaderboardNetworkSize(int N)
+        {
+            try
+            {
+                var leaderboard = await _service.GetLeaderBoardNetworkSize(N);
+
+                if (leaderboard == null)
+                {
+                    return NotFound();
+                }
+    
+                return Ok(leaderboard);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
+        } 
     }
 }

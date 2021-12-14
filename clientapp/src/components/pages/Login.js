@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,13 +12,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Modal from "react-modal";
-import { useState } from "react";
-import LoadingButton from "@mui/lab/LoadingButton";
-import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
-import userAuth from "../../hooks/UserAuth";
-import { useHistory } from "react-router-dom";
+import Links from "../Links";
+import history from "../../history";
 
 function Copyright(props) {
     return (
@@ -40,145 +35,32 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
-function LogIn() {
-    const [show, setShow] = React.useState(false);
+async function makeRequest(email) {
+    const axios = require("axios");
 
-    const [makingRequest, setMakingRequest] = useState(false);
-    const [showSignUp, setSignUp] = useState(false);
-    const [loginError, setLoginError] = useState("");
+    axios.get(Links.MDR_URL() + "Users/ByEmail/" + email).then((res) => {
+        const response = res.data;
+        console.log(res);
+        if (res.status == 200) {
+            let id = response[0].id;
+            localStorage.setItem("loggedInUser", id);
+            history.push("/dashboard");
+            window.location.reload();
+        }
+    });
+}
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+export default function SignIn() {
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
 
-    const [openSnackBar, setOpenSnackBar] = React.useState(false);
-    const [openSnackBarError, setOpenSnackBarError] = React.useState(false);
-    const [openSnackBarNoEmail, setOpenSnackBarNoEmail] = React.useState(false);
-
-    const handleClose = (event, reason) => {
-        setOpenSnackBar(false);
-    };
-
-    const handleCloseError = (event, reason) => {
-        setOpenSnackBarError(false);
-    };
-
-    const handleCloseNoEmail = (event, reason) => {
-        setOpenSnackBarNoEmail(false);
-    };
-
-    const history = useHistory();
-
-    async function handle_login() {
-        setMakingRequest(true);
-        let item = { email, password };
-
-        let result = await fetch("https://localhost:5000/api/Users/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-            body: JSON.stringify(item),
-        })
-            .then((response) => {
-                response.json();
-                if (!response.ok) {
-                    return null;
-                } else {
-                    setOpenSnackBar(true);
-
-                    localStorage.setItem(
-                        "loggedInUser",
-                        JSON.stringify(response)
-                    );
-                    history.push("/dashboard");
-                }
-                setMakingRequest(false);
-            })
-            .catch((err) => {
-                setOpenSnackBarError(true);
-                setMakingRequest(false);
-            });
-    }
-
-    const handleSubmit = (data) => {
-        //simulates logged in user
-        localStorage.setItem(
-            "loggedInUser",
-            "be31c3c0-7b0f-4985-ba66-ebe1fb9ca60b"
-        );
-        console.log(localStorage.getItem("loggedInUser"));
-
-        setMakingRequest(true);
-        fetch("https://21s5dd20socialgame.azurewebsites.net/api/Users")
-            .then((response) => {
-                console.log(response.status);
-                if (!response.ok) {
-                    setLoginError("Wrong credentials! Try again.");
-                    setMakingRequest(false);
-                    return null;
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (data) {
-                    console.log(data);
-                    //handleLogin(data);
-                    history.replace("/");
-                } else {
-                    setMakingRequest(false);
-                }
-            });
+        makeRequest(data.get("email"));
     };
 
     return (
         <ThemeProvider theme={theme}>
-            <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                open={openSnackBar}
-                autoHideDuration={1000}
-                onClose={handleClose}
-            >
-                <Alert
-                    onClose={handleClose}
-                    severity="success"
-                    sx={{ width: "100%" }}
-                >
-                    Login Successfull!
-                </Alert>
-            </Snackbar>
-            <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                open={openSnackBarError}
-                autoHideDuration={1500}
-                onClose={handleCloseError}
-            >
-                <Alert
-                    onClose={handleCloseError}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
-                    Invalid email/password combination!
-                </Alert>
-            </Snackbar>
-            <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                open={openSnackBarError}
-                autoHideDuration={1500}
-                onClose={handleCloseError}
-            >
-                <Alert
-                    onClose={handleCloseError}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
-                    No account was found with this email!
-                </Alert>
-            </Snackbar>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -193,7 +75,7 @@ function LogIn() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Login
+                        Sign in
                     </Typography>
                     <Box
                         component="form"
@@ -205,7 +87,6 @@ function LogIn() {
                             margin="normal"
                             required
                             fullWidth
-                            onChange={(e) => setEmail(e.target.value)}
                             id="email"
                             label="Email Address"
                             name="email"
@@ -216,7 +97,6 @@ function LogIn() {
                             margin="normal"
                             required
                             fullWidth
-                            onChange={(e) => setPassword(e.target.value)}
                             name="password"
                             label="Password"
                             type="password"
@@ -229,48 +109,22 @@ function LogIn() {
                             }
                             label="Remember me"
                         />
-                        <LoadingButton
+                        <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            loading={makingRequest}
-                            loadingPosition="end"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Login
-                        </LoadingButton>
+                            Sign In
+                        </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link href="#" variant="b2">
-                                    Forgot your password?
+                                <Link href="#" variant="body2">
+                                    Forgot password?
                                 </Link>
-
-                                <Modal show={show} onHide={handleClose}>
-                                    <Modal.Header closeButton>
-                                        <Modal.Title>Modal heading</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                        Woohoo, you're reading this text in a
-                                        modal!
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button
-                                            variant="secondary"
-                                            onClick={handleClose}
-                                        >
-                                            Close
-                                        </Button>
-                                        <Button
-                                            variant="primary"
-                                            onClick={handleClose}
-                                        >
-                                            Save Changes
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal>
                             </Grid>
                             <Grid item>
-                                <Link href="/signup" variant="body2">
+                                <Link href="#" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
@@ -282,5 +136,3 @@ function LogIn() {
         </ThemeProvider>
     );
 }
-
-export default LogIn;
