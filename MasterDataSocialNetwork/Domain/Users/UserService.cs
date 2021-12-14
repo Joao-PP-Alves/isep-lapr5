@@ -9,6 +9,7 @@ using DDDNetCore.Network;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Flurl.Http;
+using System.Drawing;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -481,7 +482,11 @@ namespace DDDNetCore.Domain.Users
 
             return null;
         }
-        public async Task<NSizeResponseDTO> GetNetworkSize(NetworkNSizeDTO dto){
+        public async Task<NSizeResponseDTO> GetNetworkSize(UserId userId, int level){
+
+            var user = await GetByIdAsync(userId);
+
+            var dto = new NetworkNSizeDTO(user.email.EmailAddress,level);
 
             if (dto.N > 3 || dto.N < 0){
                 throw new BusinessRuleValidationException("Level must be between 0 and 3.");
@@ -503,6 +508,20 @@ namespace DDDNetCore.Domain.Users
             NSizeResponseDTO dtoR = new NSizeResponseDTO(Int32.Parse(address.ToString()));
             
             return dtoR;
+        }
+
+        /* Para já, este método está a retornar o NetworkSize -1. Alterar no futuro.*/
+        public async Task<NSizeResponseDTO> GetNetworkDimensionSize(UserId userId, int level){
+            
+             if (level > 2 ||level < 0){
+                throw new BusinessRuleValidationException("Level must be between 0 and 2.");
+            }
+            var responseDto = await this.GetNetworkSize(userId, level);
+           
+            if (responseDto.Size > 0)
+                responseDto.Size = responseDto.Size -1;
+
+            return responseDto;
         }
     }
 }
