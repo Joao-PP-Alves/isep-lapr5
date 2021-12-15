@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Domain.Users;
 
 namespace DDDNetCore.Domain.Services.DTO{
@@ -7,13 +8,13 @@ namespace DDDNetCore.Domain.Services.DTO{
         public Guid Id {get;set;}
         public Name name {get;set;}
         public Email email {get;}
-        public List<Tag> tags {get;set;}
+        public ICollection<Tag> tags {get;set;}
 
         public LifeDate birthDate { get; set; }
 
         public PhoneNumber phoneNumber {get;set;}
 
-        public UserLoginDTO(Guid Id, Name name, Email email,  PhoneNumber phoneNumber, LifeDate birthDate, List<Tag> tags){
+        public UserLoginDTO(Guid Id, Name name, Email email,  PhoneNumber phoneNumber, LifeDate birthDate, ICollection<Tag> tags){
             this.Id = Id;
             this.name = name;
             this.phoneNumber = phoneNumber;

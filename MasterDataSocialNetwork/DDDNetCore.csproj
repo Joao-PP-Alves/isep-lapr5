@@ -41,6 +41,8 @@
     <Compile Remove="Infrastructure\Users\UserRepository.cs.BASE.cs" />
     <Compile Remove="Infrastructure\Users\UserRepository.cs.LOCAL.cs" />
     <Compile Remove="Infrastructure\Users\UserRepository.cs.REMOTE.cs" />
+    <Compile Remove="Controllers\TagController.cs" />
+    <Compile Remove="Controllers\TagsController.cs" />
   </ItemGroup>
 
 </Project>

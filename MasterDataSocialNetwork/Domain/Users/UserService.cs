@@ -5,10 +5,13 @@ using DDDNetCore.Domain.Services;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Network;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Flurl.Http;
+using System.Drawing;
+using System.Linq;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -17,11 +20,13 @@ namespace DDDNetCore.Domain.Users
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
         private readonly IFriendshipService _friendshipService;
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService)
+        private readonly ITagRepository _tagRepository;
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService, ITagRepository tagRepo)
         {
             _unitOfWork = unitOfWork;
             _repo = repo;
             _friendshipService = friendshipService;
+            _tagRepository = tagRepo;
         }
 
         public async Task<UserLoginDTO> Login(LoginDTO dto)
@@ -243,12 +248,23 @@ namespace DDDNetCore.Domain.Users
             return listDto;
         }
 
-        
-
-
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, dto.tags);
+            var tagList = new List<Tag>();
+            foreach (Tag t in dto.tags)
+            {
+                var tag = await this._tagRepository.GetByName(t.name.text);
+
+                if (_tagRepository.GetByIdAsync(tag.Id) != null)
+                {
+                    tagList.Add(tag);
+                }
+                else
+                {
+                    tagList.Add(new Tag(t.name));
+                }
+            }
+            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, tagList);
             await _repo.AddAsync(user);
             await _unitOfWork.CommitAsync();
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
@@ -485,7 +501,11 @@ namespace DDDNetCore.Domain.Users
 
             return null;
         }
-        public async Task<NSizeResponseDTO> GetNetworkSize(NetworkNSizeDTO dto){
+        public async Task<NSizeResponseDTO> GetNetworkSize(UserId userId, int level){
+
+            var user = await GetByIdAsync(userId);
+
+            var dto = new NetworkNSizeDTO(user.email.EmailAddress,level);
 
             if (dto.N > 3 || dto.N < 0){
                 throw new BusinessRuleValidationException("Level must be between 0 and 3.");
@@ -507,6 +527,35 @@ namespace DDDNetCore.Domain.Users
             NSizeResponseDTO dtoR = new NSizeResponseDTO(Int32.Parse(address.ToString()));
             
             return dtoR;
+        }
+
+        /* Para já, este método está a retornar o NetworkSize -1. Alterar no futuro.*/
+        public async Task<NSizeResponseDTO> GetNetworkDimensionSize(UserId userId, int level){
+            
+             if (level > 2 ||level < 0){
+                throw new BusinessRuleValidationException("Level must be between 0 and 2.");
+            }
+            var responseDto = await this.GetNetworkSize(userId, level);
+           
+            if (responseDto.Size > 0)
+                responseDto.Size = responseDto.Size -1;
+
+            return responseDto;
+        }
+        
+        public async Task<List<LeaderboardUserNetworkSizeDto>> GetLeaderBoardNetworkSize(int N){
+            var listUsers = _repo.GetAllAsync().Result;
+
+            List<LeaderboardUserNetworkSizeDto> listDto = new List<LeaderboardUserNetworkSizeDto>();
+
+            foreach(User user in listUsers){
+                var networkSizeUser = GetNetworkSize(user.Id,N).Result;
+                listDto.Add(new LeaderboardUserNetworkSizeDto(user.Name.text,networkSizeUser.Size));
+            }
+
+            List<LeaderboardUserNetworkSizeDto> listDtoOrdered = listDto.OrderBy(o => o.Size).ToList();
+
+            return listDtoOrdered;
         }
     }
 }

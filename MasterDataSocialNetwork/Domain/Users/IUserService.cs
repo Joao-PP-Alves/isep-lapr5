@@ -4,6 +4,7 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using System;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Domain.Services;
 using DDDNetCore.Network;
 using Microsoft.AspNetCore.Mvc;
@@ -34,9 +35,13 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<bool> checkIfTwoUsersAreFriends(UserId user1,UserId user2);
 
-        public Task<NSizeResponseDTO> GetNetworkSize(NetworkNSizeDTO dto);
+        public Task<NSizeResponseDTO> GetNetworkSize(UserId user, int level);
         
         public Task<List<Tag>> checkToAddTag(List<String> tags);
+
+        public Task<NSizeResponseDTO> GetNetworkDimensionSize(UserId user, int level);
+        
+        Task<List<LeaderboardUserNetworkSizeDto>> GetLeaderBoardNetworkSize(int N);
 
     }
 }

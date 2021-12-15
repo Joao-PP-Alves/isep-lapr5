@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DDDNetCore.Domain.Tags;
 using DDDNetCore.Domain.Users;
 
 namespace DDDNetCore.Domain.Services.DTO{
@@ -8,7 +9,7 @@ namespace DDDNetCore.Domain.Services.DTO{
 
         public Name name {get;set;}
         public Email email {get;}
-        public List<Tag> tags {get;set;}
+        public ICollection<Tag> tags {get;set;}
         public List<Friendship> friendsList { get; set; }
 
         public LifeDate birthDate { get; set; }
@@ -19,7 +20,7 @@ namespace DDDNetCore.Domain.Services.DTO{
 
         public EmotionTime EmotionTime {get;set;}
 
-        public UserDto(Guid Id, Name name, Email email, List<Friendship> friendsList, PhoneNumber phoneNumber, LifeDate birthDate, List<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime){
+        public UserDto(Guid Id, Name name, Email email, List<Friendship> friendsList, PhoneNumber phoneNumber, LifeDate birthDate, ICollection<Tag> tags, EmotionalState emotionalState,EmotionTime EmotionTime){
             this.Id = Id;
             this.name = name;
             this.friendsList = friendsList;

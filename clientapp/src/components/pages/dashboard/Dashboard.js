@@ -497,9 +497,9 @@ function DashboardContent() {
 										height: 530,
 									}}
 								>
-									<MinimalizedNetwork />
+									
 								</Paper>
-							</Grid>
+							</Grid>*
 							{/* Recent Deposits */}
 							<Grid item xs={12} md={4} lg={3}>
 								<Paper

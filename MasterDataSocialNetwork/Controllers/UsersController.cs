@@ -188,6 +188,7 @@ namespace DDDNetCore.Controllers
         {
             try
             {
+                
                 var user = await _service.AddAsync(dto);
 
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
@@ -381,13 +382,35 @@ namespace DDDNetCore.Controllers
             }
         }
 
-        // GET: api/Users/NetworkNSizeDTO
-        [HttpGet("NetworkNSizeDTO")]
-        public async Task<ActionResult<NSizeResponseDTO>> GetNetowrkSize(NetworkNSizeDTO dto)
+        // GET: api/Users/NetworkSize/123812-f-093123/1
+        [HttpGet("NetworkSize/{id}/{level}")]
+        public async Task<ActionResult<NSizeResponseDTO>> GetNetowrkSize(Guid userId, int level)
         {
             try
             {
-                var tamanho = await _service.GetNetworkSize(dto);
+                var tamanho = await _service.GetNetworkSize(new UserId(userId), level);
+
+                if (tamanho == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tamanho);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
+        }
+
+
+        // GET: api/Users/NetworkDimensionSize
+        [HttpGet("NetworkDimensionSize")]
+        public async Task<ActionResult<NSizeResponseDTO>> GetNetowrkDimensionSize(Guid userId, int level)
+        {
+            try
+            {
+                var tamanho = await _service.GetNetworkDimensionSize(new UserId(userId), level);
 
                 if (tamanho == null)
                 {
@@ -401,5 +424,26 @@ namespace DDDNetCore.Controllers
                return BadRequest(new {Message = ex.Message});
             }
         }    
+
+        // GET: api/Users/NetworkNSizeDTO
+        [HttpGet("LeaderboardNetworkSize/{N}")]
+        public async Task<ActionResult<List<LeaderboardUserNetworkSizeDto>>> GetLeaderboardNetworkSize(int N)
+        {
+            try
+            {
+                var leaderboard = await _service.GetLeaderBoardNetworkSize(N);
+
+                if (leaderboard == null)
+                {
+                    return NotFound();
+                }
+    
+                return Ok(leaderboard);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
+        } 
     }
 }
