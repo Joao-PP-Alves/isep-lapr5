@@ -43,6 +43,25 @@
     <Compile Remove="Infrastructure\Users\UserRepository.cs.REMOTE.cs" />
     <Compile Remove="Controllers\TagController.cs" />
     <Compile Remove="Controllers\TagsController.cs" />
+    <Compile Remove="Domain\Services\CreatingDTO\CreatingTagDto.cs" />
+    <Compile Remove="Domain\Services\DTO\TagDto.cs" />
+    <Compile Remove="Domain\Tags\**" />
+    <Compile Remove="Infrastructure\Tags\**" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <EmbeddedResource Remove="Domain\Tags\**" />
+    <EmbeddedResource Remove="Infrastructure\Tags\**" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <None Remove="Domain\Tags\**" />
+    <None Remove="Infrastructure\Tags\**" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <Content Remove="Domain\Tags\**" />
+    <Content Remove="Infrastructure\Tags\**" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
-using DDDNetCore.Domain.Tags;
 
 namespace DDDNetCore.Domain.Users {
     public class FriendshipService : IFriendshipService {
@@ -64,9 +63,9 @@ namespace DDDNetCore.Domain.Users {
 
         }
 
-        public async Task<FriendshipDto> UpdateFriendshipTag(Guid userId, Guid friendshipId, Guid tag){
+        public async Task<FriendshipDto> UpdateFriendshipTag(Guid userId, Guid friendshipId, string tag){
             var friendship = _repoUser.GetFriendshipAsync(new UserId(userId), new FriendshipId(friendshipId));
-            friendship.ChangeFriendshipTag(new TagId(tag));
+            friendship.ChangeFriendshipTag(new Tag(tag));
 
             await this._unitOfWork.CommitAsync();
             return new FriendshipDto(friendship.Id.AsGuid(),friendship.connection_strength,friendship.relationship_strength,friendship.friend,friendship.requester,friendship.friendshipTag);
@@ -78,12 +77,12 @@ namespace DDDNetCore.Domain.Users {
             throw new NotImplementedException();
         }
 
-        public async Task createFriends(UserId requesterId, UserId friendId, TagId friendTag){
+        public async Task createFriends(UserId requesterId, UserId friendId, string friendTag){
             var requester = await _repoUser.GetByIdAsync(requesterId);
             var friend = await _repoUser.GetByIdAsync(friendId);
 
-            Friendship friendship1 = new Friendship(friendId,requesterId,friendTag);
-            Friendship friendship2 = new Friendship(requesterId,friendId,friendTag);
+            Friendship friendship1 = new Friendship(friendId,requesterId,new Tag(friendTag));
+            Friendship friendship2 = new Friendship(requesterId,friendId,new Tag(friendTag));
 
             requester.AddFriendship(friendship1);
             friend.AddFriendship(friendship2);

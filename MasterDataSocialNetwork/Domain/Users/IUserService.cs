@@ -4,7 +4,6 @@ using DDDNetCore.Domain.Shared;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using System;
-using DDDNetCore.Domain.Tags;
 using DDDNetCore.Domain.Services;
 using DDDNetCore.Network;
 using Microsoft.AspNetCore.Mvc;

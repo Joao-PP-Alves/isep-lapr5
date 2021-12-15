@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DDDNetCore.Domain.Tags;
 using DDDNetCore.Domain.Users;
 
 namespace DDDNetCore.Domain.Services.DTO{

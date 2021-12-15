@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using DDDNetCore.Domain.Shared;
-using DDDNetCore.Domain.Tags;
 
 namespace DDDNetCore.Domain.Users
 {
@@ -17,7 +16,7 @@ namespace DDDNetCore.Domain.Users
         
         public UserId requester { get; private set; }
         
-        public TagId friendshipTag {get; set;}
+        public Tag friendshipTag {get; set;}
 
         public bool Active{get; set;}
 
@@ -25,7 +24,7 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(UserId friend, UserId requester,TagId friendTag) {
+        public Friendship(UserId friend, UserId requester,Tag friendTag) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
             this.requester = requester;
@@ -35,7 +34,7 @@ namespace DDDNetCore.Domain.Users
             this.Active = true;
         }
 
-        public Friendship(UserId friend, UserId requester, ConnectionStrength connection_strength, RelationshipStrength relationship_strength, TagId friendshipTags) {
+        public Friendship(UserId friend, UserId requester, ConnectionStrength connection_strength, RelationshipStrength relationship_strength, Tag friendshipTags) {
             this.Id = new FriendshipId(Guid.NewGuid());
             this.friend = friend;
             this.requester = requester;
@@ -52,7 +51,7 @@ namespace DDDNetCore.Domain.Users
             this.connection_strength = connection_strength;
         }
 
-        public void ChangeFriendshipTag(TagId friendshipTag){
+        public void ChangeFriendshipTag(Tag friendshipTag){
             if(this.friend == null){
                 throw new BusinessRuleValidationException("The relationship is invalid. One or both users are null");
             }

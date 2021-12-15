@@ -5,10 +5,8 @@ using DDDNetCore.Infrastructure.Users;
 using DDDNetCore.Domain.Users;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Domain.Missions;
-using DDDNetCore.Domain.Tags;
 using DDDNetCore.Infrastructure.Connections;
 using DDDNetCore.Infrastructure.Missions;
-using DDDNetCore.Infrastructure.Tags;
 
 namespace DDDNetCore.Infrastructure
 {
@@ -24,7 +22,6 @@ namespace DDDNetCore.Infrastructure
 
         public DbSet<Mission> Missions {get;set;}
         
-        public DbSet<Tag> Tags { get; set; }
         public DddNetCoreDbContext(DbContextOptions<DddNetCoreDbContext> options) : base(options)
         {
 
@@ -40,7 +37,6 @@ namespace DDDNetCore.Infrastructure
         {
             modelBuilder.HasDefaultSchema("LAPR5");
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new TagEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FriendshipEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new IntroductionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ConnectionEntityTypeConfiguration());

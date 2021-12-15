@@ -5,7 +5,6 @@ using DDDNetCore.Domain.Services;
 using DDDNetCore.Domain.Services.CreatingDTO;
 using DDDNetCore.Domain.Services.DTO;
 using DDDNetCore.Domain.Shared;
-using DDDNetCore.Domain.Tags;
 using DDDNetCore.Network;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +19,11 @@ namespace DDDNetCore.Domain.Users
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _repo;
         private readonly IFriendshipService _friendshipService;
-        private readonly ITagRepository _tagRepository;
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService, ITagRepository tagRepo)
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repo, IFriendshipService friendshipService)
         {
             _unitOfWork = unitOfWork;
             _repo = repo;
             _friendshipService = friendshipService;
-            _tagRepository = tagRepo;
         }
 
         public async Task<UserLoginDTO> Login(LoginDTO dto)
@@ -218,7 +215,7 @@ namespace DDDNetCore.Domain.Users
             {
                 foreach (string item in listStrings)
                 {
-                    Tag tagConfirmation = new Tag(new Name(item));
+                    Tag tagConfirmation = new Tag(item);
                     listTags.Add(tagConfirmation);
                 }
             }
@@ -250,21 +247,7 @@ namespace DDDNetCore.Domain.Users
 
         public async Task<UserDto> AddAsync(CreatingUserDto dto)
         {
-            var tagList = new List<Tag>();
-            foreach (Tag t in dto.tags)
-            {
-                var tag = await this._tagRepository.GetByName(t.name.text);
-
-                if (_tagRepository.GetByIdAsync(tag.Id) != null)
-                {
-                    tagList.Add(tag);
-                }
-                else
-                {
-                    tagList.Add(new Tag(t.name));
-                }
-            }
-            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, tagList);
+            var user = new User(dto.name, dto.email, dto.password, dto.phoneNumber, dto.birthDate, dto.tags);
             await _repo.AddAsync(user);
             await _unitOfWork.CommitAsync();
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));

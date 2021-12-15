@@ -12,12 +12,10 @@ using DDDNetCore.Domain.Missions;
 using DDDNetCore.Domain.Connections;
 using DDDNetCore.Infrastructure.Connections;
 using DDDNetCore.Domain.Introductions;
-using DDDNetCore.Domain.Tags;
 using DDDNetCore.Infrastructure.Missions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using DDDNetCore.Infrastructure.Shared;
-using DDDNetCore.Infrastructure.Tags;
 
 // jdbc:sqlserver://vs398.dei.isep.ipp.pt\MYSQLSERVER:1433
 namespace DDDNetCore
@@ -83,9 +81,6 @@ namespace DDDNetCore
         {
             services.AddTransient<IUnitOfWork,UnitOfWork>();
 
-            services.AddTransient<ITagRepository,TagRepository>();
-            services.AddTransient<ITagService,TagService>();
-            
             services.AddTransient<IUserRepository,UserRepository>();
             services.AddTransient<IUserService,UserService>();
 
