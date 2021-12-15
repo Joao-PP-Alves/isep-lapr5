@@ -39,7 +39,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import { useState, useEffect } from "react";
-import MinimalizedNetwork from "./MinimalizedNetwork";
+import Feed from "./feed/Feed";
 import match from "autosuggest-highlight/match";
 import Links from "../../Links";
 import RequestConnection from "./RequestConnection";
@@ -306,13 +306,17 @@ function DashboardContent() {
 							Dashboard
 						</Typography>
 						<Autocomplete
-						
 							id="highlights-demo"
 							sx={{ width: 300 }}
 							options={sample}
 							getOptionLabel={(option) => option.name || ""}
 							renderInput={(params) => (
-								<TextField {...params} label="Search Users" margin="normal"  onChange={e => setinputValue(e.target.value)}/>
+								<TextField
+									{...params}
+									label="Search Users"
+									margin="normal"
+									onChange={(e) => setinputValue(e.target.value)}
+								/>
 							)}
 							renderOption={(props, option, { inputValue }) => {
 								const matches = match(option.name, inputValue);
@@ -350,8 +354,8 @@ function DashboardContent() {
 									<ArrowForwardIosTwoToneIcon />
 								</IconButton>
 							)}
-							targetName = {inputValue}
-							requesterId = {userId}
+							targetName={inputValue}
+							requesterId={userId}
 						/>
 						<IconButton
 							color="inherit"
@@ -484,9 +488,7 @@ function DashboardContent() {
 				>
 					<Toolbar />
 					<Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
-						
 						<Grid container spacing={3}>
-							
 							{/* Chart */}
 							<Grid item xs={12} md={8} lg={9}>
 								<Paper
@@ -497,9 +499,9 @@ function DashboardContent() {
 										height: 530,
 									}}
 								>
-									
+									<Feed />
 								</Paper>
-							</Grid>*
+							</Grid>
 							{/* Recent Deposits */}
 							<Grid item xs={12} md={4} lg={3}>
 								<Paper
@@ -522,20 +524,13 @@ function DashboardContent() {
 										flexDirection: "column",
 										height: 255,
 									}}
-									
 								>
-
-									
-
-
-
 									<NetworkStats></NetworkStats>
 								</Paper>
 							</Grid>
 						</Grid>
-						
+
 						{/* <Copyright sx={{ pt: 4 }} /> */}
-						
 					</Container>
 				</Box>
 			</Box>

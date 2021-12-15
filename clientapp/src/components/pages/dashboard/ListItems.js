@@ -2,12 +2,10 @@ import * as React from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import DashboardCustomizeTwoToneIcon from '@mui/icons-material/DashboardCustomizeTwoTone';
 import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
 import PeopleAltTwoToneIcon from '@mui/icons-material/PeopleAltTwoTone';
 import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
-import LayersIcon from '@mui/icons-material/Layers';
 import GroupAddTwoToneIcon from '@mui/icons-material/GroupAddTwoTone';
 import DashBoard from '../dashboard/Dashboard';
 import Button from '@mui/material/Button';
@@ -23,22 +21,6 @@ function toEdit(event){
 
 export const mainListItems = (
 	<div>
-		<ListItem>
-			<Button
-				id="dashboardButton"
-				onClick={(event) => (window.location.href = "/dashBoard")}
-				size="small"
-				font="Montserrat"
-			>
-				<ListItemIcon>
-					<DashboardCustomizeTwoToneIcon />
-				</ListItemIcon>
-				<ListItemText
-					primary="Dashboard"
-					primaryTypographyProps={{ fontSize: "12px" }}
-				/>
-			</Button>
-		</ListItem>
 		<ListItem>
 			<Button
 				id="dashboardButton"
