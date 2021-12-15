@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import '../../../App.css';
-import CreateUser from '../user/createUser';
+import CreateUser from './createUser';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
