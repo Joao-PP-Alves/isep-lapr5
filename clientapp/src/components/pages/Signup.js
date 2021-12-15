@@ -24,6 +24,14 @@ import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
 import Links from "../Links";
+import history from "../../history";
+import { CreatingUserDTO } from "../dtos/CreatingUserDTO";
+import { BirthDate } from "../model/BirthDate";
+import { Email } from "../model/Email";
+import { Name } from "../model/Name";
+import { Password } from "../model/Password";
+import { PhoneNumber } from "../model/PhoneNumber";
+import { Tag } from "../model/Tag";
 
 function Copyright(props) {
     return (
@@ -71,7 +79,7 @@ export default function SignUp() {
     };
 
     const handleCheckChange = (event) => {
-        !checked ? console.log("checked") : console.log("not checked");
+        //checked ? console.log("checked") : console.log("not checked");
         setChecked(event.target.checked);
     };
 
@@ -87,95 +95,75 @@ export default function SignUp() {
         setOpenSnackBarError(false);
     };
 
-    const validateForm = (newState) => {
-        console.log("validating");
-        setValidated(newState);
-    };
+    
 
-    const user_name = {
-        text: input_firstName + " " + input_lastName,
-    };
+    const user_name = new Name(input_firstName + " " + input_lastName);
 
-    const user_email = {
-        emailAddress: input_email,
-    };
+    const user_email = new Email(input_email);
 
-    const user_password = {
-        value: input_password,
-    };
+    const user_password = new Password(input_password);
 
-    const user_phoneNumber = {
-        number: input_phoneNumber,
-    };
+    const user_phoneNumber = new PhoneNumber(input_phoneNumber);
 
-    const user_birthDate = {
-        date: input_birthDate.toJSON(),
-    };
+    const user_birthDate = new BirthDate(input_birthDate.toJSON());
 
-    const user_tag = {
-        name: "",
-    };
+    const user_tag = new Tag("");
 
-    const user_tags = {
-        tags: [user_tag],
-    };
+    const user = new CreatingUserDTO(
+        user_name,
+        user_email,
+        [user_tag],
+        user_password,
+        user_phoneNumber,
+        user_birthDate
+    );
 
-    const user = {
-        name: user_name,
-        email: user_email,
-        tags: [user_tag],
-        createTags() {
-            input_tags.forEach((element) => {
-                const user_tag = {
-                    name: element,
-                };
-                this.tags.push(user_tag);
-            });
-            this.tags.shift();
-        },
-        password: user_password,
-        phoneNumber: user_phoneNumber,
-        birthDate: user_birthDate,
-    };
+    user.createTags(input_tags);
 
-    function handleSubmit(event) {
+    const handleSubmit =(event) => {
         event.preventDefault();
+        
+        console.log(user);
+
         setMakingRequest(true);
-        user.createTags();
-
-        const response = fetch(
-            Links.MDR_URL()+"Users",
-
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(user),
-            }
-        )
-            .then((response) => {
-                response.json();
-                if (!response.ok) {
-                    return null;
-                } else {
-                    setOpenSnackBar(true);
-
-				window.setTimeout(redirectDashboard,100);
-                }
-                setMakingRequest(false);
-            })
-            .then((json) => console.log(json))
-
-            .catch((err) => {
-                setOpenSnackBarError(true);
-                setMakingRequest(false);
-            });
-
-            
+        makeRequest(user);
+        setMakingRequest(false);
     }
 
-    function redirectDashboard(){
+    function validate_form() {
+        //console.log("user name " + user_name.text);
+        //checked ? console.log("checked") : console.log("not checked");
+        let not_valid = !checked || user_name.text == "" ||
+        user_email.emailAddress == "" ||
+        user_password.value == "" ||
+        user_phoneNumber.number == "" ||
+        user.tags.length == 0;
+        if(not_valid) {
+            return true;
+        }
+        return false;
+    }
 
-        window.location.href = "/dashBoard";
+
+	async function makeRequest(user) {
+        const axios = require("axios");
+
+        axios.post(Links.MDR_URL() + "Users", user)
+        .then((res) => {
+            const response = res.data;
+            console.log(res);
+            if (res.status == 201) {
+                let id = response.id;
+                localStorage.setItem("loggedInUser", id);
+                history.push("/dashboard");
+                window.location.reload();
+            }
+        }
+        )
+        .catch((err) => {
+            console.log(err);
+            setOpenSnackBarError(true);
+        })
     }
 
     const handleDelete = (chipToDelete) => () => {
@@ -183,220 +171,258 @@ export default function SignUp() {
     };
 
     return (
-			<LocalizationProvider dateAdapter={AdapterDateFns}>
-				<Snackbar
-					anchorOrigin={{ vertical: "top", horizontal: "center" }}
-					open={openSnackBar}
-					autoHideDuration={1000}
-					onClose={handleClose}
-				>
-					<Alert
-						onClose={handleClose}
-						severity="success"
-						sx={{ width: "100%" }}
-					>
-						User Registered Successfully!
-					</Alert>
-				</Snackbar>
-				<Snackbar
-					anchorOrigin={{ vertical: "top", horizontal: "center" }}
-					open={openSnackBarError}
-					autoHideDuration={1500}
-					onClose={handleCloseError}
-				>
-					<Alert
-						onClose={handleCloseError}
-						severity="error"
-						sx={{ width: "100%" }}
-					>
-						Failed To Register User!
-					</Alert>
-				</Snackbar>
-				<ThemeProvider theme={theme}>
-					<form className={"formulary"} onSubmit={handleSubmit}>
-						<Container component="main" maxWidth="xs">
-							<CssBaseline />
-							<Box
-								sx={{
-									marginTop: 8,
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "center",
-								}}
-							>
-								<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-									<LockOutlinedIcon />
-								</Avatar>
-								<Typography component="h1" variant="h5">
-									Register new account
-								</Typography>
-								<Box
-									component="form"
-									noValidate
-									onSubmit={handleSubmit}
-									sx={{ mt: 3 }}
-								>
-									<Grid container spacing={2}>
-										<Grid item xs={12} sm={6}>
-											<TextField
-												autoComplete="given-name"
-												name="firstName"
-												required={true}
-												fullWidth
-												id="firstName"
-												label="First Name"
-												autoFocus
-												value={input_firstName}
-												onChange={(e) => setFirstName(e.target.value)}
-											/>
-										</Grid>
-										<Grid item xs={12} sm={6}>
-											<TextField
-												required
-												fullWidth
-												id="lastName"
-												label="Last Name"
-												name="lastName"
-												autoComplete="family-name"
-												value={input_lastName}
-												onChange={(e) => setLastName(e.target.value)}
-											/>
-										</Grid>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={openSnackBar}
+                autoHideDuration={1000}
+                onClose={handleClose}
+            >
+                <Alert
+                    onClose={handleClose}
+                    severity="success"
+                    sx={{ width: "100%" }}
+                >
+                    User Registered Successfully!
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={openSnackBarError}
+                autoHideDuration={1500}
+                onClose={handleCloseError}
+            >
+                <Alert
+                    onClose={handleCloseError}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    Failed To Register User!
+                </Alert>
+            </Snackbar>
+            <ThemeProvider theme={theme}>
+                <form className={"formulary"} onSubmit={handleSubmit}>
+                    <Container component="main" maxWidth="xs">
+                        <CssBaseline />
+                        <Box
+                            sx={{
+                                marginTop: 8,
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                                <LockOutlinedIcon />
+                            </Avatar>
+                            <Typography component="h1" variant="h5">
+                                Register new account
+                            </Typography>
+                            <Box
+                                component="form"
+                                noValidate
+                                onSubmit={handleSubmit}
+                                sx={{ mt: 3 }}
+                            >
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            autoComplete="given-name"
+                                            name="firstName"
+                                            required={true}
+                                            fullWidth
+                                            id="firstName"
+                                            label="First Name"
+                                            autoFocus
+                                            value={input_firstName}
+                                            onChange={(e) =>
+                                                setFirstName(e.target.value)
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="lastName"
+                                            label="Last Name"
+                                            name="lastName"
+                                            autoComplete="family-name"
+                                            value={input_lastName}
+                                            onChange={(e) =>
+                                                setLastName(e.target.value)
+                                            }
+                                        />
+                                    </Grid>
 
-										<Grid item xs={12} sm={6}>
-											<DesktopDatePicker
-												label="Birth date"
-												inputFormat="dd/MM/yyyy"
-												value={input_birthDate}
-												onChange={handleDateChange}
-												renderInput={(params) => <TextField {...params} />}
-											/>
-										</Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <DesktopDatePicker
+                                            label="Birth date"
+                                            inputFormat="dd/MM/yyyy"
+                                            value={input_birthDate}
+                                            onChange={handleDateChange}
+                                            renderInput={(params) => (
+                                                <TextField {...params} />
+                                            )}
+                                        />
+                                    </Grid>
 
-										<Grid item xs={12} sm={6}>
-											<TextField
-												required
-												fullWidth
-												id="phoneNumber"
-												label="Phone number"
-												name="phoneNumber"
-												autoComplete="phone-number"
-												value={input_phoneNumber}
-												onChange={(e) => setPhoneNumber(e.target.value)}
-											/>
-										</Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="phoneNumber"
+                                            label="Phone number"
+                                            name="phoneNumber"
+                                            autoComplete="phone-number"
+                                            value={input_phoneNumber}
+                                            onChange={(e) =>
+                                                setPhoneNumber(e.target.value)
+                                            }
+                                        />
+                                    </Grid>
 
-										<Grid item xs={12}>
-											<Stack spacing={3} sx={{ width: 500 }}>
-												<Autocomplete
-													multiple
-													id="tags-filled"
-													options={savedTags.map((option) => option.name)}
-													freeSolo
-													value={input_tags}
-													onChange={(e, newval, reason) => {
-														setTags(newval);
-													}}
-													renderTags={(value, getTagProps) =>
-														value.map((option, index) => (
-															<Chip
-																variant="outlined"
-																label={option}
-																{...getTagProps({ index })}
-															/>
-														))
-													}
-													renderInput={(params) => (
-														<TextField
-															{...params}
-															variant="filled"
-															label="Tags"
-															placeholder="What interests you?"
-															onKeyDown={(e) => {
-																if (e.code === "enter" && e.target.value) {
-																	setTags(input_tags.concat(e.target.value));
-																}
-															}}
-														/>
-													)}
-												/>
-											</Stack>
-										</Grid>
+                                    <Grid item xs={12}>
+                                        <Stack spacing={3} sx={{ width: 500 }}>
+                                            <Autocomplete
+                                                multiple
+                                                id="tags-filled"
+                                                options={savedTags.map(
+                                                    (option) => option.name
+                                                )}
+                                                freeSolo
+                                                value={input_tags}
+                                                onChange={(
+                                                    e,
+                                                    newval,
+                                                    reason
+                                                ) => {
+                                                    setTags(newval);
+                                                }}
+                                                renderTags={(
+                                                    value,
+                                                    getTagProps
+                                                ) =>
+                                                    value.map(
+                                                        (option, index) => (
+                                                            <Chip
+                                                                variant="outlined"
+                                                                label={option}
+                                                                {...getTagProps(
+                                                                    { index }
+                                                                )}
+                                                            />
+                                                        )
+                                                    )
+                                                }
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        variant="filled"
+                                                        label="Tags"
+                                                        placeholder="What interests you?"
+                                                        onKeyDown={(e) => {
+                                                            if (
+                                                                e.code ===
+                                                                    "enter" &&
+                                                                e.target.value
+                                                            ) {
+                                                                setTags(
+                                                                    input_tags.concat(
+                                                                        e.target
+                                                                            .value
+                                                                    )
+                                                                );
+                                                            }
+                                                        }}
+                                                    />
+                                                )}
+                                            />
+                                        </Stack>
+                                    </Grid>
 
-										<Grid item xs={12}>
-											<TextField
-												required
-												fullWidth
-												id="email"
-												label="Email Address"
-												name="email"
-												autoComplete="email"
-												value={input_email}
-												onChange={(e) => setEmail(e.target.value)}
-											/>
-										</Grid>
-										<Grid item xs={12}>
-											<TextField
-												required
-												fullWidth
-												name="password"
-												label="Password"
-												type="password"
-												id="password"
-												autoComplete="new-password"
-												value={input_password}
-												onChange={(e) => setPassword(e.target.value)}
-											/>
-										</Grid>
-										<Grid item xs={12}>
-											<FormControlLabel
-												control={
-													<Checkbox
-														checked={checked}
-														onChange={handleCheckChange}
-														color="primary"
-													/>
-												}
-												label="I agree with the terms and conditions"
-											/>
-										</Grid>
-									</Grid>
-									<LoadingButton
-										type="submit"
-										fullWidth
-										variant="contained"
-										loading={makingRequest}
-										loadingPosition="end"
-										sx={{ mt: 3, mb: 2 }}
-										onClick={handleSubmit}
-									>
-										Sign Up
-									</LoadingButton>
-									<Grid item>
-										<Link href="/login" variant="body2">
-											Already have an account? Login.
-											{LogIn}
-										</Link>
-									</Grid>
-									<Grid item>
-										<Link href="/termsConditions" variant="body2">
-											Terms and conditions.
-										</Link>
-									</Grid>
-									<Grid item>
-										<Link href="/privacyPolicy" variant="body2">
-											{PrivacyPolicy}
-											Privacy Policy.
-										</Link>
-									</Grid>
-								</Box>
-							</Box>
-							<Copyright sx={{ mt: 5 }} />
-						</Container>
-					</form>
-				</ThemeProvider>
-			</LocalizationProvider>
-		);
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="email"
+                                            label="Email Address"
+                                            name="email"
+                                            autoComplete="email"
+                                            value={input_email}
+                                            onChange={(e) =>
+                                                setEmail(e.target.value)
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            label="Password"
+                                            type="password"
+                                            id="password"
+                                            autoComplete="new-password"
+                                            value={input_password}
+                                            onChange={(e) =>
+                                                setPassword(e.target.value)
+                                            }
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={checked}
+                                                    onChange={handleCheckChange}
+                                                    color="primary"
+                                                />
+                                            }
+                                            label="I agree with the terms and conditions"
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <LoadingButton
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    disabled={validate_form()}
+                                    loading={makingRequest}
+                                    loadingPosition="end"
+                                    sx={{ mt: 3, mb: 2 }}
+                                    onClick={handleSubmit}
+                                >
+                                    Sign Up
+                                </LoadingButton>
+                                <Grid item>
+                                    <Link href="/login" variant="body2">
+                                        Already have an account? Login.
+                                        {LogIn}
+                                    </Link>
+                                </Grid>
+                                <Grid item>
+                                    <Link
+                                        href="/termsConditions"
+                                        variant="body2"
+                                    >
+                                        Terms and conditions.
+                                    </Link>
+                                </Grid>
+                                <Grid item>
+                                    <Link href="/privacyPolicy" variant="body2">
+                                        {PrivacyPolicy}
+                                        Privacy Policy.
+                                    </Link>
+                                </Grid>
+                            </Box>
+                        </Box>
+                        <Copyright sx={{ mt: 5 }} />
+                    </Container>
+                </form>
+            </ThemeProvider>
+        </LocalizationProvider>
+    );
 }
 
 const savedTags = [

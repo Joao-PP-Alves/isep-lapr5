@@ -9,11 +9,18 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useState } from "react";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { UserLoginDTO } from "../dtos/UserLoginDTO";
 import Links from "../Links";
 import history from "../../history";
+import Snackbar from "@mui/material/Snackbar";
+import { Email } from "../model/Email";
+import { Password } from "../model/Password";
+import MuiAlert from "@mui/material/Alert";
 
 function Copyright(props) {
     return (
@@ -33,34 +40,92 @@ function Copyright(props) {
     );
 }
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const theme = createTheme();
 
-
-async function makeRequest(email) {
-    const axios = require("axios");
-
-    axios.get(Links.MDR_URL() + "Users/ByEmail/" + email).then((res) => {
-        const response = res.data;
-        console.log(res);
-        if (res.status == 200) {
-            let id = response[0].id;
-            localStorage.setItem("loggedInUser", id);
-            history.push("/dashboard");
-            window.location.reload();
-        }
-    });
-}
-
 export default function SignIn() {
+
+    const [input_email, setEmail] = useState("");
+    const [input_password, setPassword] = useState("");
+
+    const email = new Email(input_email);
+
+    const password = new Password(input_password);
+
+    const user = new UserLoginDTO(email, password);
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-
-        makeRequest(data.get("email"));
+        setMakingRequest(true);
+        //const data = new FormData(event.currentTarget);
+        makeRequest(user);
+        setMakingRequest(false);
     };
+
+    
+
+    function validate_form() {
+        let not_valid =  
+        user.email.emailAddress == "" ||
+        user.password.value == "";
+        
+        if(not_valid) {
+            return true;
+        }
+        return false;
+    }
+
+    
+
+    const [makingRequest, setMakingRequest] = useState(false);
+    const [openSnackBarError, setOpenSnackBarError] = React.useState(false);
+
+    const handleCloseError = (event, reason) => {
+        setOpenSnackBarError(false);
+    };
+
+    async function makeRequest(user) {
+
+        const axios = require("axios");
+
+        let email = user.email.emailAddress;
+
+        axios.get(Links.MDR_URL() + "Users/ByEmail/" + email)
+        .then((res) => {
+            const response = res.data;
+            console.log(res);
+            if (res.status == 200) {
+                let id = response[0].id;
+                localStorage.setItem("loggedInUser", id);
+                history.push("/dashboard");
+                window.location.reload();
+            }
+        }
+        )
+        .catch((err) => {
+            setOpenSnackBarError(true);
+        })
+    }
 
     return (
         <ThemeProvider theme={theme}>
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={openSnackBarError}
+                autoHideDuration={1500}
+                onClose={handleCloseError}
+            >
+                <Alert
+                    onClose={handleCloseError}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    Failed To Login!
+                </Alert>
+            </Snackbar>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -90,6 +155,10 @@ export default function SignIn() {
                             id="email"
                             label="Email Address"
                             name="email"
+                            value={input_email}
+                            onChange={(e) =>
+                                setEmail(e.target.value)
+                            }
                             autoComplete="email"
                             autoFocus
                         />
@@ -99,6 +168,10 @@ export default function SignIn() {
                             fullWidth
                             name="password"
                             label="Password"
+                            value={input_password}
+                            onChange={(e) =>
+                                setPassword(e.target.value)
+                            }
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -109,14 +182,17 @@ export default function SignIn() {
                             }
                             label="Remember me"
                         />
-                        <Button
+                        <LoadingButton
                             type="submit"
                             fullWidth
                             variant="contained"
+                            disabled={validate_form()}
+                            loading={makingRequest}
+                            loadingPosition="end"
                             sx={{ mt: 3, mb: 2 }}
                         >
                             Sign In
-                        </Button>
+                        </LoadingButton>
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
