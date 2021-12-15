@@ -1,8 +1,8 @@
-import express, { json } from "express";
-import { PostRepository } from "./infrastructure/schemas.js";
-import mongoose from "mongoose";
-import { PostController } from "./controllers/postsController.js";
-import { PostService } from "./services/postService.js";
+import express, { json } from "express"
+import { PostRepository } from "./infrastructure/schemas.js"
+import mongoose from "mongoose"
+import { PostController } from "./src/controllers/postsController.js"
+import { PostService } from "./src/services/postService.js"
 
 var schemas;
 
