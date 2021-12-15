@@ -365,8 +365,6 @@ function ListFriendsContent() {
     rows.push(createData(...sample[i]));
   }
 
-  //TODO ia aqui!
-
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>

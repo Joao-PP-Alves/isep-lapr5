@@ -7,17 +7,17 @@ import {
   Redirect
 } from 'react-router-dom';
 import React from 'react';
-import User from "./components/mdr/user/user";
-import CreateUser from './components/mdr/user/createUser';
+import User from "./components/model/user/user";
+import CreateUser from './components/model/user/createUser';
 import UseAuth from "./hooks/UserAuth";
 import { UserContext, UserController } from './context/UserController';
-import UserList from './components/mdr/user/UserList';
+import UserList from './components/model/user/UserList';
 import LogIn from './components/pages/Login';
 import SignUp from './components/pages/Signup';
 import TermsAndConditions from './components/pages/termsAndConditions';
 import PrivacyPolicy from './components/pages/privacyPolicy';
 
-import Users from './components/mdr/user/user';
+import Users from './components/model/user/user';
 import LandingPage from './components/pages/landing_page/LandingPage';
 
 import ListPendentConnections from './components/pages/connections/ListPendentConnections';
