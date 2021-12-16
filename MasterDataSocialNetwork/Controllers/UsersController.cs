@@ -405,7 +405,7 @@ namespace DDDNetCore.Controllers
 
 
         // GET: api/Users/NetworkDimensionSize
-        [HttpGet("NetworkDimensionSize")]
+        [HttpGet("NetworkDimensionSize/{userId}/{level}")]
         public async Task<ActionResult<NSizeResponseDTO>> GetNetworkDimensionSize(Guid userId, int level)
         {
             try
