@@ -384,11 +384,11 @@ namespace DDDNetCore.Controllers
 
         // GET: api/Users/NetworkSize/123812-f-093123/1
         [HttpGet("NetworkSize/{id}/{level}")]
-        public async Task<ActionResult<NSizeResponseDTO>> GetNetowrkSize(Guid userId, int level)
+        public async Task<ActionResult<NSizeResponseDTO>> GetNetworkSize(Guid id, int level)
         {
             try
             {
-                var tamanho = await _service.GetNetworkSize(new UserId(userId), level);
+                var tamanho = await _service.GetNetworkSize(new UserId(id), level);
 
                 if (tamanho == null)
                 {
@@ -406,7 +406,7 @@ namespace DDDNetCore.Controllers
 
         // GET: api/Users/NetworkDimensionSize
         [HttpGet("NetworkDimensionSize")]
-        public async Task<ActionResult<NSizeResponseDTO>> GetNetowrkDimensionSize(Guid userId, int level)
+        public async Task<ActionResult<NSizeResponseDTO>> GetNetworkDimensionSize(Guid userId, int level)
         {
             try
             {
