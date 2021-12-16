@@ -540,5 +540,26 @@ namespace DDDNetCore.Domain.Users
 
             return listDtoOrdered;
         }
+
+        public async Task<List<String>> GetShortestPath(UserId userId1, UserId userId2){
+            var list = new List<String>();
+            var user1 = await GetByIdAsync(userId1);
+            var user2 = await GetByIdAsync(userId2);
+
+            var orig = user1.email.EmailAddress;
+            var dest = user2.email.EmailAddress;
+
+            var address = new StringBuilder(Constants.URL_Prolog);
+            address.Append("/shortpath?");
+            address.Append("orig=").Append(orig);
+            address.Append("&dest=").Append(dest);
+
+            var response = await address.ToString().GetJsonAsync();
+            list.Add(response);
+            var array = response.ToCharArray(0,response.Length);
+            address.Clear();
+
+            return list;
+        }
     }
 }

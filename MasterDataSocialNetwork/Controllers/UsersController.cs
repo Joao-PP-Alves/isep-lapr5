@@ -423,7 +423,28 @@ namespace DDDNetCore.Controllers
             {
                return BadRequest(new {Message = ex.Message});
             }
-        }    
+        }
+
+        // GET: api/Users/ShortestPath
+        [HttpGet("ShortestPath/{userId1}/{userId2}")]
+        public async Task<ActionResult<NSizeResponseDTO>> GetShortestPath(Guid userId1, Guid userId2)
+        {
+            try
+            {
+                var tamanho = await _service.GetShortestPath(new UserId(userId1), new UserId(userId2));
+
+                if (tamanho == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tamanho);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
+        }     
 
         // GET: api/Users/NetworkNSizeDTO
         [HttpGet("LeaderboardNetworkSize/{N}")]
