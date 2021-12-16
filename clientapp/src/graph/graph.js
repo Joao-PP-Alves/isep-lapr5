@@ -30,11 +30,11 @@ const populateRows = async () => {
 	colors.push(0x0fff0f);
 	colors.push(0xfff0dd);
 	// DATA GET FROM MASTER DATA API
-	await fetchUsers();
-    sampleToRows();
+	//await fetchUsers();
+    //sampleToRows();
 
 	//BEFORE DATA BASE
-	/*rows.push(createData("1", "Ferndando", null, "3", "10"));
+	rows.push(createData("1", "Ferndando", null, "3", "10"));
 	rows.push(createData("2", "Ferndanda", "1", "4", "10"));
 	rows.push(createData("3", "Ricardo", "1", "5", "10"));
 	rows.push(createData("4", "Luísa", "1", "6", "10"));
@@ -44,7 +44,7 @@ const populateRows = async () => {
 	rows.push(createData("8", "Rajesh", "6", "10", "10"));
 	rows.push(createData("9", "Rita", "3", "11", "10"));
 	rows.push(createData("10", "Rute", "4", "12", "10"));
-	rows.push(createData("11", "Diogo", "4", "13", "10"));*/
+	rows.push(createData("11", "Diogo", "4", "13", "10"));
 };
 
 let searchedVS = [];
@@ -118,9 +118,9 @@ export default class Graph {
 		this.scene = new THREE.Scene();
 
 		var aspectRatio = window.innerWidth / window.innerHeight;
-		this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 100);
+		this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 2000);
 		const controls = new OrbitControls(this.camera, this.renderer.domElement);
-		controls.enableRotate = false;
+		controls.enableRotate = true;
 		controls.maxDistance = 100;
 		controls.minDistance = 5;
 
