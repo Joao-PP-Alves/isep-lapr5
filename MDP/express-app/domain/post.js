@@ -1,5 +1,5 @@
-var mongoose = require("mongoose");
-var mongoose_validator = require("mongoose-id-validator");
+const mongoose = require("mongoose");
+const mongoose_validator = require("mongoose-id-validator");
 
 var PostSchema = mongoose.Schema({
 	id: String,
