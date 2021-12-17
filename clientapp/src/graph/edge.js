@@ -34,7 +34,7 @@ export default class Edge{
             0, 0, 1, 0,
             0, -1, 0, 0,
             0, 0, 0, 1));
-        var edgeGeometry = new THREE.CylinderGeometry( size*0.15,size*0.15, direction.length(), 16, 16);
+        var edgeGeometry = new THREE.CylinderGeometry( size*0.05,size*0.05, direction.length(), 16, 16);
         var edge = new THREE.Mesh(edgeGeometry, material);
         edge.applyMatrix(orientation);
         edge.position.x = (pointY.x + pointX.x) / 2;

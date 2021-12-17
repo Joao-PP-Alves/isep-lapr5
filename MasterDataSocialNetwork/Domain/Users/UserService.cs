@@ -419,13 +419,13 @@ namespace DDDNetCore.Domain.Users
             {
                 toReturn.Add(new UserPerspectiveDto(user.Id.Value, user.Name.text, null, null, null));
                 //toReturn.Add(new UserPerspectiveDto(user.Id.Value, user.Name.text, null, "1", "1"));
-                transforma(param, new List<UserPerspectiveDto>(), toReturn);
+                await transforma(param, new List<UserPerspectiveDto>(), toReturn,user.Id.ToString());
                 return toReturn;
             }
         }
 
         private async Task<List<UserPerspectiveDto>> transforma(int param, List<UserPerspectiveDto> auxList,
-            List<UserPerspectiveDto> toReturn)
+            List<UserPerspectiveDto> toReturn, String rootId)
         {
             if (param == 0)
             {
@@ -435,21 +435,28 @@ namespace DDDNetCore.Domain.Users
             {
                 foreach (var user in toReturn)
                 {
-                    if (!auxList.Contains(user))
-                    {
-                        auxList.Add(user);
-                        var friendsList = await _friendshipService.GetByUserIdWithFriend(new UserId(user.userId));
+                    var friendsList = await _friendshipService.GetByUserIdWithFriend(new UserId(user.userId));
                         foreach (var friend in friendsList)
                         {
                             var newUser = new UserPerspectiveDto(friend.friend.Value, friend.friendObject.Name.text,
                                 user.userId, friend.connection_strength.value,
                                 friend.relationship_strength.value);
-                            toReturn.Add(newUser);
+                            auxList.Add(newUser);
                         }
-
+                }
+                foreach (var user in auxList){
+                    var counter = 0;
+                    foreach (var item in toReturn)
+                    {
+                        if ((user.userId == item.userId && user.parentId == item.parentId) || (user.userId == item.parentId && user.parentId == item.userId) || (user.userId == rootId)){
+                            counter++;
+                        }
+                    }
+                    if (counter == 0){
+                        toReturn.Add(user);
                     }
                 }
-                transforma(param - 1, auxList, toReturn);
+                await transforma(param - 1, new List<UserPerspectiveDto>(), toReturn, rootId);
             }
             return null;
         }

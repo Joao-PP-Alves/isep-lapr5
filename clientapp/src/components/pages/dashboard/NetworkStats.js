@@ -27,7 +27,7 @@ export default function NetworkStats() {
   }, []);
 
   const [searchedVS, setSearchedVS] = React.useState([]);
-
+  // FETCH TO BE PUBLISHED
   function search() {
     fetchNetworkSize();
   }
@@ -35,7 +35,7 @@ export default function NetworkStats() {
   const fetchNetworkSize= async () => {
 
     const data = await fetch(
-      "https://localhost:5001/api/users/NetworkSize/" + userId + "/" + 3
+      Links.MDR_URL() + "users/NetworkSize/" + userId + "/" + 3
     );
     const vsList = await data.json();
     console.log(vsList);
