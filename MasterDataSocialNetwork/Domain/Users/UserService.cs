@@ -34,10 +34,14 @@ namespace DDDNetCore.Domain.Users
             if (user == null)
             {
                 user = await _repo.GetByEmail(dto.email.EmailAddress);
-                if (user == null)
+                if (user != null)
                 {
-                    throw new Exception();
+                    // Email is correct, password is wrong
+                    return null;
                 }
+
+                // User does not exist
+                throw new Exception();
             }
             
             return new UserLoginDTO(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber,

@@ -209,14 +209,16 @@ namespace DDDNetCore.Controllers
 
                 if (user == null)
                 {
-                    return NotFound();
+                    // Email is correct but password is wrong
+                    return NotFound("Password");
                 }
 
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
             }
-            catch (BusinessRuleValidationException ex)
+            catch (Exception ex)
             {
-                return Forbid();
+                // User does not exist
+                return NotFound("User");
             }
         }
 
