@@ -210,7 +210,7 @@ namespace DDDNetCore.Controllers
                 if (user == null)
                 {
                     // Email is correct but password is wrong
-                    return NotFound("Password");
+                    return Unauthorized();
                 }
 
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
