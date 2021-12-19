@@ -19,7 +19,7 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<List<User>> GetByTags(List<Tag> list);
         
-        public Task<ICollection<Tag>> GetMyTagList(UserId id);
+        public Task<List<Tag>> GetMyTagList(UserId id);
 
         public Task<int> NewFriendship(FriendshipDto friendshipDto);
 

@@ -23,14 +23,16 @@ namespace DDDNetCore.Infrastructure.Users
             
         }
 
-        public async Task<ICollection<Tag>> GetMyTagList(UserId id)
+        public async Task<List<Tag>> GetMyTagList(UserId id)
         {
-            return _context.Users.Find(id).tags;
+            return await (_context.Users
+                .Where(u => u.Id == id)
+                .SelectMany(s => s.tags).AsNoTrackingWithIdentityResolution().ToListAsync());
         }
 
         public async Task<List<Tag>> GetAllUsersTags()
        {
-           return  _context.Users.Include(u => u.tags).Select(u => u.tags.GetEnumerator().Current).ToList();;
+           return  _context.Users.SelectMany(u => u.tags).AsNoTrackingWithIdentityResolution().ToList();
        }
 
         /// <summary>
@@ -83,7 +85,10 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<User> checkCredentials(string email, string password)
         {
-            return await _context.Users.Where(u =>u.Email.EmailAddress.Equals(email)).Where(u=>u.Password.Value.Equals(password)).FirstOrDefaultAsync();
+            return await _context.Users
+                .Where(u =>u.Email.EmailAddress.Equals(email)
+                && u.Password.Value.Equals(password))
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<User>> GetByName(string name){
@@ -142,8 +147,7 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<List<Friendship>> GetMyFriendships(UserId id)
         {
-            Task<User> user = GetByIdAsync(id);
-            return user.Result.friendsList;
+            return await _context.Users.Where(u => id.Equals(u.Id)).SelectMany(u => u.friendsList).ToListAsync();
         }
 
         public async Task<List<Friendship>> GetAllFriendships()

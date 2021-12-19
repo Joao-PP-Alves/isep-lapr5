@@ -3,7 +3,6 @@ const mongoose_validator = require("mongoose-id-validator");
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
-	id: String,
 	name: String,
 	content: String,
 	userId: String,
