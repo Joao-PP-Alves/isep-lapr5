@@ -5,11 +5,11 @@ namespace DDDNetCore.Domain.Services.DTO
 {
     public class TagCloudDto
     {
-        public String tagName { get; set; }
+        public string tagName { get; set; }
         
         public int tagQuantity { get; set; }
 
-        public TagCloudDto(String tagName, int tagQuantity)
+        public TagCloudDto(string tagName, int tagQuantity)
         {
             this.tagName = tagName;
             this.tagQuantity = tagQuantity;

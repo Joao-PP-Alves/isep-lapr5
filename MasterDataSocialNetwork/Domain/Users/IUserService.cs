@@ -44,5 +44,13 @@ namespace DDDNetCore.Domain.Users{
 
         public Task<List<String>> GetShortestPath(UserId userId1, UserId userId2);
 
+        public Task<List<TagCloudDto>> GetAllUsersTagCloud();
+
+        public Task<List<TagCloudDto>> GetMyTagCloud(UserId id);
+
+        public Task<List<TagCloudDto>> GetAllFriendshipsTagCloud();
+
+        public Task<List<TagCloudDto>> GetMyFriendshipsTagCloud(UserId id);
+
     }
 }
