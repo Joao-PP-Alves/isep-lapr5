@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 const mongoose_validator = require("mongoose-id-validator");
+const Schema = mongoose.Schema;
 
-var PostSchema = mongoose.Schema({
-	id: String,
+const PostSchema = new Schema({
 	name: String,
 	content: String,
 	userId: String,
-	date: Date,
+	//date: Date,
 });
 
-PostSchema.plugin(mongoose_validator);
-module.exports = mongoose.model("Post", PostSchema);
+//PostSchema.plugin(mongoose_validator);
+const Post = mongoose.model('Posts', PostSchema);
+module.exports = Post;
