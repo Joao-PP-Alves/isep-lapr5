@@ -580,12 +580,7 @@ namespace DDDNetCore.Controllers
         {
             try
             {
-                var user = await _service.GetByIdAsync(new UserId(userId));
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                var tagCloud = await _service.GetMyFriendshipsTagCloud(new UserId(user.Id));
+                var tagCloud = await _service.GetMyFriendshipsTagCloud(new UserId(userId));
 
                 if (tagCloud == null)
                 {
