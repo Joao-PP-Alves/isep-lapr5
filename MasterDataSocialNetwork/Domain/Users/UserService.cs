@@ -34,10 +34,14 @@ namespace DDDNetCore.Domain.Users
             if (user == null)
             {
                 user = await _repo.GetByEmail(dto.email.EmailAddress);
-                if (user == null)
+                if (user != null)
                 {
-                    throw new Exception();
+                    // Email is correct, password is wrong
+                    return null;
                 }
+
+                // User does not exist
+                throw new Exception();
             }
             
             return new UserLoginDTO(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber,
@@ -419,13 +423,13 @@ namespace DDDNetCore.Domain.Users
             {
                 toReturn.Add(new UserPerspectiveDto(user.Id.Value, user.Name.text, null, null, null));
                 //toReturn.Add(new UserPerspectiveDto(user.Id.Value, user.Name.text, null, "1", "1"));
-                transforma(param, new List<UserPerspectiveDto>(), toReturn);
+                await transforma(param, new List<UserPerspectiveDto>(), toReturn,user.Id.ToString());
                 return toReturn;
             }
         }
 
         private async Task<List<UserPerspectiveDto>> transforma(int param, List<UserPerspectiveDto> auxList,
-            List<UserPerspectiveDto> toReturn)
+            List<UserPerspectiveDto> toReturn, String rootId)
         {
             if (param == 0)
             {
@@ -435,21 +439,28 @@ namespace DDDNetCore.Domain.Users
             {
                 foreach (var user in toReturn)
                 {
-                    if (!auxList.Contains(user))
-                    {
-                        auxList.Add(user);
-                        var friendsList = await _friendshipService.GetByUserIdWithFriend(new UserId(user.userId));
+                    var friendsList = await _friendshipService.GetByUserIdWithFriend(new UserId(user.userId));
                         foreach (var friend in friendsList)
                         {
                             var newUser = new UserPerspectiveDto(friend.friend.Value, friend.friendObject.Name.text,
                                 user.userId, friend.connection_strength.value,
                                 friend.relationship_strength.value);
-                            toReturn.Add(newUser);
+                            auxList.Add(newUser);
                         }
-
+                }
+                foreach (var user in auxList){
+                    var counter = 0;
+                    foreach (var item in toReturn)
+                    {
+                        if ((user.userId == item.userId && user.parentId == item.parentId) || (user.userId == item.parentId && user.parentId == item.userId) || (user.userId == rootId)){
+                            counter++;
+                        }
+                    }
+                    if (counter == 0){
+                        toReturn.Add(user);
                     }
                 }
-                transforma(param - 1, auxList, toReturn);
+                await transforma(param - 1, new List<UserPerspectiveDto>(), toReturn, rootId);
             }
             return null;
         }
@@ -540,7 +551,7 @@ namespace DDDNetCore.Domain.Users
 
             return listDtoOrdered;
         }
-
+        
         public async Task<List<TagCloudDto>> GetMyTagCloud(UserId id)
         {
             var tagsList = _repo.GetMyTagList(id).Result;
@@ -555,14 +566,36 @@ namespace DDDNetCore.Domain.Users
             {
                 if (!aux.ContainsKey(tag.name))
                 {
-                    aux.Add(tag.name,1);
+                    aux.Add(tag.name, 1);
                 }
                 else
                 {
                     aux[tag.name] += 1;
                 }
             }
+
             return aux.Select(newTag => new TagCloudDto(newTag.Key, newTag.Value)).ToList();
+        }
+
+        public async Task<List<String>> GetShortestPath(UserId userId1, UserId userId2){
+            var list = new List<String>();
+            var user1 = await GetByIdAsync(userId1);
+            var user2 = await GetByIdAsync(userId2);
+
+            var orig = user1.email.EmailAddress;
+            var dest = user2.email.EmailAddress;
+
+            var address = new StringBuilder(Constants.URL_Prolog);
+            address.Append("/shortpath?");
+            address.Append("orig=").Append(orig);
+            address.Append("&dest=").Append(dest);
+
+            var response = await address.ToString().GetJsonAsync();
+            list.Add(response);
+            var array = response.ToCharArray(0,response.Length);
+            address.Clear();
+
+            return list;
         }
     }
 }

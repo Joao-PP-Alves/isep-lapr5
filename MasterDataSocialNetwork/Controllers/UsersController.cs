@@ -209,14 +209,16 @@ namespace DDDNetCore.Controllers
 
                 if (user == null)
                 {
-                    return NotFound();
+                    // Email is correct but password is wrong
+                    return Unauthorized();
                 }
 
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
             }
-            catch (BusinessRuleValidationException ex)
+            catch (Exception ex)
             {
-                return Forbid();
+                // User does not exist
+                return NotFound("User");
             }
         }
 
@@ -384,11 +386,11 @@ namespace DDDNetCore.Controllers
 
         // GET: api/Users/NetworkSize/123812-f-093123/1
         [HttpGet("NetworkSize/{id}/{level}")]
-        public async Task<ActionResult<NSizeResponseDTO>> GetNetowrkSize(Guid userId, int level)
+        public async Task<ActionResult<NSizeResponseDTO>> GetNetworkSize(Guid id, int level)
         {
             try
             {
-                var tamanho = await _service.GetNetworkSize(new UserId(userId), level);
+                var tamanho = await _service.GetNetworkSize(new UserId(id), level);
 
                 if (tamanho == null)
                 {
@@ -405,8 +407,8 @@ namespace DDDNetCore.Controllers
 
 
         // GET: api/Users/NetworkDimensionSize
-        [HttpGet("NetworkDimensionSize")]
-        public async Task<ActionResult<NSizeResponseDTO>> GetNetowrkDimensionSize(Guid userId, int level)
+        [HttpGet("NetworkDimensionSize/{userId}/{level}")]
+        public async Task<ActionResult<NSizeResponseDTO>> GetNetworkDimensionSize(Guid userId, int level)
         {
             try
             {
@@ -423,7 +425,28 @@ namespace DDDNetCore.Controllers
             {
                return BadRequest(new {Message = ex.Message});
             }
-        }    
+        }
+
+        // GET: api/Users/ShortestPath
+        [HttpGet("ShortestPath/{userId1}/{userId2}")]
+        public async Task<ActionResult<NSizeResponseDTO>> GetShortestPath(Guid userId1, Guid userId2)
+        {
+            try
+            {
+                var tamanho = await _service.GetShortestPath(new UserId(userId1), new UserId(userId2));
+
+                if (tamanho == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tamanho);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
+        }     
 
         // GET: api/Users/NetworkNSizeDTO
         [HttpGet("LeaderboardNetworkSize/{N}")]

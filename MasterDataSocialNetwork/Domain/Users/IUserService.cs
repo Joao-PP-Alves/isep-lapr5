@@ -42,5 +42,7 @@ namespace DDDNetCore.Domain.Users{
         
         Task<List<LeaderboardUserNetworkSizeDto>> GetLeaderBoardNetworkSize(int N);
 
+        public Task<List<String>> GetShortestPath(UserId userId1, UserId userId2);
+
     }
 }

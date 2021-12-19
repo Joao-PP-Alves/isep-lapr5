@@ -50,7 +50,7 @@ const populateRows = async () => {
 let searchedVS = [];
 const fetchUsers = async () => {
 	const data = await fetch(
-		Links.MDR_URL() + "users/MyPerspective/" + userId + "/" + 1
+		Links.MDR_URL() + "users/MyPerspective/" + userId + "/10" 
 	);
 	const vsList = await data.json();
 	searchedVS = vsList;
@@ -118,9 +118,9 @@ export default class Graph {
 		this.scene = new THREE.Scene();
 
 		var aspectRatio = window.innerWidth / window.innerHeight;
-		this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 100);
+		this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 2000);
 		const controls = new OrbitControls(this.camera, this.renderer.domElement);
-		controls.enableRotate = false;
+		controls.enableRotate = true;
 		controls.maxDistance = 100;
 		controls.minDistance = 5;
 
