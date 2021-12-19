@@ -23,14 +23,16 @@ namespace DDDNetCore.Infrastructure.Users
             
         }
 
-        public async Task<ICollection<Tag>> GetTagList(UserId id)
+        public async Task<List<Tag>> GetMyTagList(UserId id)
         {
-            return _context.Users.Find(id).tags;
+            return await (_context.Users
+                .Where(u => u.Id == id)
+                .SelectMany(s => s.tags).AsNoTrackingWithIdentityResolution().ToListAsync());
         }
 
-        public async Task<List<User>> GetUsersWithTheirTags()
+        public async Task<List<Tag>> GetAllUsersTags()
        {
-           return _context.Users.Include(u => u.tags).ToList();
+           return  _context.Users.SelectMany(u => u.tags).AsNoTrackingWithIdentityResolution().ToList();
        }
 
         /// <summary>
@@ -43,8 +45,8 @@ namespace DDDNetCore.Infrastructure.Users
         public List<User> ReturnFriendsSuggestionList(UserId userId)
         {
             List<User> friendsList = new List<User>();
-            var tag = GetTagList(userId).Result;
-            var possibleFriends = GetUsersWithTheirTags().Result;
+            var tag = GetMyTagList(userId).Result;
+            var possibleFriends = GetAllAsync().Result;
             foreach (User u in possibleFriends)
             {
                 if (u.Id != userId)
@@ -83,16 +85,19 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<User> checkCredentials(string email, string password)
         {
-            return await _context.Users.Where(u =>u.Email.EmailAddress.Equals(email)).Where(u=>u.Password.Value.Equals(password)).FirstOrDefaultAsync();
+            return await _context.Users
+                .Where(u =>u.Email.EmailAddress.Equals(email)
+                && u.Password.Value.Equals(password))
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<User>> GetByName(string name){
             return await ((DbSet<User>)base.getContext()).Where(x => name.Equals(x.Name.text)).ToListAsync();
         }
-        
+
         public async Task<List<User>> GetByTags(List<Tag> list){
             List<User> listUsers = new List<User>();
-            var listPossibleUsers = GetUsersWithTheirTags().Result;
+            var listPossibleUsers = GetAllAsync().Result;
                
                 foreach (var itemThis in listPossibleUsers)
                 {
@@ -115,9 +120,7 @@ namespace DDDNetCore.Infrastructure.Users
                 throw new Exception("Invalid User Id.");
             }
             
-            /**
-             * TODO (próximo sprint): relationship strength é calculada, connection strength + tag pode ser diferente
-             **/
+            //TODO (próximo sprint): relationship strength é calculada, connection strength + tag pode ser diferente
 
             requester.AddFriendship(new Friendship(dto.friend, dto.requester, dto.connection_strength,dto.relationship_strength,dto.friendshipTag));
             friend.AddFriendship(new Friendship(dto.requester, dto.friend, dto.connection_strength, dto.relationship_strength, dto.friendshipTag));
@@ -139,10 +142,39 @@ namespace DDDNetCore.Infrastructure.Users
         public Friendship GetFriendshipAsync(UserId id, FriendshipId friendshipId)
         {
             Task<User> user = GetByIdAsync(id);
-
             return user.Result.friendsList.Find(x => x.Id == friendshipId);
         }
+
+        public async Task<List<Friendship>> GetMyFriendships(UserId id)
+        {
+            return await _context.Users.Where(u => id.Equals(u.Id)).SelectMany(u => u.friendsList).ToListAsync();
+        }
+
+        public async Task<List<Friendship>> GetAllFriendships()
+        {
+            return _context.Users.Include(u => u.friendsList).Select(u => u.friendsList.GetEnumerator().Current).ToList();
+        }
         
+        public async Task<List<Tag>> GetAllFriendshipTags(List<Friendship> friendshipList)
+        {
+            var allTagsList = new List<Tag>();
+            foreach (var friend in friendshipList)
+            {
+                allTagsList.Add(friend.friendshipTag);
+            }
+            return allTagsList;
+        }
+
+        public async Task<List<Tag>> GetSortedTagsList(List<Tag> tagsToSort)
+        {
+            var tagsToReturn = new List<Tag>();
+            foreach (var tag in tagsToSort)
+            {
+                var newTag = tag.name.TrimStart().TrimEnd().ToLower();
+                tagsToReturn.Add(new Tag(newTag));
+            }
+            return tagsToReturn;
+        }
     }
 }
 

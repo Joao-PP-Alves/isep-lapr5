@@ -209,21 +209,23 @@ namespace DDDNetCore.Controllers
 
                 if (user == null)
                 {
-                    return NotFound();
+                    // Email is correct but password is wrong
+                    return Unauthorized();
                 }
 
                 return CreatedAtAction(nameof(GetGetById), new {id = user.Id}, user);
             }
-            catch (BusinessRuleValidationException ex)
+            catch (Exception ex)
             {
-                return Forbid();
+                // User does not exist
+                return NotFound("User");
             }
         }
 
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> UpdateProfile(Guid id, UserDto dto)
+        public async Task<ActionResult<UserDto>> UpdateProfile(Guid id, UpdateUserDto dto)
         {
             /*if (id != dto.Id)
             {
@@ -507,6 +509,95 @@ namespace DDDNetCore.Controllers
             {
                return BadRequest(new {Message = ex.Message});
             }
-        } 
+        }
+        
+        // GET: api/Users/AllUsersTagCloud
+        [HttpGet("AllUsersTagCloud")]
+        public async Task<ActionResult<List<TagCloudDto>>> GetAllUsersTagCloud()
+        {
+            try
+            {
+                var tagCloud = await _service.GetAllUsersTagCloud();
+
+                if (tagCloud == null)
+                {
+                    return NotFound();
+                }
+    
+                return Ok(tagCloud);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+        
+        // GET: api/Users/AllFriendshipsTagCloud
+        [HttpGet("AllFriendshipsTagCloud")]
+        public async Task<ActionResult<List<TagCloudDto>>> GetAllFriendshipsTagCloud()
+        {
+            try
+            {
+                var tagCloud = await _service.GetAllFriendshipsTagCloud();
+
+                if (tagCloud == null)
+                {
+                    return NotFound();
+                }
+    
+                return Ok(tagCloud);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+        
+        // GET: api/Users/MyTagCloud/id
+        [HttpGet("MyTagCloud/{id}")]
+        public async Task<ActionResult<List<TagCloudDto>>> GetMyTagCloud(Guid userId)
+        {
+            try
+            {
+                var tagCloud = await _service.GetMyTagCloud(new UserId(userId));
+
+                if (tagCloud == null)
+                {
+                    return NotFound();
+                }
+    
+                return Ok(tagCloud);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
+        
+        // GET: api/Users/MyFriendshipsTagCloud/id
+        [HttpGet("MyFriendshipsTagCloud/{id}")]
+        public async Task<ActionResult<List<TagCloudDto>>> GetMyFriendshipsTagCloud(Guid userId)
+        {
+            try
+            {
+                var user = await _service.GetByIdAsync(new UserId(userId));
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var tagCloud = await _service.GetMyFriendshipsTagCloud(new UserId(user.Id));
+
+                if (tagCloud == null)
+                {
+                    return NotFound();
+                }
+    
+                return Ok(tagCloud);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+                return BadRequest(new {Message = ex.Message});
+            }
+        }
     }
 }

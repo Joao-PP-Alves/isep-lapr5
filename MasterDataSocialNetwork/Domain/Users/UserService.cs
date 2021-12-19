@@ -34,10 +34,14 @@ namespace DDDNetCore.Domain.Users
             if (user == null)
             {
                 user = await _repo.GetByEmail(dto.email.EmailAddress);
-                if (user == null)
+                if (user != null)
                 {
-                    throw new Exception();
+                    // Email is correct, password is wrong
+                    return null;
                 }
+
+                // User does not exist
+                throw new Exception();
             }
             
             return new UserLoginDTO(user.Id.AsGuid(), user.Name, user.Email, user.PhoneNumber,
@@ -259,7 +263,7 @@ namespace DDDNetCore.Domain.Users
         /**
         * método para dar atualização no perfil
         **/
-        public async Task<UserDto> UpdateProfileAsync(UserDto dto)
+        public async Task<UserDto> UpdateProfileAsync(UpdateUserDto dto)
         {
             var user = await _repo.GetByIdAsync(new UserId(dto.Id));
 
@@ -273,7 +277,6 @@ namespace DDDNetCore.Domain.Users
             user.ChangeTags(dto.tags);
             user.ChangePhoneNumber(dto.phoneNumber);
             user.ChangeEmotionalState(dto.emotionalState);
-            user.updateFriendShips(dto.friendsList);
             user.ChangeEmail(dto.email);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await _unitOfWork.CommitAsync();
@@ -524,13 +527,13 @@ namespace DDDNetCore.Domain.Users
             
              if (level > 2 ||level < 0){
                 throw new BusinessRuleValidationException("Level must be between 0 and 2.");
-            }
-            var responseDto = await this.GetNetworkSize(userId, level);
+             }
+             var responseDto = await this.GetNetworkSize(userId, level);
            
-            if (responseDto.Size > 0)
-                responseDto.Size = responseDto.Size -1;
+             if (responseDto.Size > 0)
+                 responseDto.Size = responseDto.Size -1;
 
-            return responseDto;
+             return responseDto;
         }
         
         public async Task<List<LeaderboardUserNetworkSizeDto>> GetLeaderBoardNetworkSize(int N){
@@ -548,6 +551,53 @@ namespace DDDNetCore.Domain.Users
             return listDtoOrdered;
         }
 
+        public async Task<List<TagCloudDto>> GetMyTagCloud(UserId id)
+        {
+            var tagsList = _repo.GetMyTagList(id).Result;
+            var sortedList = _repo.GetSortedTagsList(tagsList).Result;
+            return sortedList.Select(tag => new TagCloudDto(tag.name, 1)).ToList();
+        }
+        
+        public async Task<List<TagCloudDto>> GetAllUsersTagCloud()
+        {
+            var tagsList = _repo.GetAllUsersTags().Result;
+            var sortedList = _repo.GetSortedTagsList(tagsList).Result;
+            return GetTagCloudDtoList(sortedList);
+        }
+
+        public async Task<List<TagCloudDto>> GetAllFriendshipsTagCloud()
+        {
+            var friendships = _repo.GetAllFriendships().Result;
+            var tagsList = _repo.GetAllFriendshipTags(friendships).Result;
+            var sortedList = _repo.GetSortedTagsList(tagsList).Result;
+            return GetTagCloudDtoList(sortedList);
+        }
+
+        public async Task<List<TagCloudDto>> GetMyFriendshipsTagCloud(UserId id)
+        {
+            var friendships = _repo.GetMyFriendships(id).Result;
+            var tagsList = _repo.GetAllFriendshipTags(friendships).Result;
+            var sortedList = _repo.GetSortedTagsList(tagsList).Result;
+            return GetTagCloudDtoList(sortedList);
+        }
+
+        public List<TagCloudDto> GetTagCloudDtoList(List<Tag> sortedList)
+        {
+            var auxDictionary = new Dictionary<string, int>();
+            foreach (var tag in sortedList)
+            {
+                if (!auxDictionary.ContainsKey(tag.name))
+                {
+                    auxDictionary.Add(tag.name, 1);
+                }
+                else
+                {
+                    auxDictionary[tag.name] += 1;
+                }
+            }
+            return auxDictionary.Select(newTag => new TagCloudDto(newTag.Key, newTag.Value)).ToList();
+        }
+        
         public async Task<List<String>> GetShortestPath(UserId userId1, UserId userId2){
             var list = new List<String>();
             var user1 = await GetByIdAsync(userId1);

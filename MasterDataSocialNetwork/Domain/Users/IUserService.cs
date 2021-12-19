@@ -20,7 +20,7 @@ namespace DDDNetCore.Domain.Users{
         public Task<UserLoginDTO> Login(LoginDTO dto);
         
         public Task<UserDto> AddAsync(CreatingUserDto dto);
-        public Task<UserDto> UpdateProfileAsync(UserDto dto);
+        public Task<UserDto> UpdateProfileAsync(UpdateUserDto dto);
         public Task<UserDto> InactivateAsync(UserId id);
         public Task<UserDto> DeleteAsync(UserId id);
         public Task<UserDto> UpdateEmotionalStateAsync(UserDto dto);
@@ -45,6 +45,14 @@ namespace DDDNetCore.Domain.Users{
         public Task<List<String>> GetStrongestPath(UserId userId1, UserId userId2);
         public Task<List<String>> GetSafestPath(UserId userId1, UserId userId2, int minimum);
 
+
+        public Task<List<TagCloudDto>> GetAllUsersTagCloud();
+
+        public Task<List<TagCloudDto>> GetMyTagCloud(UserId id);
+
+        public Task<List<TagCloudDto>> GetAllFriendshipsTagCloud();
+
+        public Task<List<TagCloudDto>> GetMyFriendshipsTagCloud(UserId id);
 
     }
 }
