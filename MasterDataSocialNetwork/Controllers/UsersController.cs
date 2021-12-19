@@ -429,7 +429,7 @@ namespace DDDNetCore.Controllers
 
         // GET: api/Users/ShortestPath
         [HttpGet("ShortestPath/{userId1}/{userId2}")]
-        public async Task<ActionResult<NSizeResponseDTO>> GetShortestPath(Guid userId1, Guid userId2)
+        public async Task<ActionResult<List<String>>> GetShortestPath(Guid userId1, Guid userId2)
         {
             try
             {
@@ -446,9 +446,51 @@ namespace DDDNetCore.Controllers
             {
                return BadRequest(new {Message = ex.Message});
             }
+        } 
+
+        // GET: api/Users/StrongestPath
+        [HttpGet("StrongestPath/{userId1}/{userId2}")]
+        public async Task<ActionResult<List<String>>> GetStrongestPath(Guid userId1, Guid userId2)
+        {
+            try
+            {
+                var tamanho = await _service.GetStrongestPath(new UserId(userId1), new UserId(userId2));
+
+                if (tamanho == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tamanho);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
+        }  
+
+        // GET: api/Users/SafestPath
+        [HttpGet("SafestPath/{userId1}/{userId2}/{minimum}")]
+        public async Task<ActionResult<List<String>>> GetSafestPath(Guid userId1, Guid userId2, int minimum)
+        {
+            try
+            {
+                var tamanho = await _service.GetSafestPath(new UserId(userId1), new UserId(userId2), minimum);
+
+                if (tamanho == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tamanho);
+            }
+            catch(BusinessRuleValidationException ex)
+            {
+               return BadRequest(new {Message = ex.Message});
+            }
         }     
 
-        // GET: api/Users/NetworkNSizeDTO
+        // GET: api/Users/LeaderboardNetworkSize
         [HttpGet("LeaderboardNetworkSize/{N}")]
         public async Task<ActionResult<List<LeaderboardUserNetworkSizeDto>>> GetLeaderboardNetworkSize(int N)
         {
@@ -538,12 +580,7 @@ namespace DDDNetCore.Controllers
         {
             try
             {
-                var user = await _service.GetByIdAsync(new UserId(userId));
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                var tagCloud = await _service.GetMyFriendshipsTagCloud(new UserId(user.Id));
+                var tagCloud = await _service.GetMyFriendshipsTagCloud(new UserId(userId));
 
                 if (tagCloud == null)
                 {

@@ -25,14 +25,14 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<List<Tag>> GetMyTagList(UserId id)
         {
-            return await (_context.Users
+            return await _context.Users
                 .Where(u => u.Id == id)
-                .SelectMany(s => s.tags).AsNoTrackingWithIdentityResolution().ToListAsync());
+                .SelectMany(s => s.tags).AsNoTrackingWithIdentityResolution().ToListAsync();
         }
 
         public async Task<List<Tag>> GetAllUsersTags()
        {
-           return  _context.Users.SelectMany(u => u.tags).AsNoTrackingWithIdentityResolution().ToList();
+           return  await _context.Users.SelectMany(u => u.tags).AsNoTrackingWithIdentityResolution().ToListAsync();
        }
 
         /// <summary>
@@ -147,22 +147,17 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<List<Friendship>> GetMyFriendships(UserId id)
         {
-            return await _context.Users.Where(u => id.Equals(u.Id)).SelectMany(u => u.friendsList).ToListAsync();
+            return _context.Users.Where(u => id.Equals(u.Id)).SelectMany(u => u.friendsList).AsNoTrackingWithIdentityResolution().ToList();
         }
 
         public async Task<List<Friendship>> GetAllFriendships()
         {
-            return _context.Users.Include(u => u.friendsList).Select(u => u.friendsList.GetEnumerator().Current).ToList();
+            return _context.Users.SelectMany(u => u.friendsList).ToList();
         }
         
         public async Task<List<Tag>> GetAllFriendshipTags(List<Friendship> friendshipList)
         {
-            var allTagsList = new List<Tag>();
-            foreach (var friend in friendshipList)
-            {
-                allTagsList.Add(friend.friendshipTag);
-            }
-            return allTagsList;
+            return friendshipList.Select(friend => friend.friendshipTag).ToList();
         }
 
         public async Task<List<Tag>> GetSortedTagsList(List<Tag> tagsToSort)
