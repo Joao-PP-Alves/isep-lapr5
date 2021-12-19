@@ -263,7 +263,7 @@ namespace DDDNetCore.Domain.Users
         /**
         * método para dar atualização no perfil
         **/
-        public async Task<UserDto> UpdateProfileAsync(UserDto dto)
+        public async Task<UserDto> UpdateProfileAsync(UpdateUserDto dto)
         {
             var user = await _repo.GetByIdAsync(new UserId(dto.Id));
 
@@ -277,7 +277,6 @@ namespace DDDNetCore.Domain.Users
             user.ChangeTags(dto.tags);
             user.ChangePhoneNumber(dto.phoneNumber);
             user.ChangeEmotionalState(dto.emotionalState);
-            user.updateFriendShips(dto.friendsList);
             user.ChangeEmail(dto.email);
             user.updateEmotionTime(new EmotionTime(user.EmotionTime.LastEmotionalUpdate));
             await _unitOfWork.CommitAsync();

@@ -225,7 +225,7 @@ namespace DDDNetCore.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> UpdateProfile(Guid id, UserDto dto)
+        public async Task<ActionResult<UserDto>> UpdateProfile(Guid id, UpdateUserDto dto)
         {
             /*if (id != dto.Id)
             {

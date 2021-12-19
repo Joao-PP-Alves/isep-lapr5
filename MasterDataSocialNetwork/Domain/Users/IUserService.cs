@@ -20,7 +20,7 @@ namespace DDDNetCore.Domain.Users{
         public Task<UserLoginDTO> Login(LoginDTO dto);
         
         public Task<UserDto> AddAsync(CreatingUserDto dto);
-        public Task<UserDto> UpdateProfileAsync(UserDto dto);
+        public Task<UserDto> UpdateProfileAsync(UpdateUserDto dto);
         public Task<UserDto> InactivateAsync(UserId id);
         public Task<UserDto> DeleteAsync(UserId id);
         public Task<UserDto> UpdateEmotionalStateAsync(UserDto dto);
