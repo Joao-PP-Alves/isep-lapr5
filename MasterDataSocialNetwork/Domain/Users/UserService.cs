@@ -555,7 +555,7 @@ namespace DDDNetCore.Domain.Users
         {
             var tagsList = _repo.GetMyTagList(id).Result;
             var sortedList = _repo.GetSortedTagsList(tagsList).Result;
-            return sortedList.Select(tag => new TagCloudDto(tag.name, 1)).ToList();
+            return GetTagCloudDtoList(sortedList);
         }
         
         public async Task<List<TagCloudDto>> GetAllUsersTagCloud()
