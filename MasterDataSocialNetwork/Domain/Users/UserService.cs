@@ -540,5 +540,29 @@ namespace DDDNetCore.Domain.Users
 
             return listDtoOrdered;
         }
+
+        public async Task<List<TagCloudDto>> GetMyTagCloud(UserId id)
+        {
+            var tagsList = _repo.GetMyTagList(id).Result;
+            return tagsList.Select(tag => new TagCloudDto(tag.name, 1)).ToList();
+        }
+
+        public async Task<List<TagCloudDto>> GetAllUsersTagCloud()
+        {
+            var aux = new Dictionary<string, int>();
+            var tagsList = _repo.GetAllUsersTags().Result;
+            foreach (var tag in tagsList)
+            {
+                if (!aux.ContainsKey(tag.name))
+                {
+                    aux.Add(tag.name,1);
+                }
+                else
+                {
+                    aux[tag.name] += 1;
+                }
+            }
+            return aux.Select(newTag => new TagCloudDto(newTag.Key, newTag.Value)).ToList();
+        }
     }
 }
