@@ -561,11 +561,69 @@ namespace DDDNetCore.Domain.Users
             address.Append("orig=").Append(orig);
             address.Append("&dest=").Append(dest);
 
-            var response = await address.ToString().GetJsonAsync();
-            list.Add(response);
-            var array = response.ToCharArray(0,response.Length);
+            var response = await address.ToString().GetStringAsync();
+            var array = response.Split("\"");
+            foreach (var item in array)
+            {
+                if (item.Contains("@")){
+                    var user = await this.GetByEmail(item);
+                    list.Add(user.Id.ToString());
+                }
+            }
             address.Clear();
+            return list;
+        }
 
+        public async Task<List<String>> GetStrongestPath(UserId userId1, UserId userId2){
+            var list = new List<String>();
+            var user1 = await GetByIdAsync(userId1);
+            var user2 = await GetByIdAsync(userId2);
+
+            var orig = user1.email.EmailAddress;
+            var dest = user2.email.EmailAddress;
+
+            var address = new StringBuilder(Constants.URL_Prolog);
+            address.Append("/strongpath?");
+            address.Append("orig=").Append(orig);
+            address.Append("&dest=").Append(dest);
+
+            var response = await address.ToString().GetStringAsync();
+            var array = response.Split("\"");
+            foreach (var item in array)
+            {
+                if (item.Contains("@")){
+                    var user = await this.GetByEmail(item);
+                    list.Add(user.Id.ToString());
+                }
+            }
+            address.Clear();
+            return list;
+        }
+
+        public async Task<List<String>> GetSafestPath(UserId userId1, UserId userId2, int minimum){
+            var list = new List<String>();
+            var user1 = await GetByIdAsync(userId1);
+            var user2 = await GetByIdAsync(userId2);
+
+            var orig = user1.email.EmailAddress;
+            var dest = user2.email.EmailAddress;
+
+            var address = new StringBuilder(Constants.URL_Prolog);
+            address.Append("/safepath?");
+            address.Append("orig=").Append(orig);
+            address.Append("&dest=").Append(dest);
+            address.Append("&min=").Append(minimum);
+
+            var response = await address.ToString().GetStringAsync();
+            var array = response.Split("\"");
+            foreach (var item in array)
+            {
+                if (item.Contains("@")){
+                    var user = await this.GetByEmail(item);
+                    list.Add(user.Id.ToString());
+                }
+            }
+            address.Clear();
             return list;
         }
     }
