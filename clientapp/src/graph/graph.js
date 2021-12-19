@@ -37,14 +37,18 @@ const populateRows = async () => {
 	/*rows.push(createData("1", "Ferndando", null, "3", "10"));
 	rows.push(createData("2", "Ferndanda", "1", "4", "10"));
 	rows.push(createData("3", "Ricardo", "1", "5", "10"));
+	rows.push(createData("3", "Ricardo", "2", "5", "10"));
 	rows.push(createData("4", "Luísa", "1", "6", "10"));
+	rows.push(createData("4", "Luísa", "3", "6", "10"));
 	rows.push(createData("5", "Lurdes", "1", "7", "10"));
 	rows.push(createData("6", "Raquel", "2", "8", "10"));
 	rows.push(createData("7", "Olavo", "2", "9", "10"));
 	rows.push(createData("8", "Rajesh", "6", "10", "10"));
 	rows.push(createData("9", "Rita", "3", "11", "10"));
+	rows.push(createData("9", "Rita", "8", "20", "10"));
 	rows.push(createData("10", "Rute", "4", "12", "10"));
 	rows.push(createData("11", "Diogo", "4", "13", "10"));*/
+	
 };
 
 let searchedVS = [];
@@ -146,8 +150,10 @@ export default class Graph {
 		var dtos = returnRows().then((response) => {
 			this.createNodes(response);
 			var lvl = 0;
-			this.addNodesToScene(this.rootNode, lvl);
-
+			var initializedNodes = [];
+			
+			this.addNodesToScene(this.rootNode,initializedNodes, lvl);
+			
 			this.addEdgesToScene(this.nodes, response);
 		});
 
@@ -211,7 +217,15 @@ export default class Graph {
 	}
 
 	createNodes(dtos) {
+		var drawnNodes = [];
 		dtos.forEach((dto) => {
+			var drawn = false;
+			drawnNodes.forEach( (dn) => {
+				if (dn.user === dto.id){
+					drawn = true;
+				}
+			})
+			if (drawn === false){
 			var node = new Node({
 				color: 0x00ff00,
 				radius: 3,
@@ -224,10 +238,13 @@ export default class Graph {
 				angleRange: 2 * Math.PI,
 				depth: 0,
 			});
+
 			if (dto.parent === null) {
 				this.rootNode = node;
 			}
 			this.nodes.push(node);
+			drawnNodes.push(node);
+		}
 		});
 		dtos.forEach((dto) => {
 			this.nodes.forEach((node) => {
@@ -248,17 +265,24 @@ export default class Graph {
 		});
 	}
 
-	addNodesToScene(node, lvl) {
+	addNodesToScene(node, initializedNodes, lvl) {
 		if (node.parent === null) {
 			node.setNewColor(colors[lvl]);
 			node.initialize(this.scene);
+			initializedNodes.push(node);
 		}
-
+		
 		var n = node.adjacents.length;
 		lvl = lvl + 1;
 		for (var i = 0; i < node.adjacents.length; i++) {
 			var center = 0;
-			if (node.adjacents[i].parent !== null) {
+			var drawn = false;
+			initializedNodes.forEach( (aux) =>{
+				if (node.adjacents[i].user === aux.user){
+					drawn = true;
+				}
+			});
+			if (node.adjacents[i].parent !== null && drawn === false && node.adjacents[i].parent === node.user) {
 				node.adjacents[i].setNewColor(colors[lvl]);
 
 				center = (-node.angleRange + node.angleRange / n) * 0.5;
@@ -282,7 +306,8 @@ export default class Graph {
 
 				node.adjacents[i].initialize(this.scene);
 
-				this.addNodesToScene(node.adjacents[i], lvl);
+				initializedNodes.push(node.adjacents[i]);
+				this.addNodesToScene(node.adjacents[i],initializedNodes, lvl);
 			}
 		}
 	}
