@@ -2,13 +2,19 @@ const mongoose = require("mongoose");
 const express = require("express");
 const morgan = require('morgan');
 
-/*const Joi = require("joi");
+/*const Joi = require("joi");*/
 const bodyParser = require("body-parser");
-require("dotenv/config");*/
+/*require("dotenv/config");*/
 const Post = require("./domain/post");
 
 // express app
 const app = express();
+
+app.use(bodyParser.json());
+
+//import routes
+const postsRoute = require('./routes/posts');
+app.use('/all-posts', postsRoute);
 
 //Connect to DB
 console.log("connection string: " + process.env.DB_CONNECTION);
@@ -18,7 +24,6 @@ mongoose
 		{
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
-			//useCreateIndex: true,
 		}
 	)
 	.then(() => console.log("Database connected!"))
@@ -36,35 +41,3 @@ app.set('view engine', 'ejs');
 //middleware and static files
 app.use(express.static('public'));
 app.use(morgan('dev'));
-
-//mongoose and mongo sandbox routes
-app.get("/add-posts", (req, res) => {
-	const post = new Post({
-		id: "1",
-		name: "post1",
-		content: "Boa noite! #educados_respondem",
-		userId: "1",
-	});
-
-	post.save()
-		.then((result) => {
-			console.log(result);
-			res.send(result);
-		})
-		.catch((err) => {
-			console.log(err);
-		});
-});
-
-/*app.use(express.json());
-app.use(bodyParser.json());*/
-
-//Import Routes
-/*const postsRoute = require('./routes/posts');
-app.use('/posts', postsRoute);
-
-const posts = [
-	{ id: 1, name: "post1" },
-	{ id: 2, name: "post2" },
-	{ id: 3, name: "post3" },
-];*/
