@@ -547,7 +547,7 @@ namespace DDDNetCore.Domain.Users
                 listDto.Add(new LeaderboardUserNetworkSizeDto(user.Name.text,networkSizeUser.Size));
             }
 
-            List<LeaderboardUserNetworkSizeDto> listDtoOrdered = listDto.OrderBy(o => o.Size).ToList();
+            List<LeaderboardUserNetworkSizeDto> listDtoOrdered = listDto.OrderByDescending(o => o.Size).Take(10).ToList();
 
             return listDtoOrdered;
         }
