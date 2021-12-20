@@ -28,6 +28,7 @@ import ListFriends from './components/pages/friends/ListFriends';
 import ListPendentIntroductions from './components/pages/introductions/ListPendentIntroductions';
 import AppGraph from './graph/AppGraph';
 import history from './history';
+import NetworkLeaderboard from './components/pages/leaderboard/NetworkLeaderboard';
 
 //import { Navbar } from 'react-bootstrap';
 
@@ -62,6 +63,7 @@ function App() {
       <Route path="/introductions/pendent" component={ListPendentIntroductions}/>
       <Route path="/friends" component={ListFriends}/>
       <Route path="/graph" component={AppGraph}/>
+      <Route path="/leaderboard" component={NetworkLeaderboard}/>
       <Redirect to="/"/>
     </Switch>
   </Router>
