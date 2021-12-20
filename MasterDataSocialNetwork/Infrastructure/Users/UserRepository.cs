@@ -147,7 +147,7 @@ namespace DDDNetCore.Infrastructure.Users
 
         public async Task<List<Friendship>> GetMyFriendships(UserId id)
         {
-            return _context.Users.Where(u => id.Equals(u.Id)).SelectMany(u => u.friendsList).AsNoTrackingWithIdentityResolution().ToList();
+            return _context.Users.Where(u => id.Equals(u.Id)).SelectMany(u => u.friendsList).ToList();
         }
 
         public async Task<List<Friendship>> GetAllFriendships()
@@ -157,7 +157,12 @@ namespace DDDNetCore.Infrastructure.Users
         
         public async Task<List<Tag>> GetAllFriendshipTags(List<Friendship> friendshipList)
         {
-            return friendshipList.Select(friend => friend.friendshipTag).ToList();
+            if (friendshipList != null)
+            {
+                return friendshipList.Select(friend => friend.friendshipTag).ToList();
+            }
+
+            return null;
         }
 
         public async Task<List<Tag>> GetSortedTagsList(List<Tag> tagsToSort)
@@ -165,8 +170,11 @@ namespace DDDNetCore.Infrastructure.Users
             var tagsToReturn = new List<Tag>();
             foreach (var tag in tagsToSort)
             {
-                var newTag = tag.name.TrimStart().TrimEnd().ToLower();
-                tagsToReturn.Add(new Tag(newTag));
+                if (tag != null && !(tag.name.Equals("")))
+                {
+                    var newTag = tag.name.TrimStart().TrimEnd().ToLower();
+                    tagsToReturn.Add(new Tag(newTag));
+                }
             }
             return tagsToReturn;
         }

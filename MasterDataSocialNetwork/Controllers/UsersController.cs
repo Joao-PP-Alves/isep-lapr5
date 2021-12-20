@@ -555,11 +555,11 @@ namespace DDDNetCore.Controllers
         
         // GET: api/Users/MyTagCloud/id
         [HttpGet("MyTagCloud/{id}")]
-        public async Task<ActionResult<List<TagCloudDto>>> GetMyTagCloud(Guid userId)
+        public async Task<ActionResult<List<TagCloudDto>>> GetMyTagCloud(Guid id)
         {
             try
             {
-                var tagCloud = await _service.GetMyTagCloud(new UserId(userId));
+                var tagCloud = await _service.GetMyTagCloud(new UserId(id));
 
                 if (tagCloud == null)
                 {
@@ -576,11 +576,11 @@ namespace DDDNetCore.Controllers
         
         // GET: api/Users/MyFriendshipsTagCloud/id
         [HttpGet("MyFriendshipsTagCloud/{id}")]
-        public async Task<ActionResult<List<TagCloudDto>>> GetMyFriendshipsTagCloud(Guid userId)
+        public async Task<ActionResult<List<TagCloudDto>>> GetMyFriendshipsTagCloud(Guid id)
         {
             try
             {
-                var tagCloud = await _service.GetMyFriendshipsTagCloud(new UserId(userId));
+                var tagCloud = await _service.GetMyFriendshipsTagCloud(new UserId(id));
 
                 if (tagCloud == null)
                 {
